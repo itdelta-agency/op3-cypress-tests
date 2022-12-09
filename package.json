@@ -17,9 +17,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "cypress": "^10.10.0",
+    "cypress": "^11.2.0",
     "cypress-recurse": "^1.23.0",
-    "cypress-xpath": "^2.0.1",
     "dotenv": "^16.0.3",
     "imapflow": "^1.0.113",
     "mailparser": "^3.5.0",
@@ -27,6 +26,7 @@
     "nodemailer": "^6.8.0"
   },
   "devDependencies": {
+    "@cypress/xpath": "^2.0.3",
     "@shelex/cypress-allure-plugin": "^2.33.1"
   }
 }

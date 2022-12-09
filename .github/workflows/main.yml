@@ -7,44 +7,75 @@ jobs:
     timeout-minutes: 120
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Download Cypress
-        uses: bahmutov/npm-install@v1
-        env:
-          CYPRESS_INSTALL_BINARY: 0
+      - uses: actions/checkout@v3
 
-      - name: Check Cypress cache
+      - name: Install dependencies
         run: |
-          npx cypress cache path
-          npx cypress cache list
-
-      - name: Install Cypress
-        run: |
-          npx cypress install
-          npx cypress cache list
-      - name: Run Cypress
-        continue-on-error: true
-        run: |
-          DEBUG=allure-plugin* PASSWORD=${{secrets.PRODUCTION_PASSWORD}} URL=${{secrets.PRODUCTION_URL}} AUTHNAME='${{secrets.PRODUCTION_AUTHNAME}}' USERNAME=${{secrets.PRODUCTION_USERNAME}} npx cypress run --env allure=true --browser chrome
-
-      - name: Get Allure history
-        uses: actions/checkout@v2
-        if: always()
-        continue-on-error: true
-        with:
-          ref: allure
-          path: allure
+          sudo apt-get update
+          sudo apt-get install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb -y
           
-      - name: mkdir
-        run: mkdir prod
-
-      - name: Generate Allure Report
-        uses: simple-elf/allure-report-action@master
-        if: always()
+      - name: Cypress run
+        uses: cypress-io/github-action@v4
         with:
-          allure_results: allure-results
-          gh_pages: allure
-          allure_history: ./prod/tested2/
+          browser: electron
+          spec: cypress/e2e/login.cy.js
+        end: 
+          CYPRESS_allure=true
+          CYPRESS_PASSWORD=3@oMon6uTg6o
+          CYPRESS_URL=http://tenant1.release.company-policy.com/
+          CYPRESS_AUTHNAME=aaa
+          CYPRESS_USERNAME=user@aa.com
+          
+        #   env:  DEBUG=allure-plugin*, PASSWORD=${{secrets.PRODUCTION_PASSWORD}}
+
+      # - name: Install Cypress
+      #   run: npx cypress install
+
+      # - name: Run Cypress
+      #   continue-on-error: true
+      #   run: |
+      #     DEBUG=allure-plugin* PASSWORD=${{secrets.PRODUCTION_PASSWORD}} URL=${{secrets.PRODUCTION_URL}} AUTHNAME='${{secrets.PRODUCTION_AUTHNAME}}' USERNAME=${{secrets.PRODUCTION_USERNAME}} npx cypress run --env allure=true --browser chrome
+
+
+
+
+      # - name: Download Cypress
+      #   uses: bahmutov/npm-install@v1
+      #   env:
+      #     CYPRESS_INSTALL_BINARY: 0
+
+      # - name: Check Cypress cache
+      #   run: |
+      #     npx cypress cache path
+      #     npx cypress cache list
+
+      # - name: Install Cypress
+      #   run: |
+      #     npx cypress install
+      #     npx cypress cache list
+      # - name: Run Cypress
+      #   continue-on-error: true
+      #   run: |
+      #     DEBUG=allure-plugin* PASSWORD=${{secrets.PRODUCTION_PASSWORD}} URL=${{secrets.PRODUCTION_URL}} AUTHNAME='${{secrets.PRODUCTION_AUTHNAME}}' USERNAME=${{secrets.PRODUCTION_USERNAME}} npx cypress run --env allure=true --browser chrome
+
+      # - name: Get Allure history
+      #   uses: actions/checkout@v2
+      #   if: always()
+      #   continue-on-error: true
+      #   with:
+      #     ref: allure
+      #     path: allure
+          
+      # - name: mkdir
+      #   run: mkdir prod
+
+      # - name: Generate Allure Report
+      #   uses: simple-elf/allure-report-action@master
+      #   if: always()
+      #   with:
+      #     allure_results: allure-results
+      #     gh_pages: allure
+      #     allure_history: ./prod/tested2/
 
 #      - name: Clear report allure-results
 #        run: |
@@ -65,12 +96,12 @@ jobs:
 #          allure_report: allure-report
 #          allure_history: ./allure-history/release
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: JamesIves/github-pages-deploy-action@4.2.0
-        with:
-          branch: gh-pages
-          folder: ./prod
+      # - name: Deploy to GitHub Pages
+      #   id: deployment
+      #   uses: JamesIves/github-pages-deploy-action@4.2.0
+      #   with:
+      #     branch: gh-pages
+      #     folder: ./prod
 
-      - name: Show allure
-        run: cat ./allure-history/index.html
+      # - name: Show allure
+      #   run: cat ./allure-history/index.html
