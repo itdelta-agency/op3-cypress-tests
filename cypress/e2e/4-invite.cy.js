@@ -42,7 +42,7 @@ describe("C. Invite user by 2 ways", () => {
         recurse(
             () => {
                 if(main === 'release') return  cy.task('getAccount', {subject, userEmail})
-                if(main === 'org-online') return cy.task('getLastEmail')
+                if(main === 'org-online') return cy.task('getLastEmail', {});
             }, // Cypress commands to retry
             Cypress._.isObject, // keep retrying until the task returns an object
             {
@@ -72,43 +72,5 @@ describe("C. Invite user by 2 ways", () => {
 
         cy.xpath("//h2[text()='Learning center']").should('be.visible');
     });
-
-    // it('delete invited user', function () {
-    //     cy.admin();
-
-    //     cy.xpath("//a[text()='Users']").click();
-    //     cy.wait(500);
-    //     cy.accessAllItems();
-
-    //     cy.xpath("//div[text()='QA TEST']");
-    //     cy.xpath("(//*[@class='w-5 h-5 mx-1 text-red-600 hover:text-red-900 cursor-pointer'])[last()]").click();
-    // });
-
-    // it('should invite by admin tools', function () {
-    //     cy.admin();
-    //
-    //     // Go to add user page
-    //     cy.xpath("//a[text()='Users']").click();
-    //     cy.xpath("//button[text()='Add user']").click();
-    //
-    //     // Input credentials
-    //     cy.xpath("(//input[@type='text'])[1]").type(String(Math.random() * 100));
-    //     cy.xpath("(//input[@type='text'])[2]").type("QA");
-    //     cy.xpath("//input[@type='email']").type("testAddUser+" + Math.random() * 100 + "@lc.com");
-    //     cy.xpath("//input[@type='tel']").type("+7999" + Math.random() * 100);
-    //     cy.xpath("(//input[@type='password'])[1]").type(Cypress.env('password'), { log: false });
-    //     cy.xpath("(//input[@type='password'])[2]").type(Cypress.env('password'), { log: false });
-    //
-    //     // Click on submit button
-    //     cy.xpath("//button[text()='Save']").click();
-    //
-    //     // Assert user invited
-    //     cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
-    // });
-
-    // afterEach(function onAfterEach() {
-    //     if (this.currentTest.state === 'failed') {
-    //         Cypress.runner.stop();
-    //     }
-    // });
 });
+

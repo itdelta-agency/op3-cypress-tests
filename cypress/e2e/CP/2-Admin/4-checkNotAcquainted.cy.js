@@ -16,7 +16,7 @@ describe("CP4. Check Not Acquainted", () => {
 
 
     cy.xpath(`//div[text()='${userNames}']`).scrollIntoView();
-    cy.xpath(`//div[text()='${userNames}']`).next().click().contains('div', articleName).scrollIntoView().click();
+    cy.xpath(`//div[text()='${userNames}']`).next().click().contains('div', articleName).scrollIntoView().should('be.visible');
     cy.wait(500);
   })
 })

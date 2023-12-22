@@ -98,13 +98,6 @@ describe("LC.A1. Create lessons", () => {
     cy.xpath("//button[text()='Save']").click();
     cy.wait(500);
     cy.contains("Success").should('be.visible');
-
-    // delete lesson
-    // cy.visit('/admin/lc/lessons');
-    // cy.xpath(`//div[text()='${lName}']/../../../../../th[4]/div/div[2]`).last().click();
-    // cy.get('button').contains('Delete').click();
-    // cy.xpath("//p[text()='Success!']").should('be.visible');
-
   });
 
   

@@ -64,7 +64,7 @@ describe('LC.C1. Check student answers', () => {
         recurse(
             () => {
                 if(main === 'release') return  cy.task('getAccount', {subject, userEmail})
-                if(main === 'org-online') return cy.task('getLastEmail')
+                if(main === 'org-online') return cy.task('getLastEmail', {})
             }, // Cypress commands to retry
             Cypress._.isObject, // keep retrying until the task returns an object
             {

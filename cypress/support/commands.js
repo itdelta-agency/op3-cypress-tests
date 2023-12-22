@@ -16,9 +16,9 @@ Cypress.Commands.add('login', (username = Cypress.env('email'), password = Cypre
 
         cy.xpath("//input[@id='email']", { timeout: 10000 }).type(username);
         cy.xpath("//input[@id='password']", { timeout: 10000 }).type(password, { log: false });
-    
+
         cy.xpath("//button[@type='submit']", { timeout: 10000}).click();
-        cy.wait(500);
+        cy.wait(3000);
     });
 });
 
@@ -105,7 +105,23 @@ Cypress.Commands.add('question', (questionName, questionType) => {
     cy.contains("Success").should('be.visible');
 });
 
+Cypress.Commands.add('closePopup', () => {
+    const isNonExistentOrHidden  = ($el => Cypress.dom.isElement($el));
 
+    cy.wait(1000);
+    cy.contains("span", "Attention!").should(($el) => {
+        if(!isNonExistentOrHidden($el)) {
+            expect(isNonExistentOrHidden($el)).to.be.false
+        }
+
+    }).then((res) => {
+        if(res.length) {
+            cy.contains("span", "Attention!").parent().parent().next().find('button').click();
+            cy.wait(500);
+        }
+    })
+    cy.wait(1000)
+});
 
 Cypress.Commands.add('accessAllItems', () => {
     cy.wait(2000);

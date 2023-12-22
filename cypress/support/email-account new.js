@@ -84,14 +84,14 @@ const makeEmailAccount = async () => {
     },
 
 
-    async getLastEmail() {
+    async getLastEmail({port = 993, host = "ethereal.email", user = testAccount.user, pass = testAccount.pass}) {
 
       const imapConfig = {
-            host: "ethereal.email",
-            port: 993,
+            host: host,
+            port: port,
             tls: true,
-            user: testAccount.user,
-            password: testAccount.pass,
+            user: user,
+            password: pass,
         };
         
         let mail = undefined;
@@ -104,8 +104,10 @@ const makeEmailAccount = async () => {
             // search by Unseen since current date
             imap.search(["UNSEEN", ["SINCE", new Date()]], (err, results) => {
               // if we have results, continue fetching msg
-              if (!results || !results.length) {
-                rej('Nothing to fetch');
+              if (results === null
+                  || results === undefined
+                  || results.length === 0) {
+                console.log('MAIL NOT FOUND')
                 return;
               }
               const f = imap.fetch(results, { bodies: "", markSeen: true });
@@ -145,6 +147,7 @@ const makeEmailAccount = async () => {
         html: mail.html,
       };
     },
+
 
     /**
      * Utility method for sending an email

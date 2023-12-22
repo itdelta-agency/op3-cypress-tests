@@ -5,8 +5,10 @@ describe("A3. Profile editing", () => {
         cy.login();
     });
 
+
     it('should assert profile page', function () {
         cy.visit('/profile');
+       // cy.closePopup();
 
         // change names
         cy.xpath("//h1[text()='User Profile']").should('be.visible');
@@ -26,6 +28,7 @@ describe("A3. Profile editing", () => {
         Cypress.session.clearAllSavedSessions();
         cy.login(Cypress.env('email'), newPassword);
         cy.visit('/profile');
+       // cy.closePopup();
 
         // change password back
         cy.xpath("//input[@id='new_password']").clear().type(Cypress.env("password"), {log:false});
@@ -39,6 +42,7 @@ describe("A3. Profile editing", () => {
 
     it('should have new name', function () {
         cy.visit('/profile');
+      //  closePopup();
         cy.wait(500);
         cy.xpath("//h1[text()='User Profile']").should('be.visible');
         cy.xpath("//input[@id='first-name']").should('have.value','first-name');
