@@ -33,7 +33,7 @@ describe('LC.Z. Clear all created learning items', () => {
 
         cy.wait(500);
         cy.visit('/admin/lc/lessons');
-        cy.wait(500);
+        cy.wait(1500);
         cy.xpath(`//div[text()='${Cypress.env('lessonCheckboxRadio')}']`).parent().parent().parent().parent().parent().find('.tooltip').last().click();
         cy.get('button').contains('Delete').click();
         cy.wait(500);
@@ -61,6 +61,15 @@ describe('LC.Z. Clear all created learning items', () => {
         cy.xpath(`//div[text()='${Cypress.env('courseGroupName')}']/../../../../../th[5]/div/div[2]`).last().click();
         cy.get('button').contains('Delete').click();
         cy.xpath("//p[text()='Success!']").should('be.visible');
+    });
+
+    it('should delete team', function () {
+        cy.visit('/admin/teams');
+        cy.xpath(`//div[text()='${tName}']`).parent().parent().parent().parent().parent().find('.tooltip').last().click();
+        cy.get('button').contains('Delete').click();
+
+        // Assert team deleted
+        cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
     });
 
     it('delete invite user', function() {
