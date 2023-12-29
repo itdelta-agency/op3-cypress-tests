@@ -47,9 +47,6 @@ module.exports = defineConfig({
         getLastEmail(params) {
           return emailAccount.getLastEmail(params);
         },
-        getLastEmailFromMailRu() {
-          return emailAccount.getLastEmailFromMailRu();
-        },
         sendEmail() {
           return emailAccount.sendEmail();
         },
