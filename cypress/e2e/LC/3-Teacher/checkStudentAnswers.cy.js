@@ -38,7 +38,7 @@ describe('LC.C1. Check student answers', () => {
       //  Go to the students answers page
         cy.wait(1500);
         cy.visit('admin/lc/teacher/lessons');
-        cy.wait(500);
+        cy.wait(1500);
 
         // Go to the lesson
         // cy.xpath("//div[text()='" + Cypress.env('userName') + "']").click();

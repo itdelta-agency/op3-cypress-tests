@@ -28,10 +28,10 @@ describe("US.1 Add User", () => {
         // Add IMAGE
         cy.xpath('//input[@id="avatar"]').selectFile('cypress/image/qaUser.jpg', {force: true});
 
-        cy.xpath("//button[text()='Выбрать']").click();
-        cy.wait(500);
 
         // departments
+        cy.xpath("//button[text()='Выбрать']").click();
+        cy.wait(500);
         cy.contains("Выбрать: Отделы").parent().next().click();
         cy.wait(500);
         cy.xpath("//div[text()='Marketing']").click();

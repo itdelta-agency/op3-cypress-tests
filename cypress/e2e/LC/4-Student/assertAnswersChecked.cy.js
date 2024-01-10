@@ -42,7 +42,7 @@ describe('LC.D1. Assert answers were checked by teacher', () => {
         // Go to success page
         cy.wait(1500);
         cy.xpath("//p[text()='Result']").click();
-      //  cy.xpath("//div[text()='Congratulations']").should('be.visible').click();
+        cy.xpath("//div[text()='Congratulations']").should('be.visible').click();
     });
 
     // afterEach(function onAfterEach() {

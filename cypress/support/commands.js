@@ -18,7 +18,7 @@ Cypress.Commands.add('login', (username = Cypress.env('email'), password = Cypre
         cy.xpath("//input[@id='password']", { timeout: 10000 }).type(password, { log: false });
 
         cy.xpath("//button[@type='submit']", { timeout: 10000}).click();
-        cy.wait(3000);
+        cy.wait(4000);
     });
 });
 

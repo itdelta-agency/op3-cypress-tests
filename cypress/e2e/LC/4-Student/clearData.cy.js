@@ -1,5 +1,7 @@
 describe('LC.Z. Clear all created learning items', () => {
     let userEmail;
+    let tName = 'Qa Test Team';
+
     before(() => {
         cy.task("getUserEmail").then((user) => {
             cy.log(user.email);
