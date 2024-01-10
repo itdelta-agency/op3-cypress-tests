@@ -1,7 +1,5 @@
 describe('LC.Z. Clear all created learning items', () => {
     let userEmail;
-    let tName = 'Qa Test Team';
-
     before(() => {
         cy.task("getUserEmail").then((user) => {
             cy.log(user.email);
@@ -15,8 +13,8 @@ describe('LC.Z. Clear all created learning items', () => {
     })
 
     it('should delete course', function () {
-      cy.visit('/admin/lc/courses');
-      cy.wait(1000);
+        cy.visit('/admin/lc/courses');
+        cy.wait(1000);
 
         cy.xpath(`//div[text()='${Cypress.env("courseName")}']`).parent().parent().parent().parent().parent().scrollIntoView().find('.tooltip').last().click();
         cy.wait(500);
@@ -53,6 +51,7 @@ describe('LC.Z. Clear all created learning items', () => {
         cy.visit('/admin/lc/curriculums');
         cy.wait(500);
         cy.xpath(`//div[text()='${Cypress.env('curriculumName')}']`).parent().parent().parent().parent().parent().find('.tooltip').last().click();
+        cy.wait(500);
         cy.get('button').contains('Delete').click();
         cy.wait(500);
         cy.xpath("//p[text()='Success!']").should('be.visible');
@@ -61,15 +60,18 @@ describe('LC.Z. Clear all created learning items', () => {
     it('delete course group', function () {
         cy.visit('/admin/lc/groups');
         cy.xpath(`//div[text()='${Cypress.env('courseGroupName')}']/../../../../../th[5]/div/div[2]`).last().click();
+        cy.wait(500);
         cy.get('button').contains('Delete').click();
+        cy.wait(500);
         cy.xpath("//p[text()='Success!']").should('be.visible');
     });
 
     it('should delete team', function () {
         cy.visit('/admin/teams');
         cy.xpath(`//div[text()='${tName}']`).parent().parent().parent().parent().parent().find('.tooltip').last().click();
+        cy.wait(500);
         cy.get('button').contains('Delete').click();
-
+        cy.wait(500);
         // Assert team deleted
         cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
     });
@@ -80,6 +82,7 @@ describe('LC.Z. Clear all created learning items', () => {
         cy.contains(userEmail).parent().parent().last().scrollIntoView().find('.tooltip').last().click();
         cy.wait(500)
         cy.get('button').contains('Delete').click();
+        cy.wait(500)
         cy.xpath("//p[text()='Success!']").should('be.visible');
     })
 
