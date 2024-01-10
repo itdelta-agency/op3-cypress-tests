@@ -19,6 +19,7 @@ describe('2-Auth-RU-login-valid.cy.js', () => {
         cy.xpath("//button[@type='submit']", { timeout: 10000}).should('be.visible');
         cy.xpath("//button[@type='submit']", { timeout: 10000}).click();
         cy.wait(3000);
+        cy.visit('/')
         cy.xpath("//h2[text()='Учебный центр']").should('be.visible');
     });
 

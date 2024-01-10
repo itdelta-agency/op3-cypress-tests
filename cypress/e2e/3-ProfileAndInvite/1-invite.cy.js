@@ -2,6 +2,7 @@ const { recurse } = require('cypress-recurse')
 
 describe("C. Invite user by 2 ways", () => {
     let userEmail;
+    let passEmail;
     let userName;
     let main = Cypress.config('baseUrl').split('.')[1]
     let subject = 'Learning Center | Invitation to the Learning Center'
@@ -9,9 +10,8 @@ describe("C. Invite user by 2 ways", () => {
 
     before(() => {
         cy.task("getUserEmail").then((user) => {
-            cy.log(user.email);
-            cy.log(user.pass);
             userEmail = user.email;
+            passEmail = user.pass;
             userName = user.email.replace("@ethereal.email", "");
         })
     })
@@ -31,8 +31,8 @@ describe("C. Invite user by 2 ways", () => {
         cy.wait(3000);
 
         // Assert user invited
-      cy.xpath("//p[text()='Success!']", { timeout: 10000 }).should('be.visible');
-      cy.wait(2500);
+        cy.xpath("//p[text()='Success!']", { timeout: 10000 }).should('be.visible');
+        cy.wait(2500);
 
     });
 
@@ -42,7 +42,7 @@ describe("C. Invite user by 2 ways", () => {
         recurse(
             () => {
                 if(main === 'release') return  cy.task('getAccount', {subject, userEmail})
-                if(main === 'org-online') return cy.task('getLastEmail', {});
+                if(main === 'org-online') return cy.task('getLastEmail', {user: userEmail, pass:passEmail});
             }, // Cypress commands to retry
             Cypress._.isObject, // keep retrying until the task returns an object
             {
@@ -50,11 +50,11 @@ describe("C. Invite user by 2 ways", () => {
                 delay: 5000, // wait 5 seconds between attempts
             },
         )
-        .its('html')
-          .then((html) => {
-            console.log(html);
-            cy.document({ log: false }).invoke({ log: false }, 'write', html)
-        })
+            .its('html')
+            .then((html) => {
+                console.log(html);
+                cy.document({ log: false }).invoke({ log: false }, 'write', html)
+            })
         cy.xpath("//a[@class='button button-primary']").should('have.attr', 'href').then((href) => {
             confirmationLink = href;
         });

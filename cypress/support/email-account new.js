@@ -17,6 +17,10 @@ const makeEmailAccount = async () => {
       pass: testAccount.pass,
     },
 
+    async testAccountCreate() {
+      return await nodemailer.createTestAccount();
+    },
+
     /**
      * Utility method for getting the last email
      * for the Ethereal email account using ImapFlow.

@@ -36,6 +36,7 @@ module.exports = defineConfig({
   viewportWidth: 800,
   e2e: {
     baseUrl: process.env.URL,
+    registerUrl: 'https://app.org-online.ru/register',
     setupNodeEvents: async (on, config) => {
   
       const emailAccount = await makeEmailAccount();
@@ -52,6 +53,9 @@ module.exports = defineConfig({
         },
         getAccount(params) {
           return emailAccount.openMessage(params);
+        },
+        getTestAccount() {
+          return emailAccount.testAccountCreate();
         }
       });
 

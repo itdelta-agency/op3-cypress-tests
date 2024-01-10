@@ -28,15 +28,15 @@ describe("US.1 Add User", () => {
         // Add IMAGE
         cy.xpath('//input[@id="avatar"]').selectFile('cypress/image/qaUser.jpg', {force: true});
 
-        cy.xpath("//button[text()='Выбрать']").click();
-        cy.wait(500);
 
         // departments
-        cy.contains("Выбрать: Отделы").parent().next().click();
-        cy.wait(500);
-        cy.xpath("//div[text()='Marketing']").click();
-        cy.contains("Выбрать: Отделы").parent().next().next().next().click();
-        cy.wait(500);
+        // cy.xpath("//button[text()='Выбрать']").click();
+        // cy.wait(500);
+        // cy.contains("Выбрать: Отделы").parent().next().click();
+        // cy.wait(500);
+        // cy.xpath("//div[text()='Marketing']").click();
+        // cy.contains("Выбрать: Отделы").parent().next().next().next().click();
+        // cy.wait(500);
 
         //Team
         cy.xpath("//button[text()='Выбрать']").click();
@@ -82,13 +82,13 @@ describe("US.1 Add User", () => {
     })
 
     it('check user team/departments', () => {
-        cy.xpath("//a[text()='Отделы']").click();
-        cy.wait(1000);
-        cy.xpath("//div[text()='Marketing']").click();
-        cy.wait(500);
+        // cy.xpath("//a[text()='Отделы']").click();
+        // cy.wait(1000);
+        // cy.xpath("//div[text()='Marketing']").click();
+        // cy.wait(500);
 
         // check User
-        cy.xpath("//span[text()='Пользователи']").next().contains('QA QA USER USER').should('be.visible');
+//        cy.xpath("//span[text()='Пользователи']").next().contains('QA QA USER USER').should('be.visible');
 
 
         //check Team

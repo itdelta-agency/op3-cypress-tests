@@ -10,17 +10,18 @@ describe('4-Auth-RU-forgot-password.cy.js', () => {
 
     beforeEach(() => {
         cy.visit(Cypress.config().baseUrl)
-        cy.changeLangAuth();
+       // cy.changeLangAuth();
     });
 
     it('requesting reset-password-email', function () {
+        cy.changeLangAuth();
         cy.contains("Забыли пароль?").should('be.visible').click();
        // cy.wait(65000); //временное решение - org-online.ru высылает письмо сброса пароля  с ограничением, 1 раз в минуту
 
         cy.xpath("//input[@id='email']", {timeout: 10000}).type(userEmail);
-        cy.wait(1000);
+        cy.wait(500);
         cy.contains("Ссылка для сброса пароля электронной почты").should('be.visible').click();
-        cy.wait(1000);
+        cy.wait(500);
         cy.contains("Ссылка на сброс пароля была отправлена!").should('be.visible');
     });
 
@@ -29,7 +30,7 @@ describe('4-Auth-RU-forgot-password.cy.js', () => {
         recurse( //эта рекурсия не работает - таск возвращает таймаут
             () => {
                 if(main === 'release') return  cy.task('getAccount', {subject, userEmail})
-                if(main === 'org-online') return cy.task('getLastEmail', {});
+                if(main === 'org-online') return cy.task('getLastEmail', {port: 993, host: 'imap.mail.ru', user:userEmail, pass: authPassword });
             }, // Cypress commands to retry
             Cypress._.isObject, // keep retrying until the task returns an object
             {
@@ -46,7 +47,7 @@ describe('4-Auth-RU-forgot-password.cy.js', () => {
             cy.visit($btn);
         });
         cy.wait(2000);
-
+        cy.changeLangAuth();
         // Invalid Data
         cy.xpath("//input[@id='password']", { timeout: 10000 }).should('be.visible').type(authPassword);
         cy.xpath("//input[@id='password_confirmation']", { timeout: 10000 }).should('be.visible').type(wrong_password);
@@ -62,13 +63,11 @@ describe('4-Auth-RU-forgot-password.cy.js', () => {
         cy.wait(500);
 
         //Valid Data
-        cy.xpath("//input[@id='password']", {timeout: 10000}).should('be.visible').type(authPassword);
-        cy.xpath("//input[@id='password_confirmation']", {timeout: 10000}).should('be.visible').type(authPassword);
+        cy.xpath("//input[@id='password']", {timeout: 10000}).should('be.visible').clear().type(authPassword);
+        cy.xpath("//input[@id='password_confirmation']", {timeout: 10000}).should('be.visible').clear().type(authPassword);
         cy.xpath("//button[@type='submit']", {timeout: 10000}).should('be.visible').click();
-        cy.wait(2000);
+        cy.wait(3000);
+        cy.login(userEmail, authPassword);
     });
 
-    it('log in new Data ', function () {
-        cy.login(userEmail, authPassword);
-    })
 })
