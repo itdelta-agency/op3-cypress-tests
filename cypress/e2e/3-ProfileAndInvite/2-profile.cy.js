@@ -1,5 +1,5 @@
 describe("A3. Profile editing", () => {
-    const newPassword = 'fg5fHe4$fg_56fG';
+    const newPassword = 'c';
 
     beforeEach(() => {
         cy.login();

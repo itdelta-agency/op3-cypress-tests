@@ -12,6 +12,7 @@ describe("US.1 Add User", () => {
 
     it('Add user', function () {
         // Go to add user page
+        cy.wait(1500);
         cy.xpath("//button[text()='Добавить пользователя']").click();
 
         cy.wait(1000);
