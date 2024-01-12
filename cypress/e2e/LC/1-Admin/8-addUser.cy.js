@@ -42,8 +42,11 @@ describe("US.1 Add User", () => {
         cy.xpath("//button[text()='Выбрать']").click();
         cy.wait(500);
         cy.xpath("//div[text()='Команды']").click();
+        cy.wait(500);
         cy.contains("Выбрать: Команды").parent().next().click();
+        cy.wait(500);
         cy.xpath("//div[text()='Qa Test Team']").scrollIntoView().click();
+        cy.wait(500);
         cy.contains("Выбрать: Команды").parent().next().next().next().click();
 
         cy.wait(500);
@@ -66,14 +69,14 @@ describe("US.1 Add User", () => {
         cy.xpath("//span[text()='Фамилия']").next().clear().type('USER USER');
 
         email = 'Edit' + email;
-        password = password + 'Edit';
+        password+=' Edit';
 
         cy.xpath("//span[text()='Почта *']").next().clear().type(email);
         cy.xpath("//span[text()='Телефон']").next().clear().type('+7 999 999 99 99');
-        cy.xpath("//span[text()='Пароль *']").next().clear().type(password+'Edit');
-        cy.xpath("//span[text()='Повторите пароль *']").next().clear().type(password+"Edit");
+        cy.xpath("//span[text()='Пароль *']").next().clear().type(password);
+        cy.xpath("//span[text()='Повторите пароль *']").next().clear().type(password);
         cy.xpath('//input[@id="avatar"]').selectFile('cypress/image/editQaUser.jpg', {force: true});
-        cy.xpath("//span[text()='Активность']").next().children().click();
+        cy.xpath("//span[text()='Администратор']").next().children().click();
 
         //Save
         cy.xpath("//button[text()='Сохранить']").click();
@@ -99,11 +102,9 @@ describe("US.1 Add User", () => {
         cy.xpath("//span[text()='Пользователи']").next().contains('QA QA USER USER').should('be.visible');
     })
 
-    it('delete User', () => {
-        cy.xpath(`//div[text()='QA QA USER USER']`).parent().parent().parent().parent().parent().find('.tooltip').last().click();
-        cy.wait(500);
-        cy.get('button').contains('Удалить').click();
-        cy.xpath("//p[text()='Успешно!']", { timeout: 5000 }).should('be.visible');
+    it("log in account", () => {
+        cy.login(email, password);
+        cy.wait(1500);
+        cy.visit('admin/lc/courses');
     })
-
 })
