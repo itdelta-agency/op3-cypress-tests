@@ -91,4 +91,14 @@ describe('LC.Z. Clear all created learning items', () => {
         cy.xpath("//p[text()='Success!']").should('be.visible');
     })
 
+    it('delete User', () => {
+        cy.visit('/admin/user');
+        cy.wait(1000);
+        cy.xpath(`//div[text()='QA QA USER USER']`).parent().parent().parent().parent().parent().find('.tooltip').last().click();
+        cy.wait(500);
+        cy.get('button').contains('Delete').click();
+        cy.wait(500);
+        cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
+    })
+
 });
