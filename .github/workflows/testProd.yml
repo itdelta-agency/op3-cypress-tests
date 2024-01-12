@@ -21,6 +21,9 @@ jobs:
           URL: ${{vars.PRODUCTION_URL}}
           EMAIL: ${{vars.PRODUCTION_USERNAME}}
           PASSWORD: ${{secrets.PRODUCTION_PASSWORD}}
+          MAIL_TRAP_TOKEN: ${{secrets.MAIL_TRAP_TOKEN}}
+          QA_TEST_LOGIN: ${{vars.QA_TEST_LOGIN}}
+          QA_TEST_PASSWORD: ${{secrets.QA_TEST_PASSWORD}}
 
       - name: Generate Allure Report
         uses: simple-elf/allure-report-action@master
