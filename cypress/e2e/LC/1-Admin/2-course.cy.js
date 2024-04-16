@@ -43,7 +43,8 @@ describe('LC.A2. Create course', () => {
         cy.wait(500);
         cy.xpath("/html/body/div[3]/div/div/div/div/div[2]/div[2]/div/div[1]/div[2]/input").type('QA');
         cy.wait(500);
-        cy.xpath('//div[@id="react-select-4-listbox"]').click();
+        cy.contains('div', 'QA Test').click();
+        // cy.xpath('//div[@id="react-select-4-listbox"]').click();
 
         // cy.xpath("/html/body/div[3]/div/div/div/div/div[2]/div[2]/div[2]/div/div[text()='QA TEST']").click();
         cy.xpath("/html/body/div[3]/div/div/div/div/div[2]/button").click();

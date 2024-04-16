@@ -1,7 +1,7 @@
 const {recurse} = require("cypress-recurse");
 describe('4-Auth-RU-forgot-password.cy.js', () => {
     let main = Cypress.config('baseUrl').split('.')[1];
-    let subject = 'Уведомление о сбросе пароля';
+    let subject = 'Learning Center | Уведомление о сбросе пароля';
 
     const userEmail = Cypress.env('authEmail');
     const authPassword = Cypress.env('authPassword');

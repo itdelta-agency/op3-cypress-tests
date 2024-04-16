@@ -46,6 +46,7 @@ describe('LC.C1. Check student answers', () => {
         // Assert we're in the lesson
         cy.xpath("//h2[text()='Checking the lesson']");
         // Input comment for the student
+        cy.wait(1500);
         cy.xpath("//textarea").type("Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium " +
             "ad beatae consectetur consequuntur dicta est et incidunt magni maxime minima natus nihil numquam " +
             "perferendis rem sequi, temporibus, totam. Eligendi, eos?");
