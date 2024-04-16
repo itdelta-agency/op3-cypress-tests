@@ -14,6 +14,7 @@ module.exports = defineConfig({
     authPassword: process.env.QA_TEST_PASSWORD,
     courseGroupName: "QA Test Course Group",
     curriculumName: "QA Test Curriculum",
+    teemName: "Qa Test Team",
     courseName: "QA Test Course",
     lessonCheckboxRadio: "QA Test lesson (checkbox + radio)",
     lessonText: "QA Test lesson (text)",

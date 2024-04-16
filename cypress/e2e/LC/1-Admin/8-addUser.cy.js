@@ -52,8 +52,8 @@ describe("US.1 Add User", () => {
         cy.wait(500);
         //Save
         cy.xpath("//button[text()='Сохранить']").click();
-        cy.wait(2000);
-        cy.contains('Пользователь успешно обновлён!').should('be.visible');
+        cy.wait(500);
+        cy.contains('Пользователь успешно создан!').should('be.visible');
     })
 
     it('check add User', () => {

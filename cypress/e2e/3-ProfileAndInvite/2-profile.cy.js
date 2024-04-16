@@ -28,7 +28,7 @@ describe("A3. Profile editing", () => {
         cy.xpath("//input[@id='password']").clear().type(newPassword, {log:false});
 
         cy.xpath("//button[@type='submit']").click();
-        cy.wait(4500);
+        cy.wait(500);
         cy.contains("User`s profile has been updated successfully!").should('be.visible');
     });
 

@@ -1,5 +1,8 @@
 describe('LC.Z. Clear all created learning items', () => {
     let userEmail;
+
+    const isNonExistentOrHidden  = ($el => Cypress.dom.isElement($el));
+
     before(() => {
         cy.task("getUserEmail").then((user) => {
             cy.log(user.email);
@@ -70,7 +73,7 @@ describe('LC.Z. Clear all created learning items', () => {
     it('should delete team', function () {
         cy.visit('/admin/teams');
         cy.wait(1000);
-        cy.xpath(`//div[text()='${tName}']`).parent().parent().parent().parent().parent().find('.tooltip').last().click();
+        cy.xpath(`//div[text()='${Cypress.env('teemName')}']`).parent().parent().parent().parent().parent().find('.tooltip').last().click();
         cy.wait(500);
         cy.get('button').contains('Delete').click();
         cy.wait(500);
@@ -97,6 +100,25 @@ describe('LC.Z. Clear all created learning items', () => {
         cy.get('button').contains('Delete').click();
         cy.wait(500);
         cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
+    })
+
+    it('check Delete', () => {
+        cy.visit('/admin/user');
+        cy.wait(1000);
+        cy.contains('div', 'Qa Test').should(($el) => {
+            console.log(isNonExistentOrHidden($el))
+            if(!isNonExistentOrHidden($el)) {
+                expect(isNonExistentOrHidden($el)).to.be.false
+            }
+        }).then((res) => {
+            if(res.length) {
+                cy.contains('Qa Test').parent().parent().last().scrollIntoView().find('.tooltip').last().click();
+                cy.wait(500);
+                cy.get('button').contains('Delete').click();
+                cy.wait(500);
+                cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
+            }
+        })
     })
 
 });
