@@ -1,5 +1,5 @@
 describe("A3. Profile editing", () => {
-    const newPassword = 'fg5fHe4$fg_56fG';
+    const newPassword = 'c';
 
     beforeEach(() => {
         cy.login();
@@ -45,7 +45,7 @@ describe("A3. Profile editing", () => {
         cy.xpath("//input[@id='password']").clear().type(Cypress.env("password"), {log:false});
 
         cy.xpath("//button[@type='submit']").click();
-        cy.wait(4000);
+        cy.wait(500);
 
     });
 

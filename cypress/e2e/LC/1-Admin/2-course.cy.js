@@ -34,6 +34,7 @@ describe('LC.A2. Create course', () => {
 
         // Go to add courses page
         cy.xpath("//a[text()='Courses']").click();
+        cy.wait(3000);
         cy.contains('Add Course').click();
 
         cy.xpath("(//input[@type='text'])[1]").type(Cypress.env('courseName'));

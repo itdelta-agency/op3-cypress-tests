@@ -38,7 +38,7 @@ describe('LC.C1. Check student answers', () => {
       //  Go to the students answers page
         cy.wait(1500);
         cy.visit('admin/lc/teacher/lessons');
-        cy.wait(500);
+        cy.wait(1500);
 
         // Go to the lesson
         // cy.xpath("//div[text()='" + Cypress.env('userName') + "']").click();
@@ -47,14 +47,21 @@ describe('LC.C1. Check student answers', () => {
         cy.xpath("//h2[text()='Checking the lesson']");
         // Input comment for the student
         cy.wait(1500);
-        cy.xpath("//textarea").type("Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium " +
-            "ad beatae consectetur consequuntur dicta est et incidunt magni maxime minima natus nihil numquam " +
-            "perferendis rem sequi, temporibus, totam. Eligendi, eos?");
+        cy.xpath("//span[text()='Comment']").next().type("Comment");
         // Set answer as correct
         // cy.xpath("//button[@role='switch']").click();
-        cy.get('span').contains('Success').parent().click()
-        // Save answer
-        cy.xpath("//button[text()='Save']").click();
+        cy.xpath("//span[text()='Comment']").next().next().click();
+        cy.wait(500);
+        cy.contains('Success!').should('be.visible');
+        // Save Comment
+
+       cy.xpath("//span[text()='Comment for student']").next().type("Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium " +
+           "ad beatae consectetur consequuntur dicta est et incidunt magni maxime minima natus nihil numquam " +
+           "perferendis rem sequi, temporibus, totam. Eligendi, eos?");
+
+       cy.xpath("//span[text()='Success']").click();
+
+        cy.xpath("//button[text()='Restart']").next().click();
         cy.xpath(3000);
         // Assert answer saved
         cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
