@@ -24,6 +24,9 @@ jobs:
           MAIL_TRAP_TOKEN: ${{secrets.MAIL_TRAP_TOKEN}}
           QA_TEST_LOGIN: ${{vars.QA_TEST_LOGIN}}
           QA_TEST_PASSWORD: ${{secrets.QA_TEST_PASSWORD}}
+          BITRIX24_SECRET_KEY: ${{secrets.QA_TEST_PASSWORD}}
+          BITRIX24_URL: ${{vars.QA_TEST_PASSWORD}}
+          BITRIX24_USER_ID: ${{vars.QA_TEST_PASSWORD}}
 
       - name: Generate Allure Report
         uses: simple-elf/allure-report-action@master
