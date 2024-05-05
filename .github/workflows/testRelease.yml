@@ -22,7 +22,7 @@ jobs:
           EMAIL: ${{vars.RELEASE_USERNAME}}
           PASSWORD: ${{secrets.RELEASE_PASSWORD}}
           MAIL_TRAP_TOKEN: ${{secrets.MAIL_TRAP_TOKEN}}
-          QA_TEST_LOGIN: ${{secrets.QA_TEST_LOGIN}}
+          QA_TEST_LOGIN: ${{vars.QA_TEST_LOGIN}}
           QA_TEST_PASSWORD: ${{secrets.QA_TEST_PASSWORD}}
 
       - name: Generate Allure Report
