@@ -10,7 +10,7 @@ describe("CP3. Article List", () => {
   it('Deactivate Article', function () {
     cy.visit('admin/cp/post');
     cy.wait(500);
-    cy.xpath(`//div[text()="${articleName}"]/../../../../../th[3]/div/div[2]`).click();
+    cy.xpath(`//div[text()="${articleName}"]/../../../../../th[5]/div/div[2]`).click();
     cy.wait(500);
     cy.xpath('//span[text()="Active"]/../span[2]/button').click();
     cy.wait(500);
@@ -19,7 +19,7 @@ describe("CP3. Article List", () => {
     cy.wait(500);
     cy.xpath("//p[text()='Success!']", {timeout: 5000}).should('be.visible');
   });
-
+  //
   it('Check deactive article', function () {
     cy.visit('admin/cp/report');
     cy.xpath('//button[text()="Show results"]').click();
@@ -42,7 +42,7 @@ describe("CP3. Article List", () => {
   it('Activate Article', function () {
     cy.visit('admin/cp/post');
     cy.wait(500);
-    cy.xpath(`//div[text()="${articleName}"]/../../../../../th[3]/div/div[2]`).click();
+    cy.xpath(`//div[text()="${articleName}"]/../../../../../th[5]/div/div[2]`).click();
     cy.wait(500);
     cy.xpath('//span[text()="Active"]/../span[2]/button').click();
     cy.wait(500);
