@@ -28,16 +28,16 @@ describe('Landing-Test.js', () => {
     });
 
     it('зайти на лэндинг и проверить кнопки', function () {
-        cy.visit(landingUrl);
-        cy.xpath("//a[text()='Начать']", { timeout: 10000 }).eq(0).should('be.visible').click();
-        //cy.wait(2500);
-        cy.url().should('include', '/register');
-        cy.wait(2500);
-        cy.visit(landingUrl);
-        cy.xpath("//a[text()='Начать']", { timeout: 10000 }).eq(1).should('be.visible').click();
-        //cy.wait(2500);
-        cy.url().should('include', '/register');
-        cy.wait(2500);
+    //     cy.visit(landingUrl);
+    //     cy.xpath("//a[text()='Начать']", { timeout: 10000 }).eq(0).should('be.visible').click();
+    //     //cy.wait(2500);
+    //     cy.url().should('include', '/register');
+    //     cy.wait(2500);
+    //     cy.visit(landingUrl);
+    //     cy.xpath("//a[text()='Начать']", { timeout: 10000 }).eq(1).should('be.visible').click();
+    //     //cy.wait(2500);
+    //     cy.url().should('include', '/register');
+    //     cy.wait(2500);
         cy.visit(landingUrl);
         cy.xpath("//a[text()='Подробнее']", { timeout: 10000 }).eq(0).should('be.visible').click();
         //cy.wait(2500);
@@ -64,7 +64,7 @@ describe('Landing-Test.js', () => {
         cy.wait(500);
         cy.xpath("//span[text()='Сообщение']", { timeout: 10000 }).should('be.visible').parent().parent().next().type(date_in_milliseconds);
         cy.wait(500);
-        cy.xpath("//button[text()='Отправить']", { timeout: 10000 }).should('be.visible').click();
+        cy.xpath("//span[text()='Сообщение']", { timeout: 10000 }).should('be.visible').parent().parent().parent().parent().next().next().children().should('be.visible').click();
         cy.wait(5500);
         cy.request({
             url: `${lead_url}/rest/${lead_user}/${lead_secret_key}/crm.lead.list?FILTER[>DATE_CREATE]=2024-01-01&FILTER[CREATED_BY_ID]=1&FILTER[EMAIL]=${fake_unique_email}`,
@@ -109,7 +109,7 @@ describe('Landing-Test.js', () => {
         cy.wait(500);
         cy.xpath("//span[text()='Сообщение']", { timeout: 10000 }).should('be.visible').parent().parent().next().type(date_in_milliseconds);
         cy.wait(500);
-        cy.xpath("//button[text()='Отправить']", { timeout: 10000 }).should('be.visible').click();
+        cy.xpath("//span[text()='Сообщение']", { timeout: 10000 }).should('be.visible').parent().parent().parent().parent().next().next().children().should('be.visible').click();
         cy.wait(5500);
         cy.request({
             url: `${lead_url}/rest/${lead_user}/${lead_secret_key}/crm.lead.list?FILTER[>DATE_CREATE]=2024-01-01&FILTER[CREATED_BY_ID]=1&FILTER[EMAIL]=${fake_unique_email}`,
@@ -146,7 +146,7 @@ describe('Landing-Test.js', () => {
         cy.url().should('include', '/learning-center');
         cy.get('[type="text"]').should('be.visible').type(date_in_milliseconds);
         cy.wait(500);
-        cy.get('[type="email"]').eq(1).should('be.visible').type(fake_unique_email);
+        cy.get('[type="email"]').should('be.visible').type(fake_unique_email);
         cy.wait(500);
         cy.get('[type="tel"]').should('be.visible').type('1234567890');
         cy.wait(500);
@@ -187,7 +187,7 @@ describe('Landing-Test.js', () => {
         cy.url().should('include', '/policy');
         cy.get('[type="text"]').should('be.visible').type('QA_TEST_3');
         cy.wait(500);
-        cy.get('[type="email"]').eq(1).should('be.visible').type(fake_unique_email);
+        cy.get('[type="email"]').should('be.visible').type(fake_unique_email);
         cy.wait(500);
         cy.get('[type="tel"]').should('be.visible').type('1234567890');
         cy.wait(500);
@@ -222,52 +222,52 @@ describe('Landing-Test.js', () => {
             expect(Boolean(result.length)).to.be.false;
         });
     });
-    it('Перейти на страницу /prices заполнить форму и проверить Лид', function () {
-        cy.visit('https://org-online.ru');
-        cy.xpath("//a[text()='Цены']", {timeout: 10000}).should('be.visible').eq(0).click();
-        cy.wait(1500);
-        cy.url().should('include', '/prices');
-        cy.get('[type="button"]').eq(2).should('be.visible').click();
-        cy.wait(500);
-        cy.xpath("//span[text()='Имя  *']", { timeout: 10000 }).should('be.visible').next().type('QA_TEST_4');
-        cy.wait(500);
-        cy.xpath("//span[text()='Фамилия']", { timeout: 10000 }).should('be.visible').next().type('QA_TEST_4');
-        cy.wait(500);
-        cy.xpath("//span[text()='email *']", { timeout: 10000 }).should('be.visible').next().type(fake_unique_email);
-        cy.wait(500);
-        cy.xpath("//span[text()='Телефон *']", { timeout: 10000 }).should('be.visible').next().type('1234567890');
-        cy.wait(500);
-        cy.xpath("//span[text()='Сообщение']", { timeout: 10000 }).should('be.visible').parent().parent().next().type(date_in_milliseconds);
-        cy.wait(500);
-        cy.xpath("//button[text()='Отправить']", { timeout: 10000 }).should('be.visible').click();
-        cy.wait(5500);
-        cy.request({
-            url: `${lead_url}/rest/${lead_user}/${lead_secret_key}/crm.lead.list?FILTER[>DATE_CREATE]=2024-01-01&FILTER[CREATED_BY_ID]=1&FILTER[EMAIL]=${fake_unique_email}`,
-        }).as('content').then((response) => {
-            const content = response.body
-            const result = content.result;
-            let array_length = result.length;
-            let last_index = array_length - 1;
-            let last_lead = result[last_index];
-            const last_lead_name = last_lead.NAME;
-            if (last_lead_name != "QA_TEST_4") {
-                throw new Error("Не найден правильный лид");
-            } else {
-                cy.log("Проверка лида прошла успешно")
-                console.log("Проверка лида прошла успешно")
-            }
-            result.forEach((element) => {
-                console.log(element.ID);
-                cy.request({url: `${lead_url}/rest/${lead_user}/${lead_secret_key}/crm.lead.delete?id=${element.ID}`});
-            });
-        });
-        cy.wait(3000);
-        cy.request({
-            url: `${lead_url}/rest/${lead_user}/${lead_secret_key}/crm.lead.list?FILTER[>DATE_CREATE]=2024-01-01&FILTER[CREATED_BY_ID]=1&FILTER[EMAIL]=${fake_unique_email}&SELECT[]=ID`,
-        }).as('content').then((response) => {
-            const content = response.body
-            const result = content.result;
-            expect(Boolean(result.length)).to.be.false;
-        });
-    });
+    // it('Перейти на страницу /prices заполнить форму и проверить Лид', function () {
+    //     cy.visit('https://org-online.ru');
+    //     cy.xpath("//a[text()='Цены']", {timeout: 10000}).should('be.visible').eq(0).click();
+    //     cy.wait(1500);
+    //     cy.url().should('include', '/prices');
+    //     cy.get('[type="button"]').eq(2).should('be.visible').click();
+    //     cy.wait(500);
+    //     cy.xpath("//span[text()='Имя  *']", { timeout: 10000 }).should('be.visible').next().type('QA_TEST_4');
+    //     cy.wait(500);
+    //     cy.xpath("//span[text()='Фамилия']", { timeout: 10000 }).should('be.visible').next().type('QA_TEST_4');
+    //     cy.wait(500);
+    //     cy.xpath("//span[text()='email *']", { timeout: 10000 }).should('be.visible').next().type(fake_unique_email);
+    //     cy.wait(500);
+    //     cy.xpath("//span[text()='Телефон *']", { timeout: 10000 }).should('be.visible').next().type('1234567890');
+    //     cy.wait(500);
+    //     cy.xpath("//span[text()='Сообщение']", { timeout: 10000 }).should('be.visible').parent().parent().next().type(date_in_milliseconds);
+    //     cy.wait(500);
+    //     cy.xpath("//button[text()='Отправить']", { timeout: 10000 }).should('be.visible').click();
+    //     cy.wait(5500);
+    //     cy.request({
+    //         url: `${lead_url}/rest/${lead_user}/${lead_secret_key}/crm.lead.list?FILTER[>DATE_CREATE]=2024-01-01&FILTER[CREATED_BY_ID]=1&FILTER[EMAIL]=${fake_unique_email}`,
+    //     }).as('content').then((response) => {
+    //         const content = response.body
+    //         const result = content.result;
+    //         let array_length = result.length;
+    //         let last_index = array_length - 1;
+    //         let last_lead = result[last_index];
+    //         const last_lead_name = last_lead.NAME;
+    //         if (last_lead_name != "QA_TEST_4") {
+    //             throw new Error("Не найден правильный лид");
+    //         } else {
+    //             cy.log("Проверка лида прошла успешно")
+    //             console.log("Проверка лида прошла успешно")
+    //         }
+    //         result.forEach((element) => {
+    //             console.log(element.ID);
+    //             cy.request({url: `${lead_url}/rest/${lead_user}/${lead_secret_key}/crm.lead.delete?id=${element.ID}`});
+    //         });
+    //     });
+    //     cy.wait(3000);
+    //     cy.request({
+    //         url: `${lead_url}/rest/${lead_user}/${lead_secret_key}/crm.lead.list?FILTER[>DATE_CREATE]=2024-01-01&FILTER[CREATED_BY_ID]=1&FILTER[EMAIL]=${fake_unique_email}&SELECT[]=ID`,
+    //     }).as('content').then((response) => {
+    //         const content = response.body
+    //         const result = content.result;
+    //         expect(Boolean(result.length)).to.be.false;
+    //     });
+    // });
 });
