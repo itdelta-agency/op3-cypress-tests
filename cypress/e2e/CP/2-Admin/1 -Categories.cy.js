@@ -16,11 +16,11 @@ describe("CP1. Categories List", () => {
         cy.wait(500);
 
         cy.xpath("//button[text()='Save']").should('be.visible').click();
-        cy.wait(1000);
-        cy.xpath("//p[text()='Success!']").should('be.visible');
+        cy.wait(500);
+        cy.contains("Success!").should('be.visible');
 
         // check active 
-        cy.xpath(`//div[text()='${catName}']/../../../../../td[4]`).last().contains('Inactive');
+        cy.xpath(`//div[text()='${catName}']/../../../../../td[5]`).last().contains('Inactive');
     });
    
     it('should edit Category)', function () {
@@ -40,11 +40,11 @@ describe("CP1. Categories List", () => {
 
         cy.xpath("//p[text()='Success!']").should('be.visible');
 
-        cy.xpath(`//div[text()='${catName}']/../../../../../td[4]`).last().contains('Active');
+        cy.xpath(`//div[text()='${catName}']/../../../../../td[5]`).last().contains('Active');
     });
 
-    // after(() => {
-    //     cy.clearCookies();
-    // });
+    after(() => {
+        cy.clearCookies();
+    });
   
 });
