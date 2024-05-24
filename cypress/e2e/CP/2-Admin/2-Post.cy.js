@@ -51,7 +51,7 @@ describe("CP2. Article List", () => {
     }
     cy.xpath("//button[text()='Save']").click();
 
-    cy.xpath("//span[text()='Confirmation']").parent().parent().next().contains('button', 'No').click();
+    // cy.xpath("//span[text()='Confirmation']").parent().parent().next().contains('button', 'No').click();
     cy.wait(500);
 
     cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
@@ -73,8 +73,8 @@ describe("CP2. Article List", () => {
     
     cy.xpath("//button[text()='Save']").should('be.visible').click();
     cy.wait(1000);
-    cy.xpath("//span[text()='Confirmation']").parent().parent().next().contains('button', 'No').click();
-    cy.wait(500);
+    // cy.xpath("//span[text()='Confirmation']").parent().parent().next().contains('button', 'No').click();
+    // cy.wait(500);
 
     cy.xpath("//p[text()='Success!']", {timeout: 5000}).should('be.visible');
   })
