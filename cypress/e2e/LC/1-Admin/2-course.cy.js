@@ -33,7 +33,7 @@ describe('LC.A2. Create course', () => {
     it('should create course', function () {
 
         // Go to add courses page
-        cy.xpath("//a[text()='Courses']").click();
+        cy.visit('admin/lc/courses');
         cy.wait(3000);
         cy.contains('Add Course').click();
 

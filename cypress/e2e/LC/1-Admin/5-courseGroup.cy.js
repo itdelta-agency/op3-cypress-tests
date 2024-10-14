@@ -6,7 +6,7 @@ describe('LC.A3. Create course group', () => {
     it('should create course program', function () {
         // Go to add curriculums page
         // cy.wait(1500);
-        cy.xpath("//a[text()='Course groups']").click();
+        cy.visit('admin/lc/groups');
         cy.wait(1500);
         cy.contains('Add group').click();
       cy.xpath("(//input[@type='text'])[1]").type(Cypress.env('courseGroupName'))

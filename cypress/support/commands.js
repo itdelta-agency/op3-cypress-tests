@@ -127,15 +127,15 @@ Cypress.Commands.add('accessAllItems', () => {
     cy.wait(2000);
     // cy.xpath('(//button/span[starts-with(text(), \'Show\')])[last()]').click();
     cy.get('[data-test-id="pageCountButton"]').scrollIntoView().click();
-    cy.wait(2000);
+    cy.wait(1000);
     cy.xpath("//li/span[text()='Show 100 elements']").click()
     cy.wait(1000);
 });
 
-Cypress.Commands.add('changeLang', () => {
-    cy.xpath("/html/body/div[2]/div/div/div[2]/div[1]/div/div/div[1]/div/button").click();
+Cypress.Commands.add('changeLang', (lang='ru') => {
+    cy.get('[data-header-test-id="lang_button"]').click();
     cy.wait(500);
-    cy.xpath("/html/body/div[2]/div/div/div[2]/div[1]/div/div/div[1]/div").find('a').last().click();
+    cy.get(`[data-header-test-id=${lang}]`).click();
     cy.wait(500);
 });
 

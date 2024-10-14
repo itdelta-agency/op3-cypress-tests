@@ -1,16 +1,17 @@
 describe("LC.A5. Create team", () => {
     const tName = "Qa Test Team";
+    const addName = 'sdadas4rwrwerw542345'
     beforeEach(() => {
         cy.admin();
     });
 
     it('should create new team', function () {
         // Go to add user page
-        cy.xpath("//a[text()='Teams']").click();
+        cy.visit('admin/teams');
         cy.xpath("//button[text()='Add team']").click();
 
         // Input credentials
-        cy.xpath("(//input[@type='text'])[1]").type(tName + 'sdadas4rwrwerw542345');
+        cy.xpath("(//input[@type='text'])[1]").type(tName + addName);
         cy.xpath("//textarea").type("Lorem ipsum dolor sit amet, consectetur adipisicing elit.");
 
         cy.xpath("//button[text()='Save']").click();
@@ -23,8 +24,8 @@ describe("LC.A5. Create team", () => {
         cy.visit('admin/teams');
 
         cy.wait(1000);
-        // cy.accessAllItems();
-        cy.xpath(`(//div[text()='${tName + 'sdadas4rwrwerw542345'}'])`).last().click();
+        cy.accessAllItems();
+        cy.xpath(`(//div[text()='${tName + addName}'])`).last().click();
 
         cy.contains('Edit team').click();
 
@@ -42,7 +43,7 @@ describe("LC.A5. Create team", () => {
     it('check add User Team', function () {
         cy.login(Cypress.env('authEmail'), Cypress.env('authPassword'));
 
-        cy.visit('/profile');
+        cy.visit('/my-profile');
         cy.wait(1500);
         cy.xpath("//label[text()='Teams']").parent().contains('Qa Test Team').should('be.visible');
     })

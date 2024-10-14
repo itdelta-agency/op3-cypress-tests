@@ -40,11 +40,12 @@ describe("US.1 Add User", () => {
 
         //Team
         cy.xpath("//button[text()='Выбрать']").click();
-        cy.wait(500);
-        cy.xpath("//div[text()='Команды']").click();
+        // cy.wait(500);
+        cy.xpath("(//div[text()='Команды'])[2]").click();
         cy.wait(500);
         cy.contains("Выбрать: Команды").parent().next().click();
         cy.wait(500);
+        cy.xpath("/html/body/div[3]/div/div/div/div/div[2]/div[2]/div/div[1]/div[2]/input").type('Qa');
         cy.xpath("//div[text()='Qa Test Team']").scrollIntoView().click();
         cy.wait(500);
         cy.contains("Выбрать: Команды").parent().next().next().next().click();
@@ -97,9 +98,12 @@ describe("US.1 Add User", () => {
         //check Team
         cy.xpath("//a[text()='Команды']").click();
         cy.wait(1000);
+        cy.changeLang('en');
+        cy.accessAllItems();
         cy.xpath("//div[text()='Qa Test Team']").click();
         cy.wait(500);
-        cy.xpath("//span[text()='Пользователи']").next().contains('QA QA USER USER').should('be.visible');
+
+        cy.xpath("//span[text()='Users']").next().contains('QA QA USER USER').should('be.visible');
     })
 
     it("log in account", () => {

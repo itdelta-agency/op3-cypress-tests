@@ -73,6 +73,7 @@ describe('LC.Z. Clear all created learning items', () => {
     it('should delete team', function () {
         cy.visit('/admin/teams');
         cy.wait(1000);
+        cy.accessAllItems();
         cy.xpath(`//div[text()='${Cypress.env('teemName')}']`).parent().parent().parent().parent().parent().find('.tooltip').last().click();
         cy.wait(500);
         cy.get('button').contains('Delete').click();

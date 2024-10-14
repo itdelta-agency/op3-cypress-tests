@@ -35,7 +35,7 @@ describe("CP1. Categories List", () => {
         cy.xpath("//button[@role='switch']").click();
         cy.wait(500);
 
-        cy.xpath("//button[text()='Save']").should('be.visible').click();
+        cy.xpath("//button[text()='Save & Close']").should('be.visible').click();
         cy.wait(1000);
 
         cy.xpath("//p[text()='Success!']").should('be.visible');
