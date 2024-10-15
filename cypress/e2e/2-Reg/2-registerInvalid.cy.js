@@ -11,11 +11,16 @@ describe('Register Invalid', () => {
     //let confirmationLink;
 
     before(() => {
-        cy.task("getTestAccount").then((res) => {
-            userEmail = res.user;
-            pass = res.pass;
-            //userName = user.email.replace("@ethereal.email", "");
-        })
+        const ctx = Cypress.mocha.getRunner().suite.ctx
+        if (Cypress.config().baseUrl === Cypress.config().prodUrl) {
+            cy.task("getTestAccount").then((res) => {
+                userEmail = res.user;
+                pass = res.pass;
+                //userName = user.email.replace("@ethereal.email", "");
+            })
+        } else {
+            ctx.skip();
+        }
     });
 
     beforeEach(() => {

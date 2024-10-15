@@ -11,13 +11,18 @@ describe('Register Ru', () => {
     //let confirmationLink;
 
     before(() => {
-        cy.task("getTestAccount").then((res) => {
-            userEmail = res.user;
-            pass = res.pass;
-            //userName = user.email.replace("@ethereal.email", "");
-        })
-        cy.visit(Cypress.config().registerUrl);
-        cy.changeLangAuth();
+            const ctx = Cypress.mocha.getRunner().suite.ctx
+            if (Cypress.config().baseUrl === Cypress.config().prodUrl) {
+                cy.task("getTestAccount").then((res) => {
+                    userEmail = res.user;
+                    pass = res.pass;
+                    //userName = user.email.replace("@ethereal.email", "");
+                })
+                cy.visit(Cypress.config().registerUrl);
+                cy.changeLangAuth();
+            } else {
+                ctx.skip();
+            }
     });
 
     it('valid-email-input', function () {

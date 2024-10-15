@@ -40,6 +40,7 @@ module.exports = defineConfig({
   viewportWidth: 800,
   e2e: {
     baseUrl: process.env.URL,
+    prodUrl: 'https://qa-testing.org-online.ru/',
     registerUrl: 'https://app.org-online.ru/register',
     setupNodeEvents: async (on, config) => {
   
