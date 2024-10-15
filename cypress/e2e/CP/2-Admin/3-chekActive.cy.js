@@ -10,12 +10,13 @@ describe("CP3. Article List", () => {
   it('Deactivate Article', function () {
     cy.visit('admin/cp/post');
     cy.wait(500);
+    cy.searchRow(articleName);
     cy.xpath(`//div[text()="${articleName}"]/../../../../../th[5]/div/div[2]`).click();
     cy.wait(500);
     cy.xpath('//span[text()="Active"]/../span[2]/button').click();
     cy.wait(500);
     cy.xpath('//button[text()="Save"]').click();
-    cy.xpath("//span[text()='Confirmation']").parent().parent().next().contains('button', 'No').click();
+    // cy.xpath("//span[text()='Confirmation']").parent().parent().next().contains('button', 'No').click();
     cy.wait(500);
     cy.xpath("//p[text()='Success!']", {timeout: 5000}).should('be.visible');
   });
@@ -42,13 +43,14 @@ describe("CP3. Article List", () => {
   it('Activate Article', function () {
     cy.visit('admin/cp/post');
     cy.wait(500);
+    cy.searchRow(articleName);
     cy.xpath(`//div[text()="${articleName}"]/../../../../../th[5]/div/div[2]`).click();
     cy.wait(500);
     cy.xpath('//span[text()="Active"]/../span[2]/button').click();
     cy.wait(500);
     cy.xpath('//button[text()="Save"]').click();
-    cy.wait(500);
-    cy.xpath("//span[text()='Confirmation']").parent().parent().next().contains('button', 'No').click();
+    // cy.wait(500);
+    // cy.xpath("//span[text()='Confirmation']").parent().parent().next().contains('button', 'No').click();
     cy.wait(500);
     cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
   })

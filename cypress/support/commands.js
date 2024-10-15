@@ -154,6 +154,12 @@ Cypress.Commands.add('logout', () => {
     cy.wait(1500);
 });
 
+Cypress.Commands.add('searchRow', (name) => {
+    cy.get('[data-test-id="blue_button"]').next().click();
+    cy.get('[placeholder="Search"]').type(name);
+    cy.wait(500);
+})
+
 Cypress.Commands.add('skipTests', (cookieName) => {
     if ( Cypress.browser.isHeaded ) {
         cy.clearCookie(cookieName)
