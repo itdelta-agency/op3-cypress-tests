@@ -14,7 +14,7 @@ describe("CP2. Article List", () => {
 
 
   it('should create Article', function () {
-    cy.visit('admin/cp/post');
+    cy.visit('cp/admin/post');
     // cy.changeLang('en');
     cy.wait(5000);
     cy.contains('Add article').click();
@@ -61,7 +61,7 @@ describe("CP2. Article List", () => {
   });
 
   it('edit articles', function () {
-    cy.visit('admin/cp/post');
+    cy.visit('cp/admin/post');
     cy.wait(500);
     cy.searchRow(articleName);
     cy.xpath(`(//div[text()='${articleName}'])`).last().click();

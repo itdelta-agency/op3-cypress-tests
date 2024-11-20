@@ -7,7 +7,7 @@ describe("CP7. Clear Data", () => {
   });
 
    it('should delete Category)', function () {
-        cy.visit('admin/cp/category');
+        cy.visit('cp/admin/category');
         cy.contains(catName);
         cy.xpath(`//div[text()='${catName}']/../../../../../td[6]/div/div[2]`).last().click();
         cy.get('button').contains('Delete').click();
@@ -15,7 +15,7 @@ describe("CP7. Clear Data", () => {
     });
 
   it('delete articles', function () {
-    cy.visit('admin/cp/post');
+    cy.visit('cp/admin/post');
     cy.wait(500);
       cy.searchRow(articleName)
     cy.xpath(`//div[text()="${articleName}"]/../../../../../th[5]/div/div[3]`).first().click();

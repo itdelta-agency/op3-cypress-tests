@@ -43,7 +43,11 @@ describe("LC.A1. Create lessons", () => {
 
     // CREATE QUESTION AND ANSWER RADIO
     cy.xpath("//span[text()='Add question']").click();
-    cy.xpath("/html/body/div[6]/div/div/div/div/div[2]/div[2]/button[1]").click();
+    cy.wait(500);
+
+    cy.xpath("/html/body/div[3]/div/div/div/div/div[2]/div[2]/button[1]").click();
+    cy.wait(500);
+    // cy.contains(lName).click();
     cy.wait(500);
     cy.question(qNameR, 2);
     cy.wait(500);
@@ -93,7 +97,7 @@ describe("LC.A1. Create lessons", () => {
     cy.xpath("//input[@type='text']").first().type(lName);
     cy.xpath("//button[@role='switch']").click();
       cy.xpath("//span[text()='Add question']").click();
-      cy.xpath("/html/body/div[6]/div/div/div/div/div[2]/div[2]/button[1]").click();
+    cy.xpath("/html/body/div[3]/div/div/div/div/div[2]/div[2]/button[1]").click();
     cy.question(qName, 1);
     cy.xpath("//button[text()='Save']").click();
     cy.wait(500);

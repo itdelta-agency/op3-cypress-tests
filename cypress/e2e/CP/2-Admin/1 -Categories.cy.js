@@ -6,7 +6,7 @@ describe("CP1. Categories List", () => {
     });
 
     it('should create Category)', function () {
-        cy.visit('admin/cp/category');
+        cy.visit('cp/admin/category');
         cy.contains('Categories').click();
         cy.contains('Add category').click();
 
@@ -25,7 +25,7 @@ describe("CP1. Categories List", () => {
    
     it('should edit Category)', function () {
 
-        cy.visit('admin/cp/category');
+        cy.visit('cp/admin/category');
 
         // cy.accessAllItems();
         cy.xpath(`(//div[text()='${catName}'])`).last().click();

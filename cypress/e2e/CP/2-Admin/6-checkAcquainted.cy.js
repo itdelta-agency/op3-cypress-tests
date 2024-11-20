@@ -9,7 +9,7 @@ describe("CP6. Check Acquainted", () => {
   });
 
   it('checking the ignorance of the article', () => {
-    cy.visit('admin/cp/report');
+    cy.visit('cp/admin/report');
     cy.xpath('//button[text()="Show results"]').click();
     cy.wait(1500);
 
