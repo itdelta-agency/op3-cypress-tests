@@ -6,6 +6,7 @@ describe("US.1 Add User", () => {
     beforeEach(() => {
         cy.admin();
         cy.changeLang();
+        cy.wait(1000);
         cy.visit('admin/user');
     })
 
@@ -58,6 +59,7 @@ describe("US.1 Add User", () => {
     })
 
     it('check add User', () => {
+        cy.wait(500);
         cy.contains(email).click()
     })
 
