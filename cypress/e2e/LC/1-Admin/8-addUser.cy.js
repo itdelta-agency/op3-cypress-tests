@@ -6,7 +6,7 @@ describe("US.1 Add User", () => {
     beforeEach(() => {
         cy.admin();
         cy.changeLang();
-        cy.xpath("//a[text()='Пользователи']").click();
+        cy.visit('admin/user');
     })
 
 

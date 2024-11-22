@@ -3,11 +3,13 @@ describe("LC.A5. Create team", () => {
     const addName = 'sdadas4rwrwerw542345'
     beforeEach(() => {
         cy.admin();
+        cy.changeLang('en');
     });
 
     it('should create new team', function () {
         // Go to add user page
         cy.visit('admin/teams');
+        cy.wait(500);
         cy.xpath("//button[text()='Add team']").click();
 
         // Input credentials
