@@ -28,29 +28,29 @@ describe("CP2. Article List", () => {
     cy.xpath("//*[text()='" + categorisName + "'][1]").click();
 
 
-    cy.xpath("//span[text()='Questions Needed']").scrollIntoView();
-    cy.xpath("//ul/li[last()]/span[last()]/button").click();
+    cy.xpath("//ul/li[6]/div[2]").click();
+    cy.xpath("//ul/li[7]/span[2]").click();
     cy.wait(500);
     for (let i = 1; i < 4; i++) {
       cy.xpath("//span[text()='Add question']").click();
-      cy.xpath(`//ul/li[last()]/div[last()]/div/ul/div[${i}]/li/div[1]/span[2]/a`).click();
-      cy.xpath(`//ul/li[last()]/div[last()]/div/ul/div[${i}]/li/div[1]/span[2]/input`).type(`Questions ${i}`);
-      cy.xpath(`//ul/li[last()]/div[last()]/div/ul/div[${i}]/li`).click();
-      cy.xpath(`//ul/li[last()]/div[last()]/div/ul/div[${i}]/li/div[2]/ul/div/li/div[1]/span[2]/a`).click();
-      cy.xpath(`//ul/li[last()]/div[last()]/div/ul/div[${i}]/li/div[2]/ul/div/li/div[1]/span[2]/input`)
+      cy.xpath(`//ul/li[8]/div[last()]/div/ul/div[${i}]/li/div[1]/span[2]/a`).click();
+      cy.xpath(`//ul/li[8]/div[last()]/div/ul/div[${i}]/li/div[1]/span[2]/input`).type(`Questions ${i}`);
+      cy.xpath(`//ul/li[8]/div[last()]/div/ul/div[${i}]/li`).click();
+      cy.xpath(`//ul/li[8]/div[last()]/div/ul/div[${i}]/li/div[2]/ul/div/li/div[1]/span[2]/a`).click();
+      cy.xpath(`//ul/li[8]/div[last()]/div/ul/div[${i}]/li/div[2]/ul/div/li/div[1]/span[2]/input`)
         .type("Answer 1");
-      cy.xpath(`//ul/li[last()]/div[last()]/div/ul/div[${i}]/li`).click();
+      cy.xpath(`//ul/li[8]/div[last()]/div/ul/div[${i}]/li`).click();
       answerNumber = 2;
       for (let j = 1; j < 3; j++) {
-        cy.xpath(`//ul/li[last()]/div[last()]/div/ul/div[${i}]/li/div[2]/div[last()]/span`).click();
+        cy.xpath(`//ul/li[8]/div[last()]/div/ul/div[${i}]/li/div[2]/div[last()]/span`).click();
         // cy.xpath(`//ul/li[last()]/div[last()]/div/ul/div[${i}]/li/div[2]/ul/div[last()]/li/div[1]/span[2]/a`)
         //   .click();
-        cy.xpath(`//ul/li[last()]/div[last()]/div/ul/div[${i}]/li/div[2]/ul/div[last()]/li/div[1]/span[2]/input`)
+        cy.xpath(`//ul/li[8]/div[last()]/div/ul/div[${i}]/li/div[2]/ul/div[last()]/li/div[1]/span[2]/input`)
           .type(`Answer ${answerNumber}`);
         // cy.xpath(`//ul/li[last()]/div[last()]/div/ul/div[${i}]/li`).click();
         answerNumber++;
       }
-      cy.xpath(`//ul/li[last()]/div[last()]/div/ul/div[${i}]/li/div[2]/ul/div[${i}]/li/div[2]/div/div`).click();
+      cy.xpath(`//ul/li[8]/div[last()]/div/ul/div[${i}]/li/div[2]/ul/div[${i}]/li/div[2]/div/div`).click();
     }
    cy.xpath("//button[text()='Save']").click();
 
@@ -71,8 +71,8 @@ describe("CP2. Article List", () => {
     cy.xpath('//span[text()="Categories *"]//following-sibling::span/descendant::input').type(' ');
     cy.wait(500);
 
-    cy.xpath("//span[text()='Questions Needed']").scrollIntoView();
-    cy.xpath(`//ul/li[last()]/div[last()]/div/ul/div[2]/li/div[1]/span[last()]/span[last()]`).click();
+    cy.xpath("//ul/li[6]/div[2]").click();
+    cy.xpath(`//ul/li[8]/div[last()]/div/ul/div[2]/li/div[1]/span[last()]/span[last()]`).click();
     cy.wait(500);
 
     cy.xpath("//button[text()='Save']").should('be.visible').click();

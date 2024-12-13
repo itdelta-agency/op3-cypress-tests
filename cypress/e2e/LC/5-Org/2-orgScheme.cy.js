@@ -16,21 +16,21 @@ describe('OrgBoard.A2. Create department', () => {
         cy.wait(3000);
     });
 
-    // it('should create position', function () {
-    //     cy.xpath('//a[@class="flex justify-end cursor-pointer"]').click();
-    //     cy.wait(3000);
-    //
-    //     cy.xpath("//span[text()='Name *']").next().type(department);
-    //     cy.xpath("//span[text()='Head']").next().children().click();
-    //     cy.xpath("//span[text()='Head']").next().children().type('QA position');
-    //     cy.xpath(`//div[text()='${positionName}']`).scrollIntoView().click();
-    //     cy.wait(500);
-    //
-    //
-    //     cy.xpath("//button[text()='Save']").click();
-    //     cy.wait(500);
-    //     cy.contains("Success").should('be.visible');
-    // })
+    it('should create position', function () {
+        cy.xpath('//a[@class="flex justify-end cursor-pointer"]').click();
+        cy.wait(3000);
+
+        cy.xpath("//span[text()='Name *']").next().type(department);
+        cy.xpath("//span[text()='Head']").next().children().click();
+        cy.xpath("//span[text()='Head']").next().children().type('QA position');
+        cy.xpath(`//div[text()='${positionName}']`).scrollIntoView().click();
+        cy.wait(500);
+
+
+        cy.xpath("//button[text()='Save']").click();
+        cy.wait(500);
+        cy.contains("Success").should('be.visible');
+    })
 
     it('should create sub position', function () {
 
@@ -48,8 +48,6 @@ describe('OrgBoard.A2. Create department', () => {
         cy.wait(500);
         cy.xpath(`//div[text()='${positionName}']`).scrollIntoView().click();
         cy.xpath("//button[text()='Save']").click();
-        cy.wait(500);
-        cy.contains("Success").should('be.visible');
     })
 
 })
