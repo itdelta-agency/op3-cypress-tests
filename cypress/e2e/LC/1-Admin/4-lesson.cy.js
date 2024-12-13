@@ -53,6 +53,8 @@ describe("LC.A1. Create lessons", () => {
     cy.wait(500);
     // CREATE QUESTION AND ANSWER checkbox
     cy.xpath("//span[text()='Add question']").click();
+    cy.xpath("/html/body/div[3]/div/div/div/div/div[2]/div[2]/button[1]").click();
+    cy.wait(500);
     cy.question(qNameCB, 3);
     //
     // // SAVE LESSON

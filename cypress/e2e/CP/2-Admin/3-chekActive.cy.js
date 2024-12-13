@@ -11,7 +11,7 @@ describe("CP3. Article List", () => {
     cy.visit('cp/admin/post');
     cy.wait(500);
     cy.searchRow(articleName);
-    cy.xpath(`//div[text()="${articleName}"]/../../../../../th[5]/div/div[2]`).click();
+    cy.xpath(`//div[text()="${articleName}"]`).click();
     cy.wait(500);
     cy.xpath('//span[text()="Active"]/../span[2]/button').click();
     cy.wait(500);
@@ -32,7 +32,8 @@ describe("CP3. Article List", () => {
       }
     }).then((el) => {
       if(el[0].childElementCount) {
-        cy.xpath(`//div[text()='${userNames}']`).next().click().contains(articleName).should('not.exist');
+        cy.xpath(`//div[text()='${userNames}']`).next().type(articleName);
+        cy.xpath("//div[@id='react-select-3-listbox']").contains(articleName).should('not.exist');
       }
     })
     //cy.contains(userNames).parent().find('div').contains(articleName).should('not.exist');
@@ -44,7 +45,7 @@ describe("CP3. Article List", () => {
     cy.visit('cp/admin/post');
     cy.wait(500);
     cy.searchRow(articleName);
-    cy.xpath(`//div[text()="${articleName}"]/../../../../../th[5]/div/div[2]`).click();
+    cy.xpath(`//div[text()="${articleName}"]`).click();
     cy.wait(500);
     cy.xpath('//span[text()="Active"]/../span[2]/button').click();
     cy.wait(500);
