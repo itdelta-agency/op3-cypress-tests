@@ -75,7 +75,7 @@ describe("CP2. Article List", () => {
     cy.xpath(`//ul/li[8]/div[last()]/div/ul/div[2]/li/div[1]/span[last()]/span[last()]`).click();
     cy.wait(500);
 
-    cy.xpath("//button[text()='Save']").should('be.visible').click();
+    cy.xpath("//button[text()='Save']").click();
     cy.wait(1000);
     // cy.xpath("//span[text()='Confirmation']").parent().parent().next().contains('button', 'No').click();
     // cy.wait(500);

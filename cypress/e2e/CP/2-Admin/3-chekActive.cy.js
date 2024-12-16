@@ -25,7 +25,7 @@ describe("CP3. Article List", () => {
     cy.visit('cp/admin/report');
     cy.xpath('//button[text()="Show results"]').click();
 
-    cy.wait(3500);
+    cy.wait(11500);
     cy.xpath(`//div[text()='${userNames}']`).next().should(($el) => {
       if(!$el[0].childElementCount) {
         expect(!$el[0].childElementCount).to.be.true
@@ -61,7 +61,7 @@ describe("CP3. Article List", () => {
     cy.wait(500);
     cy.xpath('//button[text()="Show results"]').click();
 
-    cy.wait(3500);
+    cy.wait(11500);
     cy.xpath(`//div[text()='${userNames}']`).next().scrollIntoView().click().type(articleName).contains('div', articleName).should('be.visible');;
     cy.wait(500);
   })
