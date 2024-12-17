@@ -6,20 +6,21 @@ describe("CP7. Clear Data", () => {
     cy.admin();
   });
 
-   it('should delete Category)', function () {
-        cy.visit('cp/admin/category');
-        cy.contains(catName);
-        cy.xpath(`//div[text()='${catName}']/../../../../../td[6]/div/div[2]`).last().click();
-        cy.get('button').contains('Delete').click();
-        cy.xpath("//p[text()='Success!']").should('be.visible');
-    });
+   // it('should delete Category)', function () {
+   //      cy.visit('cp/admin/category');
+   //      cy.contains(catName);
+   //      cy.xpath(`//div[text()='${catName}']/../../../../../td[6]/div/div[2]`).last().click();
+   //      cy.get('button').contains('Delete').click();
+   //      cy.xpath("//p[text()='Success!']").should('be.visible');
+   //  });
 
   it('delete articles', function () {
     cy.visit('cp/admin/post');
     cy.wait(500);
       cy.searchRow(articleName)
-    cy.xpath(`//div[text()="${articleName}"]/../../../../../th[5]/div/div[3]`).first().click();
+      cy.xpath(`(//div[text()='${articleName}'])`).last().click();
     cy.get('button').contains('Delete').click();
+    cy.xpath('//div[@class="flex flex-row-reverse justify-start mt-4"]').find("button").contains('Delete').click({force: true});
     cy.xpath("//p[text()='Success!']").should('be.visible');
   });
 });

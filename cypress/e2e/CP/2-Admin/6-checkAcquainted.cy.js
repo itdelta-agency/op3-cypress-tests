@@ -9,11 +9,9 @@ describe("CP6. Check Acquainted", () => {
   });
 
   it('checking the ignorance of the article', () => {
-    cy.visit('cp/admin/report');
-    cy.xpath('//button[text()="Show results"]').click();
-    cy.wait(1500);
-
-    cy.contains(userNames).next().next().click();
+    cy.searchReport(userNames);
+    cy.wait(1000);
+    cy.contains('div', userNames).next().next().click();
     cy.contains(articleName).scrollIntoView().click({force: true});
   });
 });

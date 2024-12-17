@@ -64,6 +64,7 @@ describe("CP2. Article List", () => {
     cy.visit('cp/admin/post');
     cy.wait(500);
     cy.searchRow(articleName);
+    cy.wait(500);
     cy.xpath(`(//div[text()='${articleName}'])`).last().click();
 
     cy.contains('Edit article');

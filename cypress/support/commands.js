@@ -175,3 +175,14 @@ Cypress.Commands.add('skipTests', (cookieName) => {
         });
     }
 });
+
+Cypress.Commands.add('searchReport', (user) => {
+    cy.visit('cp/admin/report');
+    cy.xpath('//button[text()="Select"]').click();
+    cy.wait(200);
+    cy.contains('div', 'Search').parent().find('input').type('first-name', {force:true});
+    cy.contains('div', user).click({force: true});
+    cy.wait(500);
+    cy.xpath('//button[text()="Save"]').click();
+    cy.xpath('//button[text()="Show results"]').click();
+})

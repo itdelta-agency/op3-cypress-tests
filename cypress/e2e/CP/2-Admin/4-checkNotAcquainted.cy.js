@@ -8,11 +8,7 @@ describe("CP4. Check Not Acquainted", () => {
   });
 
   it('checking the ignorance of the article', () => {
-    cy.visit('cp/admin/report');
-    cy.contains('Report').click();
-
-    cy.xpath('//button[text()="Show results"]').click();
-    cy.wait(3000);
+      cy.searchReport(userNames);
 
 
     cy.xpath(`//div[text()='${userNames}']`).scrollIntoView();

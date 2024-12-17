@@ -42,7 +42,8 @@ describe('LC.C1. Check student answers', () => {
 
         // Go to the lesson
         // cy.xpath("//div[text()='" + Cypress.env('userName') + "']").click();
-        cy.get('button').contains('Check').first().click()
+       cy.contains('QA Test lesson (text)').parent().next().next().click();
+        // cy.get('button').contains('Check').first().click()
         // Assert we're in the lesson
         cy.xpath("//h2[text()='Checking the lesson']");
         // Input comment for the student
