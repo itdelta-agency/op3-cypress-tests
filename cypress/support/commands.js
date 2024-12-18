@@ -156,8 +156,9 @@ Cypress.Commands.add('logout', () => {
 
 Cypress.Commands.add('searchRow', (name) => {
     cy.get('[data-test-id="blue_button"]').next().click();
-    cy.get('[placeholder="Search"]').type(name);
     cy.wait(500);
+    cy.get('[placeholder="Search"]').type(name);
+    cy.wait(1000);
 })
 
 Cypress.Commands.add('skipTests', (cookieName) => {
