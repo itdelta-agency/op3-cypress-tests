@@ -98,8 +98,8 @@ describe("US.1 Add User", () => {
 
 
         //check Team
-        cy.xpath("//a[text()='Команды']").click();
-        cy.wait(1000);
+        cy.visit("admin/teams");
+        cy.wait(1500);
         cy.changeLang('en');
         cy.accessAllItems();
         cy.xpath("//div[text()='Qa Test Team']").click();
