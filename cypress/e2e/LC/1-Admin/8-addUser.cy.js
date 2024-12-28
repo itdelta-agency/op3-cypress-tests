@@ -60,13 +60,18 @@ describe("US.1 Add User", () => {
 
     it('check add User', () => {
         cy.wait(500);
-        cy.contains(email).click()
+        cy.changeLang('en');
+        cy.accessAllItems();
+        cy.contains('div', email).click()
     })
 
     it('edite User', () => {
+        cy.changeLang('en');
+        cy.accessAllItems();
         cy.contains(email).parent().parent().last().find('div').first().click();
         cy.wait(1500);
 
+        cy.changeLang();
         // filling in the fields
         cy.xpath("//span[text()='Имя *']").next().clear().type('QA QA');
         cy.xpath("//span[text()='Фамилия']").next().clear().type('USER USER');

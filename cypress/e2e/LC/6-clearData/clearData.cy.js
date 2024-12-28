@@ -18,6 +18,7 @@ describe('LC.Z. Clear all created learning items', () => {
     it('should delete course', function () {
       cy.visit('/admin/lc/courses');
       cy.wait(1000);
+        cy.accessAllItems();
 
         cy.xpath(`//div[text()='${Cypress.env("courseName")}']`).parent().parent().parent().parent().parent().scrollIntoView().find('.tooltip').last().click();
         cy.wait(500);
@@ -85,6 +86,8 @@ describe('LC.Z. Clear all created learning items', () => {
     it('delete invite user', function() {
         cy.visit('/admin/user');
         cy.wait(1000);
+        cy.accessAllItems();
+
         cy.contains(userEmail).parent().parent().last().scrollIntoView().find('.tooltip').last().click();
         cy.wait(500)
         cy.get('button').contains('Delete').click();
@@ -96,6 +99,8 @@ describe('LC.Z. Clear all created learning items', () => {
     it('delete User', () => {
         cy.visit('/admin/user');
         cy.wait(1000);
+        cy.accessAllItems();
+
         cy.xpath(`//div[text()='QA QA USER USER']`).parent().parent().parent().parent().parent().find('.tooltip').last().click();
         cy.wait(500);
         cy.get('button').contains('Delete').click();
