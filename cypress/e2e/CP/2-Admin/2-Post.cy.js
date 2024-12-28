@@ -73,7 +73,8 @@ describe("CP2. Article List", () => {
     cy.wait(500);
 
     cy.xpath("//ul/li[6]/div[2]").click();
-    cy.xpath(`//ul/li[8]/div[last()]/div/ul/div[2]/li/div[1]/span[last()]/span[last()]`).click();
+    cy.wait(500);
+    cy.contains('a', 'Questions 3').parent().next().find('span').eq(1).click();
     cy.wait(500);
 
     cy.xpath("//button[text()='Save']").click();
