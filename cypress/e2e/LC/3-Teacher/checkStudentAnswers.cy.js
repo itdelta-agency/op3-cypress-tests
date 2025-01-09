@@ -37,7 +37,7 @@ describe('LC.C1. Check student answers', () => {
    it('Check first answer', function () {
       //  Go to the students answers page
         cy.wait(1500);
-        cy.visit('admin/lc/teacher/lessons');
+        cy.visit('lc/admin/teacher/lessons');
         cy.wait(1500);
 
         // Go to the lesson

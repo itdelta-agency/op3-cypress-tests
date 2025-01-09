@@ -116,6 +116,6 @@ describe("US.1 Add User", () => {
     it("log in account", () => {
         cy.login(email, password);
         cy.wait(1500);
-        cy.visit('admin/lc/courses');
+        cy.visit('lc/admin/courses');
     })
 })

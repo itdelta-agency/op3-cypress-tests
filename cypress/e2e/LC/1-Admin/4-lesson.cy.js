@@ -26,7 +26,7 @@ describe("LC.A1. Create lessons", () => {
   
   it('should create lesson(checkbox + radio)', function () {
     // Go to add courses page
-    cy.visit('admin/lc/courses');
+    cy.visit('lc/admin/courses');
     cy.wait(500);
     cy.accessAllItems();
     cy.xpath("(//div[text()='" + Cypress.env('courseName') + "'])[1]").click();
@@ -86,7 +86,7 @@ describe("LC.A1. Create lessons", () => {
     const lName = Cypress.env('lessonText');
     const qName = Cypress.env('questionText');
 
-    cy.visit('admin/lc/courses');
+    cy.visit('lc/admin/courses');
     cy.wait(500);
     cy.accessAllItems();
     cy.xpath("(//div[text()='" + Cypress.env('courseName') + "'])[1]").click();
@@ -136,7 +136,7 @@ describe("LC.A1. Create lessons", () => {
   //   cy.wait(500);
   //   cy.contains("Success").should('be.visible');
   //   // delete lesson
-  //   // cy.visit('/admin/lc/lessons');
+  //   // cy.visit('/lc/admin/lessons');
   //   // cy.xpath(`//div[text()='${lName}']/../../../../../th[4]/div/div[2]`).last().click();
   //   // cy.get('button').contains('Delete').click();
   //   // cy.xpath("//p[text()='Success!']").should('be.visible');

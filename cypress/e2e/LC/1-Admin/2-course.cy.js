@@ -33,7 +33,7 @@ describe('LC.A2. Create course', () => {
     it('should create course', function () {
 
         // Go to add courses page
-        cy.visit('admin/lc/courses');
+        cy.visit('lc/admin/courses');
         cy.wait(3000);
         cy.contains('Add Course').click();
 

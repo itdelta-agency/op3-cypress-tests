@@ -155,7 +155,7 @@ Cypress.Commands.add('logout', () => {
 });
 
 Cypress.Commands.add('searchRow', (name) => {
-    cy.get('[data-test-id="blue_button"]').next().click();
+    cy.xpath("//div[@class='tooltip']").click();
     cy.wait(500);
     cy.get('[placeholder="Search"]').type(name);
     cy.wait(1000);
