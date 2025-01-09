@@ -17,7 +17,7 @@ describe("CP7. Clear Data", () => {
   it('delete articles', function () {
     cy.visit('cp/admin/post');
     cy.wait(500);
-      cy.searchRow(articleName)
+      cy.searchRow('QA')
       cy.xpath(`(//div[text()='${articleName}'])`).last().click();
     cy.get('button').contains('Delete').click();
     cy.xpath('//div[@class="flex flex-row-reverse justify-start mt-4"]').find("button").contains('Delete').click({force: true});

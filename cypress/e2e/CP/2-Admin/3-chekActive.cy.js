@@ -10,7 +10,7 @@ describe("CP3. Article List", () => {
   it('Deactivate Article', function () {
     cy.visit('cp/admin/post');
     cy.wait(500);
-    cy.searchRow(articleName);
+    cy.searchRow('QA');
     cy.xpath(`//div[text()="${articleName}"]`).click();
     cy.wait(500);
     cy.xpath('//span[text()="Active"]/../span[2]/button').click();
@@ -43,7 +43,7 @@ describe("CP3. Article List", () => {
   it('Activate Article', function () {
     cy.visit('cp/admin/post');
     cy.wait(500);
-    cy.searchRow(articleName);
+    cy.searchRow('QA');
     cy.xpath(`//div[text()="${articleName}"]`).click();
     cy.wait(500);
     cy.xpath('//span[text()="Active"]/../span[2]/button').click();
