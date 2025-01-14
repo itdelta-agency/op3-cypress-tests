@@ -1,5 +1,4 @@
 Cypress.Commands.add('login', (username = Cypress.env('email'), password = Cypress.env('password')) => {
-
     const hashCode = function (str) {
         str = "" + str;
         var hash = 0;
@@ -19,7 +18,11 @@ Cypress.Commands.add('login', (username = Cypress.env('email'), password = Cypre
 
         cy.xpath("//button[@type='submit']", { timeout: 10000}).click();
         cy.wait(4000);
+        cy.window().its('localStorage').invoke(`setItem`, 'tableFilterExpanded_/cp/admin/post', 'false')
+        cy.window().its('localStorage').invoke(`setItem`, 'tableFilterExpanded_/st/admin', 'false')
+        cy.reload();
     });
+
 });
 
 Cypress.Commands.add('admin', () => {
@@ -157,9 +160,10 @@ Cypress.Commands.add('logout', () => {
 Cypress.Commands.add('searchRow', (name) => {
     cy.xpath("//div[@class='tooltip']").click();
     cy.wait(500);
-    cy.get('[placeholder="Search"]').type(name);
+    cy.xpath("//span[text()='Name']").parent().parent().parent().find('[placeholder="Search"]').type(name)
+    // cy.get('[placeholder="Search"]').type(name);
     cy.wait(500);
-    cy.get('[placeholder="Search"]').type(' ');
+    cy.xpath("//span[text()='Name']").parent().parent().parent().find('[placeholder="Search"]').type(' ')
     cy.wait(1000);
 })
 
