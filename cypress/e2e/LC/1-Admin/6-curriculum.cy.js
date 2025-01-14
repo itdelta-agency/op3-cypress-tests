@@ -27,7 +27,7 @@ describe('LC.A4. Create curriculum', () => {
         cy.visit('/lc/admin/curriculums');
         cy.xpath("//button[text()='Add curriculum']").click();
 
-        cy.xpath("(//input[@type='text'])[1]").type(Cypress.env('curriculumName'));
+        cy.xpath("//span[text()='Name *']").next().type(Cypress.env('curriculumName'));
         cy.xpath("//textarea").type("Lorem ipsum dolor sit amet, consectetur adipisicing elit.")
 
         cy.xpath("(//input[@type='text'])[2]").type(Cypress.env('courseName'));
