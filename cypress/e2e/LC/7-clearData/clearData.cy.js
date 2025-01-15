@@ -77,7 +77,7 @@ describe('LC.Z. Clear all created learning items', () => {
         cy.accessAllItems();
         cy.xpath(`//div[text()='${Cypress.env('teemName')}']`).parent().parent().parent().parent().parent().find('.tooltip').last().click();
         cy.wait(500);
-        cy.get('button').contains('Delete').click();
+        cy.xpath('//div[@class="fixed z-40 inset-0 overflow-y-auto"]').find('button:contains("Delete")').click();
         cy.wait(500);
         // Assert team deleted
         cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');

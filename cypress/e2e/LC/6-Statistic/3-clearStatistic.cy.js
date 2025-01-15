@@ -15,7 +15,8 @@ describe('Statistic.ST3. clear data statistic', () => {
         cy.wait(1000);
         cy.get('tbody tr:first').find('.tooltip').last().click();
         cy.wait(1000);
-        cy.get('button').contains('Delete').click();
+        cy.xpath('//div[@class="fixed z-40 inset-0 overflow-y-auto"]').find('button:contains("Delete")').click();
+        cy.wait(1000)
         cy.contains("Success").should('be.visible');
     })
 
@@ -25,8 +26,9 @@ describe('Statistic.ST3. clear data statistic', () => {
         cy.wait(1500);
         cy.searchRow('Qa');
         cy.xpath(`//div[text()='Qa statistic']`).parent().parent().parent().parent().parent().find('.tooltip').last().scrollIntoView().first().click();
-        cy.wait(1000);
+        cy.wait(1000)
         cy.get('button').contains('Delete').click();
+        cy.wait(500)
         cy.contains("Success").should('be.visible');
     })
 
