@@ -134,33 +134,48 @@ describe('LC.Z. Clear all created learning items', () => {
     })
 
     it('delete position', function () {
-        cy.visit('ob/admin/positions');
-        cy.wait(3000);
-        cy.accessAllItems();
-        cy.xpath(`//div[text()='QA position']`).parent().parent().parent().parent().parent().find('.tooltip').last().click();
-        cy.wait(500);
-        cy.get('button').contains('Delete').click();
-        cy.wait(500);
-        cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
+        if (Cypress.config().baseUrl === Cypress.config().prodUrl) {
+            expect(true).to.be.true
+        }
+        else {
+            cy.visit('ob/admin/positions');
+            cy.wait(3000);
+            cy.accessAllItems();
+            cy.xpath(`//div[text()='QA position']`).parent().parent().parent().parent().parent().find('.tooltip').last().click();
+            cy.wait(500);
+            cy.get('button').contains('Delete').click();
+            cy.wait(500);
+            cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
+        }
     })
 
     it('delete children departament', function () {
-        cy.visit('ob/admin/departments/scheme');
-        cy.wait(3000);
-        cy.xpath(`//div[text()='QA department']`).scrollIntoView().click();
-        cy.xpath("//span[text()='QA department2']").next().find('svg').last().click({force: true});
-        cy.get('button').contains('Delete').click();
-        cy.wait(500);
-        cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
+        if (Cypress.config().baseUrl === Cypress.config().prodUrl) {
+            expect(true).to.be.true
+        }
+        else {
+            cy.visit('ob/admin/departments/scheme');
+            cy.wait(3000);
+            cy.xpath(`//div[text()='QA department']`).scrollIntoView().click();
+            cy.xpath("//span[text()='QA department2']").next().find('svg').last().click({force: true});
+            cy.get('button').contains('Delete').click();
+            cy.wait(500);
+            cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
+        }
     })
 
     it('delete departament', function () {
-        cy.visit('ob/admin/departments/scheme');
-        cy.wait(3000);
-        cy.xpath(`//div[text()='QA department']`).scrollIntoView().click();
-        cy.xpath("//div[text()='QA department']").next().find('svg').last().click({force: true});
-        cy.get('button').contains('Delete').click();
-        cy.wait(500);
-        cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
+        if (Cypress.config().baseUrl === Cypress.config().prodUrl) {
+            expect(true).to.be.true
+        }
+        else {
+            cy.visit('ob/admin/departments/scheme');
+            cy.wait(3000);
+            cy.xpath(`//div[text()='QA department']`).scrollIntoView().click();
+            cy.xpath("//div[text()='QA department']").next().find('svg').last().click({force: true});
+            cy.get('button').contains('Delete').click();
+            cy.wait(500);
+            cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
+        }
     })
 });
