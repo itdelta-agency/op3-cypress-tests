@@ -5,7 +5,7 @@ describe("CP6. Check Acquainted", () => {
 
 
   beforeEach(() => {
-    cy.login();
+    cy.admin();
   });
 
   it('checking the ignorance of the article', () => {

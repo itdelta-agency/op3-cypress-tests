@@ -2,10 +2,16 @@ describe('Statistic.ST2. adding a value to statistics', () => {
 
 
 
-    beforeEach(() => {
-        cy.task("getUserEmail").then((user) => {
-            cy.login(user.email, Cypress.env('password'));
-        })
+
+    before(() => {
+        const ctx = Cypress.mocha.getRunner().suite.ctx
+        if (Cypress.config().baseUrl !== Cypress.config().prodUrl) {
+            cy.task("getEmailAccount").then((email) => {
+                cy.login(email, Cypress.env('password'));
+            })
+        } else {
+            ctx.skip();
+        }
     });
 
     it('adding a value to statistics', function () {

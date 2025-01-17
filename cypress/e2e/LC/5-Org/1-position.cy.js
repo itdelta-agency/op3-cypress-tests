@@ -3,11 +3,15 @@ describe('OrgBoard.A1. Create position', () => {
     const description = 'QA QA position'
     let userEmail
     before(() => {
-        cy.task("getUserEmail").then((user) => {
-            cy.log(user.email);
-            cy.log(user.pass);
-            userEmail = user.email;
-        })
+        const ctx = Cypress.mocha.getRunner().suite.ctx
+        if (Cypress.config().baseUrl !== Cypress.config().prodUrl) {
+            cy.task("getEmailAccount").then((email) => {
+                cy.log(email);
+                userEmail = email;
+            })
+        } else {
+            ctx.skip();
+        }
     });
 
     beforeEach(() => {

@@ -5,7 +5,7 @@ const simpleParser = require('mailparser').simpleParser
 const makeEmailAccount = async () => {
     // Generate a new Ethereal email inbox account
     const testAccount = await nodemailer.createTestAccount()
-
+    emailApi
     // console.log(111, testAccount);
 
     console.log('created new email account %s', testAccount.user)

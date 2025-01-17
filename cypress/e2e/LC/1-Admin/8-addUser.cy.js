@@ -6,8 +6,8 @@ describe("US.1 Add User", () => {
     beforeEach(() => {
         cy.admin();
         cy.changeLang();
-        cy.wait(1000);
-        cy.visit('admin/user');
+        cy.wait(2000);
+        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Пользователи")').click({multiple: true});
     })
 
 

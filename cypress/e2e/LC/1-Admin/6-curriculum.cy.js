@@ -24,7 +24,8 @@ describe('LC.A4. Create curriculum', () => {
     it('should create curriculum', function () {
         // Go to add curriculums page
         cy.wait(1500);
-        cy.visit('/lc/admin/curriculums');
+        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Learning Center")').click({multiple: true});
+        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Curriculums")').click({multiple: true});
         cy.xpath("//button[text()='Add curriculum']").click();
 
         cy.xpath("//span[text()='Name *']").next().type(Cypress.env('curriculumName'));

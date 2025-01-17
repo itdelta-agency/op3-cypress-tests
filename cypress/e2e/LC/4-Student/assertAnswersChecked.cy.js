@@ -18,14 +18,14 @@ describe('LC.D1. Assert answers were checked by teacher', () => {
     // });
 
     before(() => {
-      cy.task("getUserEmail").then((user) => {
-        cy.login(user.email, Cypress.env('password'));
-      })
+        cy.task("getEmailAccount").then((email) => {
+            cy.login(email, Cypress.env('password'));
+        })
 
     })
 
     it('assert that answers were created', function () {
-        cy.visit('/learning/courses');
+        cy.visit('/lc/courses');
         // Find the course by name
         cy.xpath("//input[@id='search']").type(Cypress.env('courseName'));
         // Go to the course

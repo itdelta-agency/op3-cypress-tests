@@ -9,10 +9,9 @@ describe("C. Invite user by 2 ways", () => {
     let confirmationLink;
 
     before(() => {
-        cy.task("getUserEmail").then((user) => {
-            userEmail = user.email;
-            passEmail = user.pass;
-            userName = user.email.replace("@ethereal.email", "");
+        cy.task("getEmailAccount").then((user) => {
+            userEmail = user;
+            // userName = user.email.replace("@ethereal.email", "");
         })
     })
 
@@ -23,7 +22,7 @@ describe("C. Invite user by 2 ways", () => {
         cy.xpath("//button[@class='max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 z-50']").click();
         cy.xpath("//a[@href='" +Cypress.config('baseUrl') + "invite-user']").click();
         // Input credentials
-        cy.xpath("//*[@id='email']").type(userEmail);
+        cy.xpath("//input[@id='email']").type(userEmail);
 
 
         // Click on submit button
@@ -42,7 +41,7 @@ describe("C. Invite user by 2 ways", () => {
         recurse(
             () => {
                 if(main === 'release') return  cy.task('getAccount', {subject, userEmail})
-                if(main === 'org-online') return cy.task('getLastEmail', {user: userEmail, pass:passEmail});
+                if(main === 'org-online') return cy.task('getEmailData');
             }, // Cypress commands to retry
             Cypress._.isObject, // keep retrying until the task returns an object
             {

@@ -23,10 +23,9 @@ describe('LC.C1. Check student answers', () => {
         // }
         //
         // cy.admin();
-        cy.task("getUserEmail").then((user) => {
-            cy.log(user.email);
-            cy.log(user.pass);
-            userEmail = user.email;
+        cy.task("getEmailAccount").then((email) => {
+            cy.log(email);
+            userEmail = email;
         })
     });
 
@@ -38,6 +37,8 @@ describe('LC.C1. Check student answers', () => {
       //  Go to the students answers page
         cy.wait(1500);
         cy.visit('lc/admin/teacher/lessons');
+       cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Learning Center")').click({multiple: true});
+       cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Student answers")').click({multiple: true});
         cy.wait(1500);
 
         // Go to the lesson
@@ -73,7 +74,7 @@ describe('LC.C1. Check student answers', () => {
         recurse(
             () => {
                 if(main === 'release') return  cy.task('getAccount', {subject, userEmail})
-                if(main === 'org-online') return cy.task('getLastEmail', {})
+                if(main === 'org-online') return cy.task('getEmailData')
             }, // Cypress commands to retry
             Cypress._.isObject, // keep retrying until the task returns an object
             {

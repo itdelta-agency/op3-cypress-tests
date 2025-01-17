@@ -1,14 +1,10 @@
 describe("LC.A1. Create lessons", () => {
   const skipCookie = Cypress.env('shouldSkipEduTests');
-  let userName;
   const lName = Cypress.env('lessonCheckboxRadio');
   const qNameR = Cypress.env('questionRadio');
   const qNameCB = Cypress.env('questionCheckbox');
     beforeEach(() => {
       cy.admin();
-      cy.task("getUserEmail").then((user) => {
-        userName = user.email.replace("@ethereal.email", "");
-      });
       // if ( Cypress.browser.isHeaded ) {
       //   cy.clearCookie(skipCookie)
       // } else {
@@ -26,7 +22,8 @@ describe("LC.A1. Create lessons", () => {
   
   it('should create lesson(checkbox + radio)', function () {
     // Go to add courses page
-    cy.visit('lc/admin/courses');
+    cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Learning Center")').click({multiple: true});
+    cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Courses")').click({multiple: true});
     cy.wait(500);
     cy.accessAllItems();
     cy.xpath("(//div[text()='" + Cypress.env('courseName') + "'])[1]").click();

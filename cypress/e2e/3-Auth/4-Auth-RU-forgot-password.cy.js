@@ -30,7 +30,7 @@ describe('4-Auth-RU-forgot-password.cy.js', () => {
         recurse( //эта рекурсия не работает - таск возвращает таймаут
             () => {
                 if(main === 'release') return  cy.task('getAccount', {subject, userEmail})
-                if(main === 'org-online') return cy.task('getLastEmail', {port: 993, host: 'imap.mail.ru', user:userEmail, pass: authPassword });
+                if(main === 'org-online') return cy.task('getEmailData');
             }, // Cypress commands to retry
             Cypress._.isObject, // keep retrying until the task returns an object
             {

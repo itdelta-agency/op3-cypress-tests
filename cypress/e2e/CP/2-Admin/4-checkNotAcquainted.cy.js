@@ -4,7 +4,7 @@ describe("CP4. Check Not Acquainted", () => {
   let articleName = Cypress.env('articleName');
 
   beforeEach(() => {
-    cy.login();
+    cy.admin();
   });
 
   it('checking the ignorance of the article', () => {

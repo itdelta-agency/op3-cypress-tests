@@ -2,12 +2,16 @@ describe("CP1. Categories List", () => {
     let catName = Cypress.env('categoryName');
 
     beforeEach(() => {
-        cy.login();
+        cy.admin();
     });
 
     it('should create Category)', function () {
-        cy.visit('cp/admin/category');
-        cy.contains('Categories').click();
+
+        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Regulations")').click({multiple: true});
+        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Categories")').click({multiple: true});
+
+        cy.wait(1000);
+
         cy.contains('Add category').click();
 
         // create post

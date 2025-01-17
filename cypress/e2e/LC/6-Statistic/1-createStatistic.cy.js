@@ -3,8 +3,13 @@ describe('Statistic.ST1. Create Statistic', () => {
     const description = 'QA QA position'
 
 
-    beforeEach(() => {
-        cy.admin();
+    before(() => {
+        const ctx = Cypress.mocha.getRunner().suite.ctx
+        if (Cypress.config().baseUrl !== Cypress.config().prodUrl) {
+            cy.admin()
+        } else {
+            ctx.skip();
+        }
     });
 
     it('should create position', function () {

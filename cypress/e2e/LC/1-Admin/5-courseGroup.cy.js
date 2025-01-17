@@ -6,7 +6,8 @@ describe('LC.A3. Create course group', () => {
     it('should create course program', function () {
         // Go to add curriculums page
         // cy.wait(1500);
-        cy.visit('lc/admin/groups');
+        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Learning Center")').click({multiple: true});
+        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Course groups")').click({multiple: true});
         cy.wait(1500);
         cy.contains('Add group').click();
         cy.xpath("//span[text()='Name *']").next().type(Cypress.env('courseGroupName'));

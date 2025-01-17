@@ -7,7 +7,8 @@ describe("CP7. Clear Data", () => {
   });
 
    it('should delete Category)', function () {
-        cy.visit('cp/admin/category');
+       cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Regulations")').click({multiple: true});
+       cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Categories")').click({multiple: true});
         cy.contains(catName);
         cy.xpath(`//div[text()='${catName}']/../../../../../td[6]/div/div[2]`).last().click();
         cy.get('button').contains('Delete').click();

@@ -6,10 +6,9 @@ describe('LC.A2. Create course', () => {
     let userEmail;
     before(() => {
 
-        cy.task("getUserEmail").then((user) => {
-            cy.log(user.email);
-            cy.log(user.pass);
-            userEmail = user.email;
+        cy.task("getEmailAccount").then((email) => {
+            cy.log(email);
+            userEmail = email;
         })
         // if ( Cypress.browser.isHeaded ) {
         //     cy.clearCookie(skipCookie)
@@ -33,7 +32,8 @@ describe('LC.A2. Create course', () => {
     it('should create course', function () {
 
         // Go to add courses page
-        cy.visit('lc/admin/courses');
+        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Learning Center")').click({multiple: true});
+        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Courses")').click({multiple: true});
         cy.wait(3000);
         cy.contains('Add Course').click();
         cy.xpath("//span[text()='Name *']").next().type(Cypress.env('courseName'));
@@ -59,7 +59,7 @@ describe('LC.A2. Create course', () => {
       recurse(
         () => {
             if(main === 'release') return  cy.task('getAccount', {subject, userEmail})
-            if(main === 'org-online') return cy.task('getLastEmail', {})
+            if(main === 'org-online') return cy.task('getEmailData', {})
         }, // Cypress commands to retry
         Cypress._.isObject, // keep retrying until the task returns an object
         {

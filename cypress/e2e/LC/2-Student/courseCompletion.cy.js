@@ -1,13 +1,13 @@
 describe('LC.B1. Complete the course which we have created in previous tests', () => {
     beforeEach(() => {
-        cy.task("getUserEmail").then((user) => {
-            cy.login(user.email, Cypress.env('password'));
+        cy.task("getEmailAccount").then((email) => {
+            cy.login(email, Cypress.env('password'));
         })
       // cy.login('nagopib486@chambile.com', '123');
     });
 
     it('Student should answer the lesson', function () {
-        cy.visit('/learning/courses');
+        cy.visit('/lc/courses');
         // Find the course by name
         cy.xpath("//input[@id='search']").type(Cypress.env('courseName'));
         // Go to the course

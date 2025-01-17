@@ -2,7 +2,7 @@ describe('LC.B2. Search courses', () => {
 
     beforeEach(() => {
         cy.login();
-        cy.visit('/learning/courses');
+        cy.visit('/lc/courses');
     });
 
     it('select Started Finished and All courses', function () {

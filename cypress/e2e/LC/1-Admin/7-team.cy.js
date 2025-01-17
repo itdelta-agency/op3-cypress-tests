@@ -8,7 +8,7 @@ describe("LC.A5. Create team", () => {
 
     it('should create new team', function () {
         // Go to add user page
-        cy.visit('admin/teams');
+        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Teams")').click({multiple: true});
         cy.wait(500);
         cy.xpath("//button[text()='Add team']").click();
 

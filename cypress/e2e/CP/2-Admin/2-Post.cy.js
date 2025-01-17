@@ -9,12 +9,13 @@ describe("CP2. Article List", () => {
 
 
   beforeEach(() => {
-    cy.login();
+    cy.admin();
   });
 
 
   it('should create Article', function () {
-    cy.visit('cp/admin/post');
+    cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Regulations")').click({multiple: true});
+    cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Articles")').click({multiple: true});
     // cy.changeLang('en');
     cy.wait(5000);
     cy.contains('Add article').click();

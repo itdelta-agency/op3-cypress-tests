@@ -4,11 +4,12 @@ describe("CP3. Article List", () => {
   const userNames = Cypress.env('usersArticle');
 
   beforeEach(() => {
-    cy.login();
+    cy.admin();
   });
 
   it('Deactivate Article', function () {
-    cy.visit('cp/admin/post');
+    cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Regulations")').click({multiple: true});
+    cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Articles")').click({multiple: true});
     cy.wait(500);
     cy.searchRow('QA');
     cy.xpath(`//div[text()="${articleName}"]`).click();
@@ -41,7 +42,8 @@ describe("CP3. Article List", () => {
   })
   //
   it('Activate Article', function () {
-    cy.visit('cp/admin/post');
+    cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Regulations")').click({multiple: true});
+    cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Articles")').click({multiple: true});
     cy.wait(500);
     cy.searchRow('QA');
     cy.xpath(`//div[text()="${articleName}"]`).click();

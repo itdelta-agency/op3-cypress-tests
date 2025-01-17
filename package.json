@@ -16,6 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@cemalgnlts/mailjs": "^3.0.1",
     "cypress-recurse": "^1.23.0",
     "dotenv": "^16.3.1",
     "imapflow": "^1.0.113",
