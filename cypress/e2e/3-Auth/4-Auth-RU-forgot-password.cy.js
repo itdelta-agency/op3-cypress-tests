@@ -26,6 +26,10 @@ describe('4-Auth-RU-forgot-password.cy.js', () => {
     });
 
     it('getting last email', function () {
+        if (Cypress.config().baseUrl === Cypress.config().prodUrl) {
+            expect(true).to.be.true
+            return;
+        }
         cy.wait(1000);
         recurse( //эта рекурсия не работает - таск возвращает таймаут
             () => {

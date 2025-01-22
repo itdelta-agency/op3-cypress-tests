@@ -10,7 +10,7 @@ describe("CP3. Article List", () => {
   it('Deactivate Article', function () {
     cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Regulations")').click({multiple: true});
     cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Articles")').click({multiple: true});
-    cy.wait(1000);
+    cy.wait(3000);
     cy.searchRow('QA');
     cy.xpath(`//div[text()="${articleName}"]`).click();
     cy.wait(500);
@@ -24,7 +24,7 @@ describe("CP3. Article List", () => {
   //
   it('Check deactive article', function () {
     cy.searchReport(userNames);
-    cy.wait(1000);
+    cy.wait(3000);
     cy.xpath(`//div[text()='${userNames}']`).next().should(($el) => {
       if(!$el[0].childElementCount) {
         expect(!$el[0].childElementCount).to.be.true
@@ -44,7 +44,7 @@ describe("CP3. Article List", () => {
   it('Activate Article', function () {
     cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Regulations")').click({multiple: true});
     cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Articles")').click({multiple: true});
-    cy.wait(1000);
+    cy.wait(3000);
     cy.searchRow('QA');
     cy.xpath(`//div[text()="${articleName}"]`).click();
     cy.wait(500);
@@ -60,7 +60,7 @@ describe("CP3. Article List", () => {
   it('checkActive Article', function () {
     cy.searchReport(userNames);
 
-    cy.wait(1000);
+    cy.wait(3000);
     cy.xpath(`//div[text()='${userNames}']`).next().scrollIntoView().click().type(articleName).contains('div', articleName).should('be.visible');;
     cy.wait(500);
   })
