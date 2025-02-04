@@ -18,8 +18,8 @@ describe('LC.A3. Create course group', () => {
 
         // Save group
         cy.xpath('(//input[@type="text"])[2]').type(Cypress.env('courseName'));
-        cy.wait(500);
-        cy.xpath('//div[@id="react-select-2-listbox"]').click();
+        cy.wait(1500);
+        cy.contains('div', Cypress.env('courseName')).click()
         cy.xpath("//button[text()='Save']").click();
 
         // Assert group created

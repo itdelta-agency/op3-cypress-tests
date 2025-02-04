@@ -13,7 +13,9 @@ describe('Statistic.ST1. Create Statistic', () => {
     });
 
     it('should create position', function () {
-        cy.visit('/st/admin');
+        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Statistics")').click({multiple: true});
+
+        cy.contains("a", 'Statistics list').click();
         cy.wait(3000);
         cy.contains('Add statistics').click();
         cy.wait(1500);

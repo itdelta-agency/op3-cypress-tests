@@ -18,7 +18,9 @@ describe('Statistic.ST3. clear data statistic', () => {
 
 
     it('clearing a value to statistics', function () {
-        cy.visit('/st/admin');
+        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Statistics")').click({multiple: true});
+
+        cy.contains("a", 'Statistics list').click();
 
         cy.wait(1000);
         cy.searchRow('Qa');
@@ -32,7 +34,9 @@ describe('Statistic.ST3. clear data statistic', () => {
     })
 
     it('delete statistic', function () {
-        cy.visit('/st/admin');
+        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Statistics")').click({multiple: true});
+
+        cy.contains("a", 'Statistics list').click();
         console.log(window.location);
         cy.wait(1500);
         cy.searchRow('Qa');
