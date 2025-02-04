@@ -34,24 +34,24 @@ describe("CP2. Article List", () => {
     cy.wait(500);
     for (let i = 1; i < 4; i++) {
       cy.xpath("//span[text()='Add question']").click();
-      cy.xpath(`//ul/li[8]/div[last()]/div/ul/div[${i}]/li/div[1]/span[2]/a`).click();
-      cy.xpath(`//ul/li[8]/div[last()]/div/ul/div[${i}]/li/div[1]/span[2]/input`).type(`Questions ${i}`);
-      cy.xpath(`//ul/li[8]/div[last()]/div/ul/div[${i}]/li`).click();
-      cy.xpath(`//ul/li[8]/div[last()]/div/ul/div[${i}]/li/div[2]/ul/div/li/div[1]/span[2]/a`).click();
-      cy.xpath(`//ul/li[8]/div[last()]/div/ul/div[${i}]/li/div[2]/ul/div/li/div[1]/span[2]/input`)
+      cy.xpath(`//ul/li[8]/div[last()]/div/ul/div[1]/li/div[1]/span[2]/a`).click();
+      cy.xpath(`//ul/li[8]/div[last()]/div/ul/div[1]/li/div[1]/span[2]/input`).type(`Questions ${i}`);
+      cy.xpath(`//ul/li[8]/div[last()]/div/ul/div[1]/li`).click();
+      cy.xpath(`//ul/li[8]/div[last()]/div/ul/div[1]/li/div[2]/ul/div/li/div[1]/span[2]/a`).click();
+      cy.xpath(`//ul/li[8]/div[last()]/div/ul/div[1]/li/div[2]/ul/div/li/div[1]/span[2]/input`)
         .type("Answer 1");
-      cy.xpath(`//ul/li[8]/div[last()]/div/ul/div[${i}]/li`).click();
+      cy.xpath(`//ul/li[8]/div[last()]/div/ul/div[1]/li`).click();
       answerNumber = 2;
       for (let j = 1; j < 3; j++) {
-        cy.xpath(`//ul/li[8]/div[last()]/div/ul/div[${i}]/li/div[2]/div[last()]/span`).click();
+        cy.xpath(`//ul/li[8]/div[last()]/div/ul/div[1]/li/div[2]/div[last()]/span`).click();
         // cy.xpath(`//ul/li[last()]/div[last()]/div/ul/div[${i}]/li/div[2]/ul/div[last()]/li/div[1]/span[2]/a`)
         //   .click();
-        cy.xpath(`//ul/li[8]/div[last()]/div/ul/div[${i}]/li/div[2]/ul/div[last()]/li/div[1]/span[2]/input`)
+        cy.xpath(`//ul/li[8]/div[last()]/div/ul/div[1]/li/div[2]/ul/div[last()]/li/div[1]/span[2]/input`)
           .type(`Answer ${answerNumber}`);
         // cy.xpath(`//ul/li[last()]/div[last()]/div/ul/div[${i}]/li`).click();
         answerNumber++;
       }
-      cy.xpath(`//ul/li[8]/div[last()]/div/ul/div[${i}]/li/div[2]/ul/div[${i}]/li/div[2]/div/div`).click();
+      cy.xpath(`//ul/li[8]/div[last()]/div/ul/div[1]/li/div[2]/ul/div[1]/li/div[2]/div/div`).click();
     }
    cy.xpath("//button[text()='Save']").click();
 
