@@ -68,8 +68,8 @@ describe("C. Invite user by 2 ways", () => {
         cy.xpath("//*[@id='new_password']").type(Cypress.env('password'), { log: false });
 
         cy.xpath("(//button[@type='submit'])[1]").click();
-
-        cy.xpath("//h2[text()='Learning center']").should('be.visible');
+        cy.wait(500);
+        cy.contains("You have registered successfully!").should('be.visible');
     });
 });
 
