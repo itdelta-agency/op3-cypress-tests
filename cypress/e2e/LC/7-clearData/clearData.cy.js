@@ -68,8 +68,8 @@ describe('LC.Z. Clear all created learning items', () => {
     it('delete course group', function () {
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Learning Center")').click({multiple: true});
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Course groups")').click({multiple: true});
-        cy.wait(1000);
-        cy.xpath(`//div[text()='${Cypress.env('courseGroupName')}']/../../../../../th[5]/div/div[2]`).last().click();
+        cy.wait(3000);
+        cy.contains(Cypress.env('courseGroupName')).parent().parent().parent().parent().parent().find('.tooltip').last().click();
         cy.wait(500);
         cy.get('button').contains('Delete').click();
         cy.wait(500);
