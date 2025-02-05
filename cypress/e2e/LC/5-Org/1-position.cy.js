@@ -31,7 +31,7 @@ describe('OrgBoard.A1. Create position', () => {
         cy.xpath("//div[text()='Qa User']").scrollIntoView().click();
 
         cy.xpath("//span[text()='Functions']").next().type(description);
-        cy.xpath("//span[text()='Valuable End Product']").next().type(description);
+        cy.xpath("//span[text()='VFP']").next().type(description);
 
         cy.xpath("//button[text()='Save']").click();
         cy.wait(500);

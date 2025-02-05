@@ -12,7 +12,7 @@ describe('Statistic.ST1. Create Statistic', () => {
         }
     });
 
-    it('should create position', function () {
+    it('should create statistics', function () {
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Statistics")').click({multiple: true});
 
         cy.contains("a", 'Statistics list').click();
