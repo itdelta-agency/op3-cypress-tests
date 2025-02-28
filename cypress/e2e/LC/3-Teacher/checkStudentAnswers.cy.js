@@ -41,17 +41,12 @@ describe('LC.C1. Check student answers', () => {
        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Student answers")').click({multiple: true});
         cy.wait(1500);
 
-        // Go to the lesson
-        // cy.xpath("//div[text()='" + Cypress.env('userName') + "']").click();
-       cy.contains('QA Test lesson (text)').parent().next().next().click();
-        // cy.get('button').contains('Check').first().click()
-        // Assert we're in the lesson
-        cy.xpath("//h2[text()='Checking the lesson']");
-        // Input comment for the student
+       cy.contains('QA Test').click()
+       cy.wait(500);
+
         cy.wait(1500);
         cy.xpath("//span[text()='Comment']").next().type("Comment");
-        // Set answer as correct
-        // cy.xpath("//button[@role='switch']").click();
+
         cy.xpath("//span[text()='Comment']").next().next().click();
         cy.wait(500);
         cy.contains('Success!').should('be.visible');

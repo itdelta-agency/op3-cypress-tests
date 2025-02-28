@@ -22,9 +22,12 @@ describe('LC.B1. Complete the course which we have created in previous tests', (
         // Assert we're in the second lesson
         cy.xpath("//h1[text()='" + Cypress.env('lessonCheckboxRadio') + "']");
         // Select correct radio answer
-        cy.xpath("(//input[@type='radio'])[1]").click();
+        cy.xpath("(//input[@type='radio'])").parent().find(":contains('answer 1')").click();
+
+
+        cy.xpath("//label[text()='answer 1']").click();
         // Select correct checkbox answer
-        cy.xpath("(//input[@type='checkbox'])[1]").click();
+        // cy.xpath("(//input[@type='checkbox'])").parent().parent().find(":contains('answer 1')").click({multiple: true});
         // Go to the next lesson
         cy.wait(2000)
         cy.xpath('//button[text()=\'Check\']').click();

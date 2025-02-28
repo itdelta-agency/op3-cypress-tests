@@ -10,7 +10,9 @@ describe("CP7. Clear Data", () => {
        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Regulations")').click({multiple: true});
        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Categories")').click({multiple: true});
         cy.contains(catName);
-        cy.xpath(`//div[text()='${catName}']/../../../../../td[6]/div/div[2]`).last().click();
+        cy.xpath(`//div[text()='${catName}']`).parent().parent().parent().parent().parent().find('td').eq(0).find('div').click().then(($el) => {
+            cy.wrap($el).find(':contains("Delete category")').click({ multiple: true, force: true });
+        })
         cy.get('button').contains('Delete').click();
         cy.xpath("//p[text()='Success!']").should('be.visible');
     });

@@ -23,8 +23,8 @@ describe("CP1. Categories List", () => {
         cy.wait(500);
         cy.contains("Success!").should('be.visible');
 
-        // check active 
-        cy.xpath(`//div[text()='${catName}']/../../../../../td[5]`).last().contains('Inactive');
+        // // check active
+        cy.xpath(`//div[text()='${catName}']/../../../../../td[6]`).last().contains('Inactive');
     });
    
     it('should edit Category)', function () {
@@ -32,7 +32,7 @@ describe("CP1. Categories List", () => {
         cy.visit('cp/admin/category');
 
         // cy.accessAllItems();
-        cy.xpath(`(//div[text()='${catName}'])`).last().click();
+        cy.xpath(`(//div[text()='${catName}'])`).click();
         //
         cy.contains('Edit category');
 
@@ -44,7 +44,7 @@ describe("CP1. Categories List", () => {
 
         cy.xpath("//p[text()='Success!']").should('be.visible');
 
-        cy.xpath(`//div[text()='${catName}']/../../../../../td[5]`).last().contains('Active');
+         cy.xpath(`//div[text()='${catName}']/../../../../../td[6]`).last().contains('Active');
     });
 
     after(() => {
