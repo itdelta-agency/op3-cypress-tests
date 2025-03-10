@@ -1,10 +1,5 @@
 describe('OrgBoard.A4.Settings', () => {
-    before(() => {
-        const ctx = Cypress.mocha.getRunner().suite.ctx
-        if (Cypress.config().baseUrl === Cypress.config().prodUrl) {
-            ctx.skip();
-        }
-    });
+
 
     beforeEach(() => {
         cy.admin();

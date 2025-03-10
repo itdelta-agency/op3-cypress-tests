@@ -4,12 +4,7 @@ describe('Statistic.ST1. Create Statistic', () => {
 
 
     before(() => {
-        const ctx = Cypress.mocha.getRunner().suite.ctx
-        if (Cypress.config().baseUrl !== Cypress.config().prodUrl) {
-            cy.admin()
-        } else {
-            ctx.skip();
-        }
+        cy.admin()
     });
 
     it('should create statistics', function () {
