@@ -8,7 +8,7 @@ describe('LC.Z. Clear all created learning items', () => {
             cy.log(email);
             userEmail = email;
         })
-    });
+    })
 
     beforeEach(() => {
         cy.admin();
@@ -77,7 +77,7 @@ describe('LC.Z. Clear all created learning items', () => {
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Learning Center")').click({multiple: true});
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Course groups")').click({multiple: true});
         cy.wait(3000);
-        cy.contains(Cypress.env('courseGroupName')).parent().parent().parent().parent().parent().find('th').eq(1).find('div').click().then(($el) => {
+        cy.contains(Cypress.env('courseGroupName')).parent().parent().find('th').eq(1).find('div').click().then(($el) => {
             cy.wrap($el).find(':contains("Delete group")').click({ multiple: true, force: true });
         })
         cy.wait(500);
@@ -90,12 +90,12 @@ describe('LC.Z. Clear all created learning items', () => {
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Teams")').click({multiple: true});
         cy.wait(1000);
         cy.accessAllItems();
-        cy.xpath(`//div[text()='${Cypress.env('teemName')}']`).parent().parent().parent().parent().parent().find('.tooltip').last().click();
-        cy.wait(500);
-        cy.xpath('//div[@class="fixed z-40 inset-0 overflow-y-auto"]').find('th').eq(1).find('div').click().then(($el) => {
+        cy.contains(Cypress.env('teemName')).parent().parent().find('th').eq(1).find('div').click().then(($el) => {
             cy.wrap($el).find(':contains("Delete team")').click({ multiple: true, force: true });
         })
         cy.wait(500);
+        cy.xpath('//div[@class="fixed z-40 inset-0 overflow-y-auto"]').find(':contains("Delete")').click({multiple: true});
+        cy.wait(500)
         // Assert team deleted
         cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
     });
@@ -106,7 +106,7 @@ describe('LC.Z. Clear all created learning items', () => {
         cy.wait(1000);
         cy.accessAllItems();
 
-        cy.contains(userEmail).parent().parent().parent().parent().parent().find('th').eq(1).find('div').click().then(($el) => {
+        cy.contains(userEmail).parent().parent().find('th').eq(1).find('div').click().then(($el) => {
             cy.wrap($el).find(':contains("Delete user")').click({ multiple: true, force: true });
         })
         cy.wait(500)
