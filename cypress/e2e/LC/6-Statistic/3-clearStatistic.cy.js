@@ -13,10 +13,15 @@ describe('Statistic.ST3. clear data statistic', () => {
 
         cy.wait(3000);
         cy.searchRow('Qa');
-        // cy.xpath(`//div[text()='Qa statistic']`).parent().parent().parent().parent().parent().find('td').eq(1).find('div').click().then(($el) => {
-        //     cy.wrap($el).scrollIntoView().find(':contains("Delete statistic")').click({ multiple: true, force: true });
-        // })
-       // cy.get('tbody tr:first').find('.tooltip').last().click();
+        cy.wait(1500);
+        cy.xpath("//div[text()='Qa statistic']").parent().parent().parent().parent().parent().find('th').eq(1).find('div').click().then(($el) => {
+            cy.wrap($el).find(':contains("Statistic data")').click({ multiple: true, force: true });
+        })
+        cy.wait(1500);
+        cy.get('tbody tr:first').find('th').eq(1).find('div').click().then(($el) => {
+            cy.wrap($el).find(':contains("Delete value")').click({ multiple: true, force: true });
+        })
+
         cy.wait(1000);
         cy.xpath('//div[@class="fixed z-40 inset-0 overflow-y-auto"]').find('button:contains("Delete")').click();
         cy.wait(1000)
@@ -30,7 +35,10 @@ describe('Statistic.ST3. clear data statistic', () => {
 
         cy.wait(1500);
         cy.searchRow('Qa');
-        cy.xpath(`//div[text()='Qa statistic']`).parent().parent().parent().parent().parent().find('.tooltip').last().scrollIntoView().first().click();
+        cy.wait(1500);
+        cy.xpath("//div[text()='Qa statistic']").parent().parent().parent().parent().parent().find('th').eq(1).find('div').click().then(($el) => {
+            cy.wrap($el).find(':contains("Delete statistic")').click({ multiple: true, force: true });
+        })
         cy.wait(1000)
         cy.get('button').contains('Delete').click();
         cy.wait(500)

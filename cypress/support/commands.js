@@ -19,7 +19,7 @@ Cypress.Commands.add('login', (username = Cypress.env('email'), password = Cypre
         cy.xpath("//button[@type='submit']", { timeout: 10000}).click();
         cy.wait(4000);
         cy.window().its('localStorage').invoke(`setItem`, 'tableFilterExpanded_/cp/admin/post', 'false')
-        cy.window().its('localStorage').invoke(`setItem`, 'tableFilterExpanded_/st/admin', 'false')
+        cy.window().its('localStorage').invoke(`setItem`, 'tableFilterExpanded_/st/admin/index', 'false')
     });
 
 });
