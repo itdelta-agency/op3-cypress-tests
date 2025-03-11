@@ -34,7 +34,7 @@ describe("LC.A5. Create team", () => {
         cy.xpath("//span[text()='Name *']").next().clear().type(tName);
         cy.wait(500);
 
-        cy.xpath("//span[text()='Users']").next().children().click();
+        cy.xpath("//span[text()='Users']").next().children().click().type('Qa');
         cy.xpath("//div[text()='Qa User']").scrollIntoView().click();
         cy.wait(500);
         cy.xpath("//button[text()='Save']").should('be.visible').click();

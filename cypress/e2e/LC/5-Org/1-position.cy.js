@@ -22,7 +22,7 @@ describe('OrgBoard.A1. Create position', () => {
         cy.xpath("//span[text()='Name *']").next().type(position);
         cy.xpath("//button[@role='switch']").click();
         cy.xpath("//span[text()='Description']").next().type(description);
-        cy.xpath("//span[text()='user']").next().children().click();
+        cy.xpath("//span[text()='user']").next().children().click().type('Qa');
         cy.xpath("//div[text()='Qa User']").scrollIntoView().click();
 
         cy.xpath("//span[text()='Functions']").next().type(description);
