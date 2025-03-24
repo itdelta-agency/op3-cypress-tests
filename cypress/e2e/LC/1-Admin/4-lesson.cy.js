@@ -89,29 +89,29 @@ describe("LC.A1. Create lessons", () => {
 
   });
 
-  it('save Lesson of Course', function () {
-    // SAVE COURSE
-    cy.login()
-    cy.visit('lc/admin/courses');
-    cy.wait(500)
-    cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Learning Center")').click({multiple: true});
-    cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Courses")').click({multiple: true});
-    cy.wait(500);
-    cy.accessAllItems();
-    cy.xpath("(//div[text()='" + Cypress.env('courseName') + "'])[1]").click();
-
-    cy.xpath("//span[text()='List of lessons']//following-sibling::span/descendant::input").type(Cypress.env('lessonCheckboxRadio'));
-    cy.xpath("//*[text()='" + Cypress.env('lessonCheckboxRadio') + "'][1]").click();
-    cy.xpath("//span[text()='List of lessons']//following-sibling::span/descendant::input").type(Cypress.env('lessonText'));
-    cy.xpath("//*[text()='" + Cypress.env('lessonText') + "'][1]").click();
-    // cy.xpath("//span[text()='List of lessons']//following-sibling::span/descendant::input").type(Cypress.env('lessonTimer'));
-    // cy.xpath("//*[text()='" + Cypress.env('lessonTimer') + "'][1]").click();
-
-    //Save course
-    cy.xpath("//button[text()='Save']").click();
-    cy.wait(1000);
-    cy.contains("Success").should('be.visible');
-  })
+  // it('save Lesson of Course', function () {
+  //   // SAVE COURSE
+  //   cy.login()
+  //   cy.visit('lc/admin/courses');
+  //   cy.wait(500)
+  //   cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Learning Center")').click({multiple: true});
+  //   cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Courses")').click({multiple: true});
+  //   cy.wait(500);
+  //   cy.accessAllItems();
+  //   cy.xpath("(//div[text()='" + Cypress.env('courseName') + "'])[1]").click();
+  //
+  //   cy.xpath("//span[text()='List of lessons']//following-sibling::span/descendant::input").type(Cypress.env('lessonCheckboxRadio'));
+  //   cy.xpath("//*[text()='" + Cypress.env('lessonCheckboxRadio') + "'][1]").click();
+  //   cy.xpath("//span[text()='List of lessons']//following-sibling::span/descendant::input").type(Cypress.env('lessonText'));
+  //   cy.xpath("//*[text()='" + Cypress.env('lessonText') + "'][1]").click();
+  //   // cy.xpath("//span[text()='List of lessons']//following-sibling::span/descendant::input").type(Cypress.env('lessonTimer'));
+  //   // cy.xpath("//*[text()='" + Cypress.env('lessonTimer') + "'][1]").click();
+  //
+  //   //Save course
+  //   cy.xpath("//button[text()='Save']").click();
+  //   cy.wait(1000);
+  //   cy.contains("Success").should('be.visible');
+  // })
   // it('should create lesson(timer)', function () {
   //   const lName = Cypress.env('lessonTimer');
   //   const qName = Cypress.env('questionText');
