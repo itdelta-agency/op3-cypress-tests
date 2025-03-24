@@ -3,9 +3,11 @@ describe("CP3. Article List", () => {
   let articleName = Cypress.env('articleName');
   const userNames = Cypress.env('usersArticle');
 
-  beforeEach(() => {
+  before(() => {
     cy.admin();
   });
+
+
 
   it('Deactivate Article', function () {
     cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Regulations")').click({multiple: true});
@@ -23,6 +25,8 @@ describe("CP3. Article List", () => {
   });
   //
   it('Check deactive article', function () {
+    cy.login()
+    cy.visit('/')
     cy.searchReport(userNames);
     cy.wait(3000);
     cy.xpath(`//div[text()='${userNames}']`).next().should(($el) => {
@@ -42,6 +46,8 @@ describe("CP3. Article List", () => {
   })
   //
   it('Activate Article', function () {
+    cy.login()
+    cy.visit('/')
     cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Regulations")').click({multiple: true});
     cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Articles")').click({multiple: true});
     cy.wait(3000);
@@ -58,6 +64,8 @@ describe("CP3. Article List", () => {
   })
 
   it('checkActive Article', function () {
+    cy.login()
+    cy.visit('/')
     cy.searchReport(userNames);
 
     cy.wait(3000);

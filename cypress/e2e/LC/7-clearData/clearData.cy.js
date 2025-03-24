@@ -10,11 +10,13 @@ describe('LC.Z. Clear all created learning items', () => {
         })
     })
 
-    beforeEach(() => {
+    before(() => {
         cy.admin();
     })
 
     it('should delete course', function () {
+        cy.login();
+        cy.visit('/')
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Learning Center")').click({multiple: true});
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Courses")').click({multiple: true});
 
@@ -30,6 +32,8 @@ describe('LC.Z. Clear all created learning items', () => {
     });
 
     it('should delete lessons', function () {
+        cy.login();
+        cy.visit('/')
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Learning Center")').click({multiple: true});
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Lessons")').click({multiple: true});
         cy.wait(1500);
@@ -61,6 +65,8 @@ describe('LC.Z. Clear all created learning items', () => {
     });
 
     it('delete curriculum', function () {
+        cy.login();
+        cy.visit('/')
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Learning Center")').click({multiple: true});
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Curriculums")').click({multiple: true});
         cy.wait(500);
@@ -74,6 +80,8 @@ describe('LC.Z. Clear all created learning items', () => {
     });
 
     it('delete course group', function () {
+        cy.login();
+        cy.visit('/')
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Learning Center")').click({multiple: true});
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Course groups")').click({multiple: true});
         cy.wait(3000);
@@ -87,6 +95,8 @@ describe('LC.Z. Clear all created learning items', () => {
     });
 
     it('should delete team', function () {
+        cy.login();
+        cy.visit('/')
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Teams")').click({multiple: true});
         cy.wait(1000);
         cy.accessAllItems();
@@ -101,6 +111,7 @@ describe('LC.Z. Clear all created learning items', () => {
     });
 
     it('delete invite user', function() {
+        cy.login();
         cy.visit('/admin/user');
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Users")').click({multiple: true});
         cy.wait(1000);
@@ -117,6 +128,7 @@ describe('LC.Z. Clear all created learning items', () => {
 
 
     it('delete User', () => {
+        cy.login();
         cy.visit('/admin/user');
         cy.wait(1000);
         cy.accessAllItems();
@@ -131,6 +143,7 @@ describe('LC.Z. Clear all created learning items', () => {
     })
 
     it('check Delete', () => {
+        cy.login();
         cy.visit('/admin/user');
         cy.wait(1000);
         cy.contains('div', 'Qa Test').should(($el) => {
@@ -152,6 +165,7 @@ describe('LC.Z. Clear all created learning items', () => {
     })
 
     it('delete position', function () {
+        cy.login();
 
             cy.visit('ob/admin/positions');
             cy.wait(3000);
@@ -167,7 +181,7 @@ describe('LC.Z. Clear all created learning items', () => {
     })
 
     it('delete children departament', function () {
-
+        cy.login();
             cy.visit('ob/admin/departments/scheme');
             cy.wait(3000);
             cy.xpath(`//div[text()='QA department']`).scrollIntoView().click();
@@ -179,7 +193,7 @@ describe('LC.Z. Clear all created learning items', () => {
     })
 
     it('delete departament', function () {
-
+        cy.login();
             cy.visit('ob/admin/departments/scheme');
             cy.wait(3000);
             cy.xpath(`//div[text()='QA department']`).scrollIntoView().click();

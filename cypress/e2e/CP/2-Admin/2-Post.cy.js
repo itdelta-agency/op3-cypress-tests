@@ -74,7 +74,6 @@ describe("CP2. Article List", () => {
     cy.wait(500);
 
     cy.xpath("//ul/li[6]/div[2]").click();
-    cy.xpath("//ul/li[7]/span[2]").click();
     cy.wait(500);
     cy.contains('a', 'Questions 3').parent().next().find('span').eq(1).click();
     cy.wait(500);

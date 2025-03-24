@@ -26,7 +26,8 @@ Cypress.Commands.add('login', (username = Cypress.env('email'), password = Cypre
 
 Cypress.Commands.add('admin', () => {
     cy.login();
-    cy.visit('/admin');
+    cy.visit('/')
+    cy.visitAdmin();
     cy.wait(3000);
     cy.get('body').then(($body) => {
         if($body.find('.inline-block.align-bottom.bg-white button').length) {
@@ -38,7 +39,7 @@ Cypress.Commands.add('admin', () => {
     .then(selector => {
         cy.get(selector).click();
     })
-    
+
     cy.wait(500);
 });
 
@@ -48,7 +49,7 @@ Cypress.Commands.add('createAnswerForQuestion', (questionName) => {
   cy.wait(500);
   /* cy.xpath("(//div[text()='" + lName + "'])[1]") */
   // cy.xpath("(//button[text()='Save'])[2]").click();
-  
+
   //  // cy.xpath("//*[text()='Create answer']").should('be.visible');
   cy.xpath("/html/body/div[2]/div/div/div[2]/div[2]/main/div/ul/li[6]/div[2]/div/div[1]/button").click();
   cy.xpath("/html/body/div[2]/div/div/div[2]/div[2]/main/div/ul/li[6]/div[2]/div/div[2]/input").type(questionName + ' answer');
@@ -192,4 +193,10 @@ Cypress.Commands.add('searchReport', (user) => {
     cy.wait(500);
     cy.xpath('//button[text()="Save"]').click();
     cy.xpath('//button[text()="Show results"]').click();
+})
+
+Cypress.Commands.add('visitAdmin', (user) => {
+    cy.get("[data-header-test-id='header_menu_button']").click();
+    cy.get("[data-header-test-id='header_dropdown_menu']").eq(1).click();
+    cy.wait(1000)
 })

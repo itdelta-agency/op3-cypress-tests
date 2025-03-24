@@ -3,7 +3,7 @@ describe("CP5. Familiarization with the article", () => {
   const article = Cypress.env('articleName');
 
   before(() => {
-     cy.admin();
+     cy.login();
   });
 
   it('checking the ignorance of the article ADMIN', () => {

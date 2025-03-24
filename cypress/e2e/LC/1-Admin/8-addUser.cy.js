@@ -3,16 +3,16 @@ describe("US.1 Add User", () => {
     let email = `qaUserManual${Math.random()}@mail.ru`;
     let password = `Qa${Math.random()}`
 
-    beforeEach(() => {
+    before(() => {
         cy.admin();
-        cy.changeLang();
-        cy.wait(2000);
-        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Пользователи")').click({multiple: true});
     })
 
 
     it('Add user', function () {
         // Go to add user page
+        cy.changeLang();
+        cy.wait(2000);
+        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Пользователи")').click({multiple: true});
         cy.xpath("//button[text()='Добавить пользователя']").click();
 
         cy.wait(1000);
@@ -59,14 +59,23 @@ describe("US.1 Add User", () => {
     })
 
     it('check add User', () => {
-        cy.wait(500);
+        cy.login()
+        cy.visit('/')
         cy.changeLang('en');
+        cy.wait(2000);
+        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Users")').click({multiple: true});
+        cy.wait(500);
         cy.accessAllItems();
         cy.contains('div', email).click()
     })
 
     it('edite User', () => {
+        cy.login()
+        cy.visit('/')
         cy.changeLang('en');
+        cy.wait(2000);
+        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Users")').click({multiple: true});
+        cy.wait(500);
         cy.accessAllItems();
         cy.wait(500);
         cy.contains(email).parent().parent().last().find('div').eq(2).click();
@@ -95,6 +104,12 @@ describe("US.1 Add User", () => {
     })
 
     it('check user team/departments', () => {
+        cy.login()
+        cy.visit('/')
+        cy.changeLang('en');
+        cy.wait(2000);
+        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Users")').click({multiple: true});
+        cy.wait(500);
         // cy.xpath("//a[text()='Отделы']").click();
         // cy.wait(1000);
         // cy.xpath("//div[text()='Marketing']").click();
@@ -107,7 +122,6 @@ describe("US.1 Add User", () => {
         //check Team
         cy.visit("admin/teams");
         cy.wait(1500);
-        cy.changeLang('en');
         cy.accessAllItems();
         cy.xpath("//div[text()='Qa Test Team']").click();
         cy.wait(500);

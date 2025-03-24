@@ -3,7 +3,7 @@ describe("LC.A1. Create lessons", () => {
   const lName = Cypress.env('lessonCheckboxRadio');
   const qNameR = Cypress.env('questionRadio');
   const qNameCB = Cypress.env('questionCheckbox');
-    beforeEach(() => {
+    before(() => {
       cy.admin();
       // if ( Cypress.browser.isHeaded ) {
       //   cy.clearCookie(skipCookie)
@@ -19,7 +19,7 @@ describe("LC.A1. Create lessons", () => {
       //   });
       // }
     });
-  
+
   it('should create lesson(checkbox + radio)', function () {
     // Go to add courses page
     cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Learning Center")').click({multiple: true});
@@ -67,6 +67,7 @@ describe("LC.A1. Create lessons", () => {
     const lName = Cypress.env('lessonText');
     const qName = Cypress.env('questionText');
 
+    cy.login()
     cy.visit('lc/admin/courses');
     cy.wait(500);
     cy.accessAllItems();
@@ -90,6 +91,9 @@ describe("LC.A1. Create lessons", () => {
 
   it('save Lesson of Course', function () {
     // SAVE COURSE
+    cy.login()
+    cy.visit('lc/admin/courses');
+    cy.wait(500)
     cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Learning Center")').click({multiple: true});
     cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Courses")').click({multiple: true});
     cy.wait(500);
@@ -145,8 +149,8 @@ describe("LC.A1. Create lessons", () => {
   // });
   //
   //
-  
-  
+
+
 
     // afterEach(function onAfterEach() {
     //     // if (this.currentTest.state === 'failed') {
