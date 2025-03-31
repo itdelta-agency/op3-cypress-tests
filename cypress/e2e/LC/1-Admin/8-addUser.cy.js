@@ -60,7 +60,7 @@ describe("US.1 Add User", () => {
 
     it('check add User', () => {
         cy.login()
-        cy.visit('/')
+        cy.visit('/admin/teams')
         cy.changeLang('en');
         cy.wait(2000);
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Users")').click({multiple: true});
@@ -71,7 +71,7 @@ describe("US.1 Add User", () => {
 
     it('edite User', () => {
         cy.login()
-        cy.visit('/')
+        cy.visit('/admin/teams')
         cy.changeLang('en');
         cy.wait(2000);
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Users")').click({multiple: true});
@@ -105,7 +105,7 @@ describe("US.1 Add User", () => {
 
     it('check user team/departments', () => {
         cy.login()
-        cy.visit('/')
+        cy.visit('/admin/teams')
         cy.changeLang('en');
         cy.wait(2000);
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Users")').click({multiple: true});

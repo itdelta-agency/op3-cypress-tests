@@ -23,10 +23,11 @@ describe("CP3. Article List", () => {
     cy.wait(500);
     cy.xpath("//p[text()='Success!']", {timeout: 5000}).should('be.visible');
   });
-  //
+
   it('Check deactive article', function () {
     cy.login()
-    cy.visit('/')
+    cy.visit('/cp/admin/report')
+    cy.wait(2000);
     cy.searchReport(userNames);
     cy.wait(3000);
     cy.xpath(`//div[text()='${userNames}']`).next().should(($el) => {
@@ -35,19 +36,20 @@ describe("CP3. Article List", () => {
       }
     }).then((el) => {
       if(el[0].childElementCount) {
-       cy.xpath(`//div[text()='${userNames}']`).next().type(articleName);
+        cy.xpath(`//div[text()='${userNames}']`).next().type(articleName);
         cy.wait(200);
         cy.xpath(`//div[text()='${userNames}']`).next().find('div').last().contains(articleName).should('not.exist');
       }
     })
     //cy.contains(userNames).parent().find('div').contains(articleName).should('not.exist');
-   // cy.contains(userNames).parent().parent().next().contains(articleName, { timeout: 5000 }).should('not.exist');
+    // cy.contains(userNames).parent().parent().next().contains(articleName, { timeout: 5000 }).should('not.exist');
     cy.wait(500)
   })
   //
   it('Activate Article', function () {
     cy.login()
-    cy.visit('/')
+    cy.visit('/cp/admin/report');
+    cy.wait(2000);
     cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Regulations")').click({multiple: true});
     cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Articles")').click({multiple: true});
     cy.wait(3000);
@@ -65,7 +67,8 @@ describe("CP3. Article List", () => {
 
   it('checkActive Article', function () {
     cy.login()
-    cy.visit('/')
+    cy.visit('/cp/admin/report');
+    cy.wait(2000);
     cy.searchReport(userNames);
 
     cy.wait(3000);

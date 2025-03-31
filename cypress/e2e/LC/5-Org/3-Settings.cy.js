@@ -24,7 +24,7 @@ describe('OrgBoard.A4.Settings', () => {
 
     it('check save data', function () {
         cy.login();
-        cy.visit('/')
+        cy.visit('/admin/user')
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Settings")').click({multiple: true});
         cy.wait(3000);
         cy.xpath("//a[@name='OrgScheme']").click();
@@ -36,7 +36,7 @@ describe('OrgBoard.A4.Settings', () => {
 
     it('defalut settings', function () {
         cy.login();
-        cy.visit('/')
+        cy.visit('/admin/user')
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Settings")').click({multiple: true});
         cy.wait(3000);
         cy.xpath("//a[@name='OrgScheme']").click();

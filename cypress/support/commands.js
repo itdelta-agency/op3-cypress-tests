@@ -36,61 +36,61 @@ Cypress.Commands.add('admin', () => {
 
         return 'body';
     })
-    .then(selector => {
-        cy.get(selector).click();
-    })
+        .then(selector => {
+            cy.get(selector).click();
+        })
 
     cy.wait(500);
 });
 
 Cypress.Commands.add('createAnswerForQuestion', (questionName) => {
-  cy.wait(1500);
-  cy.xpath("//span[text()='Add answer']").click();
-  cy.wait(500);
-  /* cy.xpath("(//div[text()='" + lName + "'])[1]") */
-  // cy.xpath("(//button[text()='Save'])[2]").click();
+    cy.wait(1500);
+    cy.xpath("//span[text()='Add answer']").click();
+    cy.wait(500);
+    /* cy.xpath("(//div[text()='" + lName + "'])[1]") */
+    // cy.xpath("(//button[text()='Save'])[2]").click();
 
-  //  // cy.xpath("//*[text()='Create answer']").should('be.visible');
-  cy.xpath("/html/body/div[2]/div/div/div[2]/div[2]/main/div/ul/li[6]/div[2]/div/div[1]/button").click();
-  cy.xpath("/html/body/div[2]/div/div/div[2]/div[2]/main/div/ul/li[6]/div[2]/div/div[2]/input").type(questionName + ' answer');
-  cy.xpath("(//button[@role='switch'])[2]").click();
-  cy.xpath("(//button[text()='Save'])[1]").click();
-  // cy.xpath("//p[text()='Success!']").should('be.visible');
+    //  // cy.xpath("//*[text()='Create answer']").should('be.visible');
+    cy.xpath("/html/body/div[2]/div/div/div[2]/div[2]/main/div/ul/li[6]/div[2]/div/div[1]/button").click();
+    cy.xpath("/html/body/div[2]/div/div/div[2]/div[2]/main/div/ul/li[6]/div[2]/div/div[2]/input").type(questionName + ' answer');
+    cy.xpath("(//button[@role='switch'])[2]").click();
+    cy.xpath("(//button[text()='Save'])[1]").click();
+    // cy.xpath("//p[text()='Success!']").should('be.visible');
 });
 
 Cypress.Commands.add('addAnswers', () => {
 
-  cy.xpath("//span[text()='Add answer']").click();
+    cy.xpath("//span[text()='Add answer']").click();
 
-  // cy.xpath("//input[@type='text']").type(Cypress.env('answer1'));
-  // cy.xpath("(//button[@role='switch'])[1]").click();
-  // cy.xpath("(//button[@role='switch'])[2]").click();
-  // cy.xpath("//button[text()='Save']").click();
+    // cy.xpath("//input[@type='text']").type(Cypress.env('answer1'));
+    // cy.xpath("(//button[@role='switch'])[1]").click();
+    // cy.xpath("(//button[@role='switch'])[2]").click();
+    // cy.xpath("//button[text()='Save']").click();
 
 
-  cy.xpath("/html/body/div[2]/div/div/div[2]/div[2]/main/div/ul/li[5]/div[2]/div/div[1]/input").type(Cypress.env('answer1'));
+    cy.xpath("/html/body/div[2]/div/div/div[2]/div[2]/main/div/ul/li[5]/div[2]/div/div[1]/input").type(Cypress.env('answer1'));
     cy.xpath("//input[@type='checkbox']").click();
     cy.xpath("(//button[@role='switch'])[2]").click();
     cy.xpath("(//button[text()='Save'])[1]").click();
 
-  cy.xpath("//span[text()='Add answer']").click();
-  cy.xpath("/html/body/div[2]/div/div/div[2]/div[2]/main/div/ul/li[5]/div[2]/div/div[1]/input").type(Cypress.env('answer2'));
-  cy.xpath("//input[@type='checkbox']").click();
-  cy.xpath("(//button[text()='Save'])[1]").click();
+    cy.xpath("//span[text()='Add answer']").click();
+    cy.xpath("/html/body/div[2]/div/div/div[2]/div[2]/main/div/ul/li[5]/div[2]/div/div[1]/input").type(Cypress.env('answer2'));
+    cy.xpath("//input[@type='checkbox']").click();
+    cy.xpath("(//button[text()='Save'])[1]").click();
 
-  cy.xpath("//span[text()='Add answer']").click();
-  cy.xpath("/html/body/div[2]/div/div/div[2]/div[2]/main/div/ul/li[5]/div[2]/div/div[1]/input").type(Cypress.env('answer3'));
-  cy.xpath("//input[@type='checkbox']").click();
-  cy.xpath("(//button[text()='Save'])[1]").click();
+    cy.xpath("//span[text()='Add answer']").click();
+    cy.xpath("/html/body/div[2]/div/div/div[2]/div[2]/main/div/ul/li[5]/div[2]/div/div[1]/input").type(Cypress.env('answer3'));
+    cy.xpath("//input[@type='checkbox']").click();
+    cy.xpath("(//button[text()='Save'])[1]").click();
 
 });
 
 Cypress.Commands.add('question', (questionName, questionType) => {
 
-   // cy.xpath("//div[@class='flex items-center cursor-pointer mb-3']").click();
+    // cy.xpath("//div[@class='flex items-center cursor-pointer mb-3']").click();
     cy.xpath("//h2[text()='Add question']").click();
 
-   // // cy.xpath("//*[text()=Создание вопроса']").should('be.visible');
+    // // cy.xpath("//*[text()=Создание вопроса']").should('be.visible');
     cy.xpath("(//input[@type='text'])[1]").type(questionName);
     cy.xpath("(//input[@type='text'])[2]").type(questionName + questionType);
 
@@ -151,8 +151,8 @@ Cypress.Commands.add('changeLangAuth', () => {
 
 Cypress.Commands.add('logout', () => {
     cy.wait(1500);
-  cy.xpath("//button[@class='max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 z-50]'").click();
-  cy.wait(500);
+    cy.xpath("//button[@class='max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 z-50]'").click();
+    cy.wait(500);
     cy.xpath("//a[@href='" +Cypress.config('baseUrl') + "logout']").click();
     cy.wait(1500);
 });
@@ -186,6 +186,7 @@ Cypress.Commands.add('skipTests', (cookieName) => {
 Cypress.Commands.add('searchReport', (user) => {
     cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Regulations")').click({multiple: true});
     cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Report")').click({multiple: true});
+    cy.wait(1000);
     cy.xpath('//button[text()="Select"]').click();
     cy.wait(200);
     cy.contains('div', 'Search').parent().find('input').type('first-name', {force:true});

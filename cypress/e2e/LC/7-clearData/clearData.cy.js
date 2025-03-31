@@ -16,11 +16,11 @@ describe('LC.Z. Clear all created learning items', () => {
 
     it('should delete course', function () {
         cy.login();
-        cy.visit('/')
+        cy.visit('/admin/user')
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Learning Center")').click({multiple: true});
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Courses")').click({multiple: true});
 
-      cy.wait(1000);
+        cy.wait(1000);
         cy.accessAllItems();
         cy.wait(500);
         cy.xpath(`//div[text()='${Cypress.env("courseName")}']`).parent().parent().parent().parent().parent().find('th').eq(1).find('div').click().then(($el) => {
@@ -33,7 +33,7 @@ describe('LC.Z. Clear all created learning items', () => {
 
     it('should delete lessons', function () {
         cy.login();
-        cy.visit('/')
+        cy.visit('/admin/user')
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Learning Center")').click({multiple: true});
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Lessons")').click({multiple: true});
         cy.wait(1500);
@@ -66,7 +66,7 @@ describe('LC.Z. Clear all created learning items', () => {
 
     it('delete curriculum', function () {
         cy.login();
-        cy.visit('/')
+        cy.visit('/admin/user')
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Learning Center")').click({multiple: true});
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Curriculums")').click({multiple: true});
         cy.wait(500);
@@ -81,7 +81,7 @@ describe('LC.Z. Clear all created learning items', () => {
 
     it('delete course group', function () {
         cy.login();
-        cy.visit('/')
+        cy.visit('/admin/user')
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Learning Center")').click({multiple: true});
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Course groups")').click({multiple: true});
         cy.wait(3000);
@@ -167,39 +167,39 @@ describe('LC.Z. Clear all created learning items', () => {
     it('delete position', function () {
         cy.login();
 
-            cy.visit('ob/admin/positions');
-            cy.wait(3000);
-            cy.accessAllItems();
-            cy.xpath(`//div[text()='QA position']`).parent().parent().parent().parent().parent().find('th').eq(1).find('div').click().then(($el) => {
-                cy.wrap($el).find(':contains("Delete position")').click({ multiple: true, force: true });
-            })
-            cy.wait(500);
-            cy.get('button').contains('Delete').click();
-            cy.wait(500);
-            cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
+        cy.visit('ob/admin/positions');
+        cy.wai(3000);
+        cy.accessAllItems();
+        cy.xpath(`//div[text()='QA position']`).parent().parent().parent().parent().parent().find('th').eq(1).find('div').click().then(($el) => {
+            cy.wrap($el).find(':contains("Delete position")').click({ multiple: true, force: true });
+        })
+        cy.wait(500);
+        cy.get('button').contains('Delete').click();
+        cy.wait(500);
+        cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
 
     })
 
     it('delete children departament', function () {
         cy.login();
-            cy.visit('ob/admin/departments/scheme');
-            cy.wait(3000);
-            cy.xpath(`//div[text()='QA department']`).scrollIntoView().click();
-            cy.xpath("//span[text()='QA department2']").next().find('svg').last().click({force: true});
-            cy.get('button').contains('Delete').click();
-            cy.wait(500);
-            cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
+        cy.visit('ob/admin/departments/scheme');
+        cy.wait(3000);
+        cy.xpath(`//div[text()='QA department']`).scrollIntoView().click();
+        cy.xpath("//span[text()='QA department2']").next().find('svg').last().click({force: true});
+        cy.get('button').contains('Delete').click();
+        cy.wait(500);
+        cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
 
     })
 
     it('delete departament', function () {
         cy.login();
-            cy.visit('ob/admin/departments/scheme');
-            cy.wait(3000);
-            cy.xpath(`//div[text()='QA department']`).scrollIntoView().click();
-            cy.xpath("//div[text()='QA department']").next().find('svg').last().click({force: true});
-            cy.get('button').contains('Delete').click();
-            cy.wait(500);
-            cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
+        cy.visit('ob/admin/departments/scheme');
+        cy.wait(3000);
+        cy.xpath(`//div[text()='QA department']`).scrollIntoView().click();
+        cy.xpath("//div[text()='QA department']").next().find('svg').last().click({force: true});
+        cy.get('button').contains('Delete').click();
+        cy.wait(500);
+        cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
     })
 });

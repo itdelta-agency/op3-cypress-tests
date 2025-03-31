@@ -30,7 +30,7 @@ describe('Statistic.ST3. clear data statistic', () => {
 
     it('delete statistic', function () {
         cy.login();
-        cy.visit('/')
+        cy.visit('/admin/user')
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Statistics")').click({multiple: true});
 
         cy.contains("a", 'Statistics list').click();
