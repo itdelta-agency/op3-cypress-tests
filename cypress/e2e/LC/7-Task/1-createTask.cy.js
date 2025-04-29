@@ -133,19 +133,4 @@ describe('Task.T1. Create Task', () => {
         cy.get('button').contains('Delete').click();
         cy.contains("p", "Success!").should('be.visible')
     })
-
-    it('add comment', function () {
-        cy.login();
-        cy.visit('/admin/user');
-        cy.wait(1000);
-        visitPage();
-
-        cy.xpath(`//div[text()='Task 1']`).closest('tr').within(() => {
-            cy.get('th').eq(0).find('div').click();
-        });
-        cy.contains('Delete').should('be.visible').click({ multiple: true });
-        cy.wait(200);
-        cy.get('button').contains('Delete').click();
-        cy.contains("p", "Success!").should('be.visible')
-    })
 })

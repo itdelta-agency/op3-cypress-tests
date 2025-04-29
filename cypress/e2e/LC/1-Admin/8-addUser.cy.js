@@ -41,8 +41,8 @@ describe("US.1 Add User", () => {
 
         //Team
         cy.xpath("//button[text()='Выбрать']").click();
-        // cy.wait(500);
-        cy.xpath("(//div[text()='Команды'])[2]").click();
+        cy.wait(500);
+        cy.xpath("(//div[text()='Команды'])").click();
         cy.wait(500);
         cy.contains("Выбрать: Команды").parent().next().click();
         cy.wait(500);
