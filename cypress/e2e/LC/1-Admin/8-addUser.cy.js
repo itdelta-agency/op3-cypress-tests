@@ -24,7 +24,7 @@ describe("US.1 Add User", () => {
         cy.xpath("//span[text()='Телефон']").next().type('+7 999 999 99 99');
         cy.xpath("//span[text()='Пароль *']").next().type(password);
         cy.xpath("//span[text()='Повторите пароль *']").next().type(password);
-        cy.xpath("//span[text()='Активность']").next().children().click();
+        cy.xpath("//span[text()='Статус']").next().children().click();
 
         // Add IMAGE
         cy.xpath('//input[@id="avatar"]').selectFile('cypress/image/qaUser.jpg', {force: true});
