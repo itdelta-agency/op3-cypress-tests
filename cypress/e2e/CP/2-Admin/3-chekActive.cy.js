@@ -10,13 +10,15 @@ describe("CP3. Article List", () => {
 
 
   it('Deactivate Article', function () {
+    cy.wait(500);
     cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Regulations")').click({multiple: true});
+    cy.wait(500);
     cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Articles")').click({multiple: true});
     cy.wait(3000);
     cy.searchRow('QA');
     cy.xpath(`//div[text()="${articleName}"]`).click();
     cy.wait(500);
-    cy.xpath('//span[text()="Active"]/../span[2]/button').click();
+    cy.xpath('//span[text()="Status"]/../span[2]/button').click();
     cy.wait(500);
     cy.xpath('//button[text()="Save"]').click();
     // cy.xpath("//span[text()='Confirmation']").parent().parent().next().contains('button', 'No').click();
@@ -56,7 +58,7 @@ describe("CP3. Article List", () => {
     cy.searchRow('QA');
     cy.xpath(`//div[text()="${articleName}"]`).click();
     cy.wait(500);
-    cy.xpath('//span[text()="Active"]/../span[2]/button').click();
+    cy.xpath('//span[text()="Status"]/../span[2]/button').click();
     cy.wait(500);
     cy.xpath('//button[text()="Save"]').click();
     // cy.wait(500);

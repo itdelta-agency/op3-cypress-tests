@@ -9,7 +9,7 @@ describe('OrgBoard.A4.Settings', () => {
 
     it('Regulations settings', function ()  {
         cy.xpath("//a[@name='Regulations']").click();
-        cy.get('button[role="switch"]').then($switch => {
+        cy.get('button[role="switch"]').eq(0).then($switch => {
             const isChecked = $switch.attr('aria-checked') === 'true';
 
             if (isChecked) {

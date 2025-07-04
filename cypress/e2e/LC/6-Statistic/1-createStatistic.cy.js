@@ -16,7 +16,7 @@ describe('Statistic.ST1. Create Statistic', () => {
         cy.wait(1500);
 
         cy.xpath("//span[text()='Name *']").next().type('Qa statistic');
-        cy.xpath('//span[text()="Active"]/../span[2]/button').click();
+        cy.xpath('//span[text()="Status"]/../span[2]/button').click();
         cy.xpath("//span[text()='Post *']").next().children().click();
         cy.xpath("//span[text()='Post *']").next().children().type(position);
         cy.contains('div', position).click();
