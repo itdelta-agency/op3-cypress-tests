@@ -71,20 +71,32 @@ const makeEmailAccount = async () => {
 
 
     async openMessage({ subject, userEmail }) {
-      const {accountId, inboxId} = await this.getInbox();
+      const { accountId, inboxId } = await this.getInbox();
       const message = await this.getMessage(subject, userEmail);
 
       const url = `https://mailtrap.io/api/accounts/${accountId}/inboxes/${inboxId}/messages/${message.id}/body.html`;
+
       try {
         const response = await this.fetchParam(url);
-        const data = await response.text();
+        const html = await response.text();
+
+       // ИЗВЛЕКАЕМ confirmationLink И accountId из HTML
+        const confirmationLinkMatch = html.match(/https:\/\/[^"]*\/confirm[^"]*/);
+        const extractedAccountIdMatch = html.match(/accountId=(\w+)/);
+
+        const confirmationLink = confirmationLinkMatch ? confirmationLinkMatch[0] : null;
+        const extractedAccountId = extractedAccountIdMatch ? extractedAccountIdMatch[1] : null;
+
         return {
-          html:data
-        };
-      } catch (error) {
-        console.error(error);
-      }
-    },
+         html,
+         confirmationLink,
+         accountId: extractedAccountId
+       };
+     } catch (error) {
+    console.error(error);
+    return null;
+   }
+ },
 
 
     async getLastEmail({port = 993, host = "ethereal.email", user = testAccount.user, pass = testAccount.pass}) {

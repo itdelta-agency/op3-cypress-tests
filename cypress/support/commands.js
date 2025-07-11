@@ -10,17 +10,17 @@ Cypress.Commands.add('login', (username = Cypress.env('email'), password = Cypre
         return hash;
     }
 
-    cy.session([username, hashCode(password)], () => {
-        cy.visit(Cypress.config('baseUrl') + 'login', { timeout: 10000 });
+    // cy.session([username, hashCode(password)], () => {
+    //     cy.visit(Cypress.config('baseUrl') + 'login', { timeout: 10000 });
 
-        cy.xpath("//input[@id='email']", { timeout: 10000 }).type(username);
-        cy.xpath("//input[@id='password']", { timeout: 10000 }).type(password, { log: false });
+    //     cy.xpath("//input[@id='email']", { timeout: 10000 }).type(username);
+    //     cy.xpath("//input[@id='password']", { timeout: 10000 }).type(password, { log: false });
 
-        cy.xpath("//button[@type='submit']", { timeout: 10000}).click();
-        cy.wait(4000);
-        cy.window().its('localStorage').invoke(`setItem`, 'tableFilterExpanded_/cp/admin/post', 'false')
-        cy.window().its('localStorage').invoke(`setItem`, 'tableFilterExpanded_/st/admin/index', 'false')
-    });
+    //     cy.xpath("//button[@type='submit']", { timeout: 10000}).click();
+    //     cy.wait(4000);
+    //     cy.window().its('localStorage').invoke(`setItem`, 'tableFilterExpanded_/cp/admin/post', 'false')
+    //     cy.window().its('localStorage').invoke(`setItem`, 'tableFilterExpanded_/st/admin/index', 'false')
+    // });
 
 });
 
