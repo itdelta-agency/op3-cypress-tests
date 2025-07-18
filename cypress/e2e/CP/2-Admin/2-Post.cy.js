@@ -98,17 +98,8 @@ describe("CP2. Article List", () => {
         }
       });
 
-cy.get('.css-hlgwow')
-  .then($el => {
-    if ($el.length) {
-      cy.wrap($el).click().type('123');
-    } else {
-      cy.get('.css-1dyz3mf').click().type('123');
-    }
-  })
-  .then(() => {
-    cy.contains('123', { timeout: 1000 }).click({ force: true });
-  });
+    cy.get('.css-hlgwow                               .css-1dyz3mf').click().type(123)
+    .contains(123, { timeout: 1000 }).click({ force: true });
     // cy.xpath("//ul/li[6]/div[2]").click();
     // cy.wait(500);
     cy.contains('a', 'Questions 3').parent().next().find('span').eq(1).click();
