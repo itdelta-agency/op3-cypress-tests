@@ -4,7 +4,7 @@
   "description": "App for testing Learning Center",
   "main": "index.js",
   "scripts": {
-    "cy:open": "npx cypress open allure=true --browser chromium --e2e",
+    "cy:open": "npx cypress open allure=true --browser chrome --e2e",
     "cy:run": "DEBUG=allure-plugin* npx cypress run --env allure=true --browser chrome",
     "cy:cucumber:run": "DEBUG=allure-plugin* npx cypress run --config specPattern=cypress/e2e/cucumber/*.feature,excludeSpecPattern=*.js --env allure=true --browser chrome",
     "allure:report": "allure generate allure-results --clean -o allure-report",
@@ -18,10 +18,11 @@
   "dependencies": {
     "@cemalgnlts/mailjs": "^3.0.1",
     "cypress-recurse": "^1.23.0",
-    "dotenv": "^16.3.1",
+    "dotenv": "^16.6.1",
     "imapflow": "^1.0.113",
+    "jsdom": "^26.1.0",
     "mailparser": "^3.5.0",
-    "mailslurp-client": "^15.14.1",
+    "mailslurp-client": "^15.24.1",
     "node-fetch": "^2.7.0",
     "nodemailer": "^6.8.0"
   },
@@ -32,7 +33,7 @@
     "@babel/preset-env": "^7.20.2",
     "@cypress/xpath": "^2.0.3",
     "@shelex/cypress-allure-plugin": "^2.33.1",
-    "cypress": "^12.3.0",
+    "cypress": "14.5.1",
     "imap": "^0.8.19",
     "imap-mailbox": "^1.0.1"
   }

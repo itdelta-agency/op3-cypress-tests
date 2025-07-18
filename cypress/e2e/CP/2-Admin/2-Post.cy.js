@@ -14,23 +14,41 @@ describe("CP2. Article List", () => {
 
 
   it('should create Article', function () {
-    cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Regulations")').click({multiple: true});
-    cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Articles")').click({multiple: true});
+
+    cy.get('.flex.justify-between', { timeout: 10000 }).eq(1).then($tab => {
+      const isExpanded = $tab.attr('aria-expanded') === 'true';  // true если открыта
+      if (!isExpanded) {
+        cy.wrap($tab).click();
+      }
+    });
+    cy.get('a.text-indigo-100',).eq(1).click();
     // cy.changeLang('en');
-    cy.wait(5000);
-    cy.contains('Add article').click();
-    cy.wait(500);
+    cy.wait(1500);
+    cy.get('.text-white.bg-indigo-600').eq(0).click();
+    cy.wait(1500);
 
     // create Article
-    cy.get('ul li:first input').type(articleName);
+    cy.get('.shadow-sm').eq(0).type(articleName);
+    cy.get("button[role='switch']")
+      .invoke('attr', 'aria-checked')
+      .then(checked => {
+        if (checked === 'false') {
+          cy.get("button[role='switch']").click();
+        }
+      });
 
 
-    cy.xpath('//span[text()="Categories *"]//following-sibling::span/descendant::input').type(categorisName);
+    cy.get('.css-hlgwow').type(categorisName);
     cy.xpath("//*[text()='" + categorisName + "'][1]").click();
 
 
-    cy.xpath("//ul/li[6]/div[2]").click();
-    cy.xpath("//ul/li[7]/span[2]").click();
+    cy.get('.mr-1').click();
+    cy.get("button[role='switch']").eq(1).then($checkbox => {
+      if (!$checkbox.attr('aria-checked') || $checkbox.attr('aria-checked') === 'false') {
+        cy.wrap($checkbox).click();
+      }
+    });
+
     cy.wait(500);
     for (let i = 1; i < 4; i++) {
       cy.xpath("//span[text()='Add question']").click();
@@ -39,7 +57,7 @@ describe("CP2. Article List", () => {
       cy.xpath(`//ul/div/li/div[2]/div/ul/div[1]/li`).click();
       cy.xpath(`//ul/div/li/div[2]/div/ul/div[1]/li/div[2]/ul/div/li/div[1]/span[2]/a`).click();
       cy.xpath(`//ul/div/li/div[2]/div/ul/div[1]/li/div[2]/ul/div/li/div[1]/span[2]/input`)
-          .type(`Answer 1`);
+        .type(`Answer 1`);
       cy.xpath(`//ul/div/li/div[2]/div/ul/div[1]/li`).click();
       answerNumber = 2;
       for (let j = 1; j < 3; j++) {
@@ -47,7 +65,7 @@ describe("CP2. Article List", () => {
         // cy.xpath(`//ul/li[last()]/div[last()]/div/ul/div[${i}]/li/div[2]/ul/div[last()]/li/div[1]/span[2]/a`)
         //   .click();
         cy.xpath(`//ul/div/li/div[2]/div/ul/div[1]/li/div[2]/ul/div[last()]/li/div[1]/span[2]/input`)
-            .type(`Answer ${answerNumber}`);
+          .type(`Answer ${answerNumber}`);
         // cy.xpath(`//ul/li[last()]/div[last()]/div/ul/div[${i}]/li`).click();
         answerNumber++;
       }
@@ -70,20 +88,38 @@ describe("CP2. Article List", () => {
 
     cy.contains('Edit article');
 
-    cy.xpath('//span[text()="Categories *"]//following-sibling::span/descendant::input').type(' ');
-    cy.wait(500);
+    cy.get('.shadow-sm').eq(0).clear().type(articleName);
 
-    cy.xpath("//ul/li[6]/div[2]").click();
-    cy.wait(500);
+    cy.get("button[role='switch']")
+      .invoke('attr', 'aria-checked')
+      .then(checked => {
+        if (checked === 'false') {
+          cy.get("button[role='switch']").click();
+        }
+      });
+
+cy.get('.css-hlgwow')
+  .then($el => {
+    if ($el.length) {
+      cy.wrap($el).click().type('123');
+    } else {
+      cy.get('.css-1dyz3mf').click().type('123');
+    }
+  })
+  .then(() => {
+    cy.contains('123', { timeout: 1000 }).click({ force: true });
+  });
+    // cy.xpath("//ul/li[6]/div[2]").click();
+    // cy.wait(500);
     cy.contains('a', 'Questions 3').parent().next().find('span').eq(1).click();
     cy.wait(500);
 
-    cy.xpath("//button[text()='Save']").click();
+    cy.get('.text-center.w-full').eq(2).click();
     cy.wait(1000);
     // cy.xpath("//span[text()='Confirmation']").parent().parent().next().contains('button', 'No').click();
     // cy.wait(500);
 
-    cy.xpath("//p[text()='Success!']", {timeout: 5000}).should('be.visible');
+    cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
   })
 
 
@@ -91,3 +127,4 @@ describe("CP2. Article List", () => {
   //   cy.clearCookies();
   // });
 })
+

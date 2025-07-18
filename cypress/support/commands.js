@@ -4,43 +4,59 @@ Cypress.Commands.add('login', (username = Cypress.env('email'), password = Cypre
         var hash = 0;
         for (var i = 0; i < str.length; i++) {
             var char = str.charCodeAt(i);
-            hash = ((hash<<5)-hash)+char;
+            hash = ((hash << 5) - hash) + char;
             hash = hash & hash; // Convert to 32bit integer
         }
         return hash;
     }
 
-    // cy.session([username, hashCode(password)], () => {
-    //     cy.visit(Cypress.config('baseUrl') + 'login', { timeout: 10000 });
+    cy.session([username, hashCode(password)], () => {
+        cy.visit(Cypress.config('baseUrl') + 'login', { timeout: 10000 });
 
-    //     cy.xpath("//input[@id='email']", { timeout: 10000 }).type(username);
-    //     cy.xpath("//input[@id='password']", { timeout: 10000 }).type(password, { log: false });
+        cy.xpath("//input[@id='email']", { timeout: 10000 }).type(username);
+        cy.xpath("//input[@id='password']", { timeout: 10000 }).type(password, { log: false });
 
-    //     cy.xpath("//button[@type='submit']", { timeout: 10000}).click();
-    //     cy.wait(4000);
-    //     cy.window().its('localStorage').invoke(`setItem`, 'tableFilterExpanded_/cp/admin/post', 'false')
-    //     cy.window().its('localStorage').invoke(`setItem`, 'tableFilterExpanded_/st/admin/index', 'false')
-    // });
+        cy.xpath("//button[@type='submit']", { timeout: 10000 }).click();
+        cy.wait(2000);
+        cy.window().its('localStorage').invoke(`setItem`, 'tableFilterExpanded_/cp/admin/post', 'false')
+        cy.window().its('localStorage').invoke(`setItem`, 'tableFilterExpanded_/st/admin/index', 'false')
+    });
 
 });
+
+Cypress.Commands.add('resetAppState', () => {
+    cy.clearCookies();
+    cy.clearLocalStorage();
+    cy.window().then((win) => {
+        win.sessionStorage.clear();
+    });
+});
+
+
+Cypress.Commands.add('checkTextPresence', (text) => {
+    return cy.get('body').then(($body) => {
+        return $body.text().includes(text);
+    });
+});
+
 
 Cypress.Commands.add('admin', () => {
     cy.login();
     cy.visit('/')
     cy.visitAdmin();
-    cy.wait(3000);
-    cy.get('body').then(($body) => {
-        if($body.find('.inline-block.align-bottom.bg-white button').length) {
-            return '.inline-block.align-bottom.bg-white button';
-        }
+    cy.wait(1000);
+    // cy.get('body').then(($body) => {
+    //     if($body.find('.inline-block.align-bottom.bg-white button').length) {
+    //         return '.inline-block.align-bottom.bg-white button';
+    //     }
 
-        return 'body';
-    })
-        .then(selector => {
-            cy.get(selector).click();
-        })
+    //     return 'body';
+    // })
+    //     .then(selector => {
+    //         cy.get(selector).click();
+    //     })
 
-    cy.wait(500);
+    cy.wait(1000);
 });
 
 Cypress.Commands.add('createAnswerForQuestion', (questionName) => {
@@ -98,7 +114,7 @@ Cypress.Commands.add('question', (questionName, questionType) => {
     cy.xpath("(//div[@role='radio'])[" + questionType + "]").click({ force: true });
 
     questionType === 1 && cy.xpath("//button[@role='switch']").click();
-    if(questionType !== 1) {
+    if (questionType !== 1) {
         cy.addAnswers();
         cy.xpath("//button[@role='switch']").click();
     }
@@ -109,16 +125,16 @@ Cypress.Commands.add('question', (questionName, questionType) => {
 });
 
 Cypress.Commands.add('closePopup', () => {
-    const isNonExistentOrHidden  = ($el => Cypress.dom.isElement($el));
+    const isNonExistentOrHidden = ($el => Cypress.dom.isElement($el));
 
     cy.wait(1000);
     cy.contains("span", "Attention!").should(($el) => {
-        if(!isNonExistentOrHidden($el)) {
+        if (!isNonExistentOrHidden($el)) {
             expect(isNonExistentOrHidden($el)).to.be.false
         }
 
     }).then((res) => {
-        if(res.length) {
+        if (res.length) {
             cy.contains("span", "Attention!").parent().parent().next().find('button').click();
             cy.wait(500);
         }
@@ -131,11 +147,13 @@ Cypress.Commands.add('accessAllItems', () => {
     // cy.xpath('(//button/span[starts-with(text(), \'Show\')])[last()]').click();
     cy.get('[data-test-id="pageCountButton"]').scrollIntoView().click();
     cy.wait(1000);
-    cy.xpath("//li/span[text()='Show 100 elements']").click()
+    cy.get('.font-normal.block').eq(3).click()
     cy.wait(1000);
 });
 
-Cypress.Commands.add('changeLang', (lang='ru') => {
+
+
+Cypress.Commands.add('changeLang', (lang = 'ru') => {
     cy.get('[data-header-test-id="lang_button"]').click();
     cy.wait(500);
     cy.get(`[data-header-test-id=${lang}]`).click();
@@ -151,24 +169,32 @@ Cypress.Commands.add('changeLangAuth', () => {
 
 Cypress.Commands.add('logout', () => {
     cy.wait(1500);
-    cy.xpath("//button[@class='max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 z-50]'").click();
+    cy.xpath("//button[@class='max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 z-50']").click();
     cy.wait(500);
-    cy.xpath("//a[@href='" +Cypress.config('baseUrl') + "logout']").click();
+    cy.xpath("//a[@href='" + Cypress.config('baseUrl') + "logout']").click();
     cy.wait(1500);
 });
 
 Cypress.Commands.add('searchRow', (name) => {
-    cy.xpath("//div[@class='tooltip']").click();
+    // Проверяем, включены ли фильтры
+    if (Cypress.$('.mt-1.relative.flex').length === 0) {
+        cy.xpath("//div[@class='tooltip']").click();
+    }
     cy.wait(500);
-    cy.xpath("//span[text()='Name']").parent().parent().parent().find('[placeholder="Search"]').type(name)
-    // cy.get('[placeholder="Search"]').type(name);
+    // Используем оба возможных placeholder'а
+    cy.get('[placeholder="Search"], [placeholder="Поиск"]').first()
+        .should('be.visible')
+        .clear()
+        .type(name);
     cy.wait(500);
-    cy.xpath("//span[text()='Name']").parent().parent().parent().find('[placeholder="Search"]').type(' ')
+    cy.get('[placeholder="Search"], [placeholder="Поиск"]').first()
+        .type(' ')
+        .blur();  // Чтобы триггерить фильтр
     cy.wait(1000);
-})
+});
 
 Cypress.Commands.add('skipTests', (cookieName) => {
-    if ( Cypress.browser.isHeaded ) {
+    if (Cypress.browser.isHeaded) {
         cy.clearCookie(cookieName)
     } else {
         cy.getCookie(cookieName).then(cookie => {
@@ -184,13 +210,18 @@ Cypress.Commands.add('skipTests', (cookieName) => {
 });
 
 Cypress.Commands.add('searchReport', (user) => {
-    cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Regulations")').click({multiple: true});
-    cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Report")').click({multiple: true});
-    cy.wait(1000);
+    cy.get('.flex.justify-between', { timeout: 10000 }).eq(1).then($tab => {
+        const isExpanded = $tab.attr('aria-expanded') === 'true';  // true если открыта
+        if (!isExpanded) {
+            cy.wrap($tab).click();
+        }
+    });
+    cy.get('.bg-indigo-800').click();
+    cy.wait(2000);
     cy.xpath('//button[text()="Select"]').click();
     cy.wait(200);
-    cy.contains('div', 'Search').parent().find('input').type('first-name', {force:true});
-    cy.contains('div', user).click({force: true});
+    cy.contains('div', 'Search').parent().find('input').type('first-name last-name', { force: true });
+    cy.contains('div', 'first-name last-name', { timeout: 1000 }).click({ force: true });
     cy.wait(500);
     cy.xpath('//button[text()="Save"]').click();
     cy.xpath('//button[text()="Show results"]').click();
