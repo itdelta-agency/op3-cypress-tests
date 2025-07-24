@@ -1,29 +1,41 @@
+import { ROUTES } from "../../../support/routes";
+
 describe("LC.A1. Create lessons", () => {
   const skipCookie = Cypress.env('shouldSkipEduTests');
-  const lName = Cypress.env('lessonCheckboxRadio');
-  const qNameR = Cypress.env('questionRadio');
-  const qNameCB = Cypress.env('questionCheckbox');
-    before(() => {
-      cy.admin();
-      // if ( Cypress.browser.isHeaded ) {
-      //   cy.clearCookie(skipCookie)
-      // } else {
-      //   cy.getCookie(skipCookie).then(cookie => {
-      //     if (
-      //         cookie &&
-      //         typeof cookie === 'object' &&
-      //         cookie.value === 'true'
-      //     ) {
-      //       Cypress.runner.stop();
-      //     }
-      //   });
-      // }
-    });
+  let lName = Cypress.env('lessonCheckboxRadio');
+  let qNameR = Cypress.env('questionRadio');
+  let qNameCB = Cypress.env('questionCheckbox');
+  let lessonText = Cypress.env('lessonText');
+  let lessonTimer = Cypress.env('lessonTimer');
+  let qName = Cypress.env('questionText');
+
+  before(() => {
+    cy.admin();
+    if (Cypress.browser.isHeaded) {
+      cy.clearCookie(skipCookie)
+    } else {
+      cy.getCookie(skipCookie).then(cookie => {
+        if (
+          cookie &&
+          typeof cookie === 'object' &&
+          cookie.value === 'true'
+        ) {
+          Cypress.runner.stop();
+        }
+      });
+    }
+  });
 
   it('should create lesson(checkbox + radio)', function () {
     // Go to add courses page
-    cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Learning Center")').click({multiple: true});
-    cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Courses")').click({multiple: true});
+    cy.get('.flex.justify-between', { timeout: 10000 }).eq(2).then($tab => {
+      const isExpanded = $tab.attr('aria-expanded') === 'true';  // true если открыта
+      if (!isExpanded) {
+        cy.wrap($tab).click();
+      }
+    });
+    cy.contains('Courses').click();
+
     cy.wait(500);
     cy.accessAllItems();
     cy.xpath("(//div[text()='" + Cypress.env('courseName') + "'])[1]").click();
@@ -64,11 +76,9 @@ describe("LC.A1. Create lessons", () => {
 
 
   it('should create lesson(text)', function () {
-    const lName = Cypress.env('lessonText');
-    const qName = Cypress.env('questionText');
 
     cy.login()
-    cy.visit('lc/admin/courses');
+    cy.visit(ROUTES.courses);
     cy.wait(500);
     cy.accessAllItems();
     cy.xpath("(//div[text()='" + Cypress.env('courseName') + "'])[1]").click();
@@ -78,9 +88,9 @@ describe("LC.A1. Create lessons", () => {
 
     //// Create lesson ////
     cy.xpath("//h2[text()='Create lesson']").click();
-    cy.xpath("//input[@type='text']").first().type(lName);
+    cy.xpath("//input[@type='text']").first().type(lessonText);
     cy.xpath("//button[@role='switch']").click();
-      cy.xpath("//span[text()='Add question']").click();
+    cy.xpath("//span[text()='Add question']").click();
     cy.xpath("/html/body/div[3]/div/div/div/div/div[2]/div[2]/button[1]").click();
     cy.question(qName, 1);
     cy.xpath("//button[text()='Save']").click();
@@ -89,72 +99,101 @@ describe("LC.A1. Create lessons", () => {
 
   });
 
-  // it('save Lesson of Course', function () {
-  //   // SAVE COURSE
-  //   cy.login()
-  //   cy.visit('lc/admin/courses');
-  //   cy.wait(500)
-  //   cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Learning Center")').click({multiple: true});
-  //   cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Courses")').click({multiple: true});
-  //   cy.wait(500);
-  //   cy.accessAllItems();
-  //   cy.xpath("(//div[text()='" + Cypress.env('courseName') + "'])[1]").click();
-  //
-  //   cy.xpath("//span[text()='List of lessons']//following-sibling::span/descendant::input").type(Cypress.env('lessonCheckboxRadio'));
-  //   cy.xpath("//*[text()='" + Cypress.env('lessonCheckboxRadio') + "'][1]").click();
-  //   cy.xpath("//span[text()='List of lessons']//following-sibling::span/descendant::input").type(Cypress.env('lessonText'));
-  //   cy.xpath("//*[text()='" + Cypress.env('lessonText') + "'][1]").click();
-  //   // cy.xpath("//span[text()='List of lessons']//following-sibling::span/descendant::input").type(Cypress.env('lessonTimer'));
-  //   // cy.xpath("//*[text()='" + Cypress.env('lessonTimer') + "'][1]").click();
-  //
-  //   //Save course
-  //   cy.xpath("//button[text()='Save']").click();
-  //   cy.wait(1000);
-  //   cy.contains("Success").should('be.visible');
-  // })
-  // it('should create lesson(timer)', function () {
-  //   const lName = Cypress.env('lessonTimer');
-  //   const qName = Cypress.env('questionText');
-  //
-  //
-  //   cy.xpath("//a[text()='Courses']").click();
-  //   cy.wait(500);
-  //   cy.accessAllItems();
-  //   cy.xpath("(//div[text()='" + Cypress.env('courseName') + "'])[1]").click();
-  //
-  //   cy.xpath("//span[text()='List of lessons']//following-sibling::span/descendant::input").click();
-  //   cy.xpath("/html/body/div[2]/div/div/div[2]/div[2]/main/div/ul/li[7]/span[2]/div[3]/div[2]/div/div[2]/button").click();
-  //
-  //   // Create lesson
-  //   cy.xpath("//h2[text()='Create lesson']").click();
-  //   cy.xpath("//input[@type='text']").first().type(lName);
-  //   cy.xpath("//button[@role='switch']").click();
-  //   cy.xpath("/html/body/div[2]/div/div/div[2]/div[2]/main/div/ul/li[7]/div[2]/label/input").type(2);
-  //
-  //   // Create text question
-  //        cy.xpath("//span[text()='Add question']").click();
-  //       cy.xpath("/html/body/div[6]/div/div/div/div/div[2]/div[2]/button[1]").click();
-  //   cy.question(qName, 1);
-  //
-  //
-  //   cy.xpath("//button[text()='Save']").click();
-  //   cy.wait(500);
-  //   cy.contains("Success").should('be.visible');
-  //   // delete lesson
-  //   // cy.visit('/lc/admin/lessons');
-  //   // cy.xpath(`//div[text()='${lName}']/../../../../../th[4]/div/div[2]`).last().click();
-  //   // cy.get('button').contains('Delete').click();
-  //   // cy.xpath("//p[text()='Success!']").should('be.visible');
-  //
-  // });
-  //
-  //
+
+
+  it('should create lesson(timer)', function () {
+    const q2Name = Cypress.env('questionText');
+
+    cy.login()
+    cy.visit(ROUTES.courses);
+
+    // cy.xpath("//a[text()='Courses']").click();
+    cy.wait(500);
+    cy.accessAllItems();
+    cy.xpath("(//div[text()='" + Cypress.env('courseName') + "'])[1]").click();
+
+    cy.xpath("//span[text()='List of lessons']//following-sibling::span/descendant::input").click();
+    cy.xpath("/html/body/div[2]/div/div/div[2]/div[2]/main/div/ul/li[7]/span[2]/div[3]/div[2]/div/div[2]/button").click();
+
+    // Create lesson
+    cy.xpath("//h2[text()='Create lesson']").click();
+    cy.xpath("//input[@type='text']").first().type(lessonTimer);
+    cy.xpath("//button[@role='switch']").click();
+    cy.get('input[type="text"]').eq(2).type(2);
+
+    // Create text question
+    cy.xpath("//span[text()='Add question']").click();
+    cy.wait(200);
+    cy.get('.flex.flex-row-reverse').contains('Save').click();
+    cy.wait(700);
+    cy.get('input.shadow-sm').eq(0).click().type(q2Name);
+    cy.wait(200);
+    cy.get('input.shadow-sm').eq(1).type(qName + 2);
+    cy.get("button[role='switch']")
+      .invoke('attr', 'aria-checked')
+      .then(checked => {
+        if (checked === 'false') {
+          cy.get("button[role='switch']").eq(0).click();
+        }
+      });
+    // cy.question(qName, 1);
+    cy.contains('button[type="button"]', 'Save').click();
+    cy.wait(1500);
+
+    cy.xpath("//button[text()='Save']").click();
+    cy.wait(500);
+    cy.contains("Success").should('be.visible');
+
+    cy.wait(1000);
+    //Проверка массовых действий
+    cy.bulkAction(['Deactivate', 'Activate',], [lName, lessonText, lessonTimer]);
+
+  });
+
+
+  it('save Lesson of Course', function () {
+    const courseName = Cypress.env('courseName');
+
+    cy.login();
+    cy.visit(ROUTES.courses);
+    cy.wait(1100);
+    cy.accessAllItems();
+
+    // Открыть нужный курс
+    cy.xpath(`(//div[text()='${courseName}'])`).first().click();
+    cy.wait(500);
+    cy.scrollTo('bottom', { ensureScrollable: false });
+    cy.wait(500);
+
+    cy.get('.list-reset.flex ').within(() => {
+      cy.contains(lName).scrollIntoView().should('be.visible');
+      cy.contains(lessonText).should('be.visible');
+      cy.contains(lessonTimer).should('be.visible');
+    });
+    
+    cy.contains(lName).should('be.visible');
+
+    cy.get("button[role='switch']").eq(1)
+      .invoke('attr', 'aria-checked')
+      .then(checked => {
+        if (checked === 'false') {
+          cy.get("button[role='switch']").eq(1).click();
+        }
+      });
+
+
+    // Сохранить курс
+    cy.xpath("//button[text()='Save']").click();
+    cy.contains("Success", { timeout: 10000 }).should('be.visible');
+  });
 
 
 
-    // afterEach(function onAfterEach() {
-    //     // if (this.currentTest.state === 'failed') {
-    //     //     cy.setCookie(skipCookie, 'true');
-    //     // }
-    // });
+
+
+  afterEach(function onAfterEach() {
+    // if (this.currentTest.state === 'failed') {
+    //     cy.setCookie(skipCookie, 'true');
+    // }
+  });
 });

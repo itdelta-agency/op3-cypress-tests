@@ -30,7 +30,8 @@ describe("CP1. Categories List", () => {
           cy.get("button[role='switch']").click();
         }
       });
-    cy.get('input[type="number"]').type(222);
+    cy.get('input[type="number"]').clear().type(222);
+    cy.whoCanSee(['Users', 'Teams', 'Others']);
     cy.get(".sm\\:col-start-3").should('be.visible').click();
     cy.wait(500);
     cy.contains("Success!").should('be.visible');

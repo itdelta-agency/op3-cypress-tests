@@ -1,5 +1,5 @@
 export const ROUTES = {
-  login: '/',
+  login: '/login',
   users: '/admin/user',
   createUser:'/admin/user/create',
   categories: '/cp/admin/category',
@@ -10,5 +10,6 @@ export const ROUTES = {
   invite: 'invite-user',
   report: 'cp/admin/report',
   articles: 'cp/admin/post',
+  lessons: '/lc/admin/lessons',
 
 };

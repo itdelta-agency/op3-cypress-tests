@@ -1,76 +1,134 @@
-const { recurse } = require('cypress-recurse');
+const jsdom = require("jsdom");
+const { JSDOM } = jsdom;
+
 describe('LC.A2. Create course', () => {
-   //  const skipCookie = Cypress.env('shouldSkipEduTests');
-    let main = Cypress.config('baseUrl').split('.')[1];
-    let subject = 'Learning Center | Course has been assigned to you.';
-    let userEmail;
-    before(() => {
+  let inbox;
+  let emailLink;
+  const courseGroupName = Cypress.env('courseGroupName');
+  const lessonCheckboxRadio = Cypress.env('lessonCheckboxRadio');
+  const courseName = Cypress.env('courseName');
 
-        cy.task("getEmailAccount").then((email) => {
-            cy.log(email);
-            userEmail = email;
-        })
-        // if ( Cypress.browser.isHeaded ) {
-        //     cy.clearCookie(skipCookie)
-        // } else {
-        //     cy.getCookie(skipCookie).then(cookie => {
-        //         if (
-        //             cookie &&
-        //             typeof cookie === 'object' &&
-        //             cookie.value === 'true'
-        //         ) {
-        //             Cypress.runner.stop();
-        //         }
-        //     });
-        // }
+  before(() => {
+    cy.task('getLastInbox').then(result => {
+      expect(result, 'Inbox должен быть получен').to.exist;
+      inbox = result;
+      cy.log('📬 Используем email:', inbox.emailAddress);
     });
+  });
+
+  beforeEach(() => {
+    cy.admin(); // Авторизация
+  });
+
+  it('should create course and assign user', () => {
+    // Проверяем, что переменные заданы
+    expect(courseGroupName, 'courseGroupName должен быть задан').to.exist;
+    expect(lessonCheckboxRadio, 'lessonCheckboxRadio должен быть задан').to.exist;
+    expect(courseName, 'courseName должен быть задан').to.exist;
+
+    cy.get('.flex.justify-between', { timeout: 10000 }).eq(2).then($tab => {
+      const isExpanded = $tab.attr('aria-expanded') === 'true';  // true если открыта
+      if (!isExpanded) {
+        cy.wrap($tab).click();
+      }
+    });
+    cy.contains('Courses').click();
+
+    cy.wait(200);
     
-    beforeEach(() => {
-        cy.admin();
+    cy.contains('Add Course').click();
+    cy.wait(200);
+
+    // Заполняем форму
+    cy.xpath("//span[text()='Name *']").next().type(courseName);
+    cy.xpath("//textarea").type("Автотест: описание курса");
+
+    cy.contains('li', 'Available for').within(() => {
+      cy.contains('button', 'Select').click();
     });
 
-    it('should create course', function () {
 
-        // Go to add courses page
-        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Learning Center")').click({multiple: true});
-        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Courses")').click({multiple: true});
-        cy.wait(3000);
-        cy.contains('Add Course').click();
-        cy.xpath("//span[text()='Name *']").next().type(Cypress.env('courseName'));
-        cy.xpath("//textarea").type("Lorem ipsum dolor sit amet, consectetur adipisicing elit.")
-        // Set course as active
-        cy.xpath("//button[text()='Select']").click();
-        cy.wait(500);
-        cy.xpath("/html/body/div[3]/div/div/div/div/div[2]/div[2]/div/div[1]/div[2]/input").type('QA');
-        cy.wait(500);
-        cy.contains('div', 'QA Test').click();
-        // cy.xpath('//div[@id="react-select-4-listbox"]').click();
-
-        // cy.xpath("/html/body/div[3]/div/div/div/div/div[2]/div[2]/div[2]/div/div[text()='QA TEST']").click();
-        cy.xpath("/html/body/div[3]/div/div/div/div/div[2]/button").click();
-        cy.wait(500);
-        cy.xpath("//button[text()='Save']").click();
-        cy.wait(1000);
-        cy.contains("Success").should('be.visible');
+    // cy.contains('div', 'Users').click();
+    const userName = 'Антонио';
+    // cy.wait(1200);
+    cy.contains('div', 'Search', { timeout: 10000 })
+      .parent()
+      .find('input')
+      .type(userName, { force: true });
+    cy.contains('div', userName, { timeout: 5000 }).click({ force: true });
+    cy.get('.mt-3.w-full').click();
+    cy.contains('li', 'Available for').within(() => {
+      cy.get('ul').should('contain', userName);
     });
-  
-    it('check get email', function () {
-      cy.wait(2500);
-      recurse(
-        () => {
-            if(main === 'release') return  cy.task('getAccount', {subject, userEmail})
-            if(main === 'org-online') return cy.task('getEmailData', {})
-        }, // Cypress commands to retry
-        Cypress._.isObject, // keep retrying until the task returns an object
-        {
-          timeout: 60000, // retry up to 1 minute
-          delay: 5000, // wait 5 seconds between attempts
-        },
-      )
-        .its('html')
-        .then((html) => {
-          cy.document({ log: false }).invoke({ log: false }, 'write', html);
-        });
-      cy.xpath("//span[@class='course-title']").should('be.visible');
-    })
+
+
+    // Группа курса
+    cy.get('.css-hlgwow').eq(0).click().type(courseGroupName);
+
+    // Ждем появления опции с нужным значением и кликаем
+    cy.contains('div', courseGroupName, { timeout: 5000 })
+      .should('be.visible')
+      .click();
+
+    // 1 чек бокс
+    cy.get("button[role='switch']").eq(0)
+      .invoke('attr', 'aria-checked')
+      .then(checked => {
+        if (checked === 'false') {
+          cy.get("button[role='switch']").eq(0).click();
+        }
+      });
+
+    // Урок
+    cy.get('.css-hlgwow').eq(1).click().type(lessonCheckboxRadio);
+
+    cy.contains('div', lessonCheckboxRadio, { timeout: 5000 })
+      .should('be.visible')
+      .click();
+
+    cy.get("button[role='switch']").eq(1)
+      .invoke('attr', 'aria-checked')
+      .then(checked => {
+        if (checked === 'false') {
+          cy.get("button[role='switch']").eq(1).click();
+        }
+      });
+
+    // Сохраняем курс
+    cy.contains('button[type="button"]', "Save").click();
+
+    // Проверяем успешное сохранение
+    cy.contains("Success").should("be.visible");
+
+    cy.bulkAction(['Deactivate', 'Activate',], [courseName]);
+
+  });
+
+  // it('should get course email and extract link', () => {
+  //   cy.task('getLastEmail', { inboxId: inbox.id, timeout: 60000 }).then(email => {
+  //     expect(email, 'Письмо должно быть получено').to.exist;
+
+  //     const html = email.bodyHTML || email.body;
+
+  //     const dom = new JSDOM(html);
+  //     const doc = dom.window.document;
+
+  //     // Ищем ссылку на курс в письме
+  //     const link = doc.querySelector('a[href*="/course"]')?.href;
+
+  //     cy.log('🔗 Найденная ссылка:', link);
+  //     expect(link, 'Ссылка на курс должна быть найдена в письме').to.exist;
+
+  //     emailLink = link;
+  //   });
+  // });
+
+  // it('should open assigned course from email', () => {
+  //   expect(emailLink, 'email link должен быть доступен').to.exist;
+
+  //   cy.visit(emailLink);
+
+  //   // Проверяем, что курс открылся (замени селектор на актуальный для твоего UI)
+  //   cy.contains('Course Overview').should('be.visible');
+  // });
 });

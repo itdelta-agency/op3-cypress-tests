@@ -26,7 +26,13 @@ describe("CP3. Article List", () => {
     cy.searchRow('QA');
     cy.xpath(`//div[text()="${articleName}"]`).click();
     cy.wait(500);
-    cy.xpath('//span[text()="Status"]/../span[2]/button').click();
+    cy.get("button[role='switch']")
+      .invoke('attr', 'aria-checked')
+      .then(checked => {
+        if (checked === 'true') {
+          cy.get("button[role='switch']").click();
+        }
+      });
     cy.wait(500);
     cy.xpath('//button[text()="Save"]').click();
     cy.wait(500);
@@ -34,24 +40,24 @@ describe("CP3. Article List", () => {
     cy.clearCookies();
   });
 
-it('Check deactive article', function () {
-  cy.login();
-  cy.wait(2000);
-  cy.visit(ROUTES.report);
-  cy.wait(2000);
+  it('Check deactive article', function () {
+    cy.login();
+    cy.wait(2000);
+    cy.visit(ROUTES.report);
+    cy.wait(2000);
 
-  // Поиск и фильтрация по пользователю
-  cy.searchReport(); // ты уже реализовал эту команду
+    // Поиск и фильтрация по пользователю
+    cy.whoCanSee(['Users']);
 
-  cy.wait(2000);
+    cy.wait(2000);
+    cy.get('.px-3.py-1').click();
 
-cy.xpath(`//div[text()='${userNames}']`)
-  .next()
-  .scrollIntoView()
-  .click()
-  .type(articleName)
-  .contains('div', articleName)
-  .should('not.exist');
+    cy.wait(1000);
+    cy.xpath(`//div[text()='${userNames}']`).next().scrollIntoView()
+      .click().type(articleName);
+
+    // Проверяем, что элемент с текстом articleName **не существует**
+    cy.contains('div', 'No options').should('be.visible');
   });
 
 
@@ -60,14 +66,20 @@ cy.xpath(`//div[text()='${userNames}']`)
   it('Activate Article', function () {
     cy.login()
     cy.visit(ROUTES.articles);
-    cy.wait(2000);
+    cy.wait(1000);
     cy.searchRow('QA');
     cy.xpath(`//div[text()="${articleName}"]`).click();
-    cy.wait(500);
-    cy.xpath('//span[text()="Status"]/../span[2]/button').click();
-    cy.wait(500);
+    cy.wait(100);
+    cy.get("button[role='switch']")
+      .invoke('attr', 'aria-checked')
+      .then(checked => {
+        if (checked === 'false') {
+          cy.get("button[role='switch']").click();
+        }
+      });
+    cy.wait(100);
     cy.xpath('//button[text()="Save"]').click();
-    cy.wait(500);
+    cy.wait(100);
     cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
   })
 
@@ -75,12 +87,25 @@ cy.xpath(`//div[text()='${userNames}']`)
   it('check Active Article', function () {
     cy.login()
     cy.visit('/cp/admin/report');
-    cy.wait(2000);
-    cy.searchReport();
+    cy.wait(1000);
+    cy.get('.flex.justify-between', { timeout: 10000 }).eq(1).then($tab => {
+      const isExpanded = $tab.attr('aria-expanded') === 'true';  // true если открыта
+      if (!isExpanded) {
+        cy.wrap($tab).click();
+      }
+    });
+    cy.get('.bg-indigo-800').click();
+    cy.wait(1000);
+    cy.whoCanSee(['Users']);
 
-    cy.wait(3000);
-    cy.xpath(`//div[text()='${userNames}']`).next().scrollIntoView().click().type(articleName).contains('div', articleName).should('be.visible');;
+
+    cy.get('.px-3.py-1').click();
+
+    cy.wait(1000);
+    cy.xpath(`//div[text()='${userNames}']`).next().scrollIntoView()
+      .click().type(articleName);
     cy.wait(500);
+    cy.contains('div', articleName).should('be.visible');
   })
 
 })

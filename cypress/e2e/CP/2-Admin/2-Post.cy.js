@@ -40,14 +40,34 @@ describe("CP2. Article List", () => {
 
     cy.get('.css-hlgwow').type(categorisName);
     cy.xpath("//*[text()='" + categorisName + "'][1]").click();
+    cy.wait(1500);
+    cy.whoCanSee(['Users', 'Teams', 'Others']);
+    cy.wait(1500);
 
+    cy.get('.px-3.py-1.text-sm').click();
+    
+    for (let i = 0; i <= 3; i++){
+    let word = 'QA Cours ' + i;
+      cy.get('.flex-1.text-sm').click().type(word);
+      cy.get('.px-3.py-1').eq(0).click();
+      cy.get('.px-3.py-1.text-sm').click();
+    }
+
+    cy.get('.my-2.flex.flex-wrap').click();
+    cy.get('.w-full.max-h-24')
+      .children('li')
+      .should('be.visible');
 
     cy.get('.mr-1').click();
     cy.get("button[role='switch']").eq(1).then($checkbox => {
-      if (!$checkbox.attr('aria-checked') || $checkbox.attr('aria-checked') === 'false') {
+      if (!$checkbox.attr('aria-checked') === 'false') {
         cy.wrap($checkbox).click();
       }
     });
+
+        // Продолжение сценария:
+    cy.get('.tab.flex.cursor-pointer').parent().next().find('span').eq(1).click();
+    cy.wait(500);
 
     cy.wait(500);
     for (let i = 1; i < 4; i++) {
@@ -71,7 +91,7 @@ describe("CP2. Article List", () => {
       }
       cy.xpath(`//ul/div/li/div[2]/div/ul/div[1]/li/div[2]/ul/div[${i}]/li/div[2]/div/div`).click();
     }
-    cy.xpath("//button[text()='Save']").click();
+    cy.xpath("//button[text()='Save & Close']").click();
 
     // cy.xpath("//span[text()='Confirmation']").parent().parent().next().contains('button', 'No').click();
     cy.wait(500);
@@ -98,24 +118,32 @@ describe("CP2. Article List", () => {
         }
       });
 
-    cy.get('.css-hlgwow                               .css-1dyz3mf').click().type(123)
-    .contains(123, { timeout: 1000 }).click({ force: true });
-    // cy.xpath("//ul/li[6]/div[2]").click();
-    // cy.wait(500);
-    cy.contains('a', 'Questions 3').parent().next().find('span').eq(1).click();
+    cy.get('body').then(($body) => {
+      if ($body.find('.css-hlgwow').length) {
+        cy.get('.css-hlgwow').click().type('123');
+      } else {
+        cy.get('.css-1dyz3mf').click().type('123');
+      }
+    });
+
+    // Ждём и выбираем нужный элемент из выпадающего списка
+    cy.contains('123', { timeout: 1000 }).click({ force: true });
+
+    // Продолжение сценария:
+    cy.get('.tab.flex.cursor-pointer').parent().next().find('span').eq(1).click();
     cy.wait(500);
 
     cy.get('.text-center.w-full').eq(2).click();
     cy.wait(1000);
-    // cy.xpath("//span[text()='Confirmation']").parent().parent().next().contains('button', 'No').click();
-    // cy.wait(500);
 
+    // Подтверждение: проверка "Success!"
     cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
+
+    cy.wait(1500);
+    cy.bulkAction(['Activate', 'Deactivate'], [articleName]);
+    // after(() => {
+    //   cy.clearCookies();
+    // });
   })
 
-
-  // after(() => {
-  //   cy.clearCookies();
-  // });
-})
-
+});
