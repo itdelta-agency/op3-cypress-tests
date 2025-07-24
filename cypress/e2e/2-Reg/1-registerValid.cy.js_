@@ -6,9 +6,9 @@ describe('Register Ru', () => {
     let name = 'QaRegister';
     let last_name = 'Test';
     let test_password = 'Qatest123';
-    //let main = Cypress.config('baseUrl').split('.')[1]
-    //let subject = 'Learning Center | Invitation to the Learning Center'
-    //let confirmationLink;
+    let main = Cypress.config('baseUrl').split('.')[1]
+    let subject = 'Learning Center | Invitation to the Learning Center'
+    let confirmationLink;
 
     before(() => {
             const ctx = Cypress.mocha.getRunner().suite.ctx
