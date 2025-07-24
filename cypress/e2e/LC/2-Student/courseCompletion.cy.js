@@ -1,64 +1,105 @@
 describe('LC.B1. Complete the course which we have created in previous tests', () => {
-    beforeEach(() => {
-        cy.task("getEmailAccount").then((email) => {
-            cy.login(email, Cypress.env('password'));
-        })
-      // cy.login('nagopib486@chambile.com', '123');
+
+  const courseName = Cypress.env('courseName');
+  beforeEach(() => {
+    cy.task("getUserEmail").then((data) => {
+      // data — объект, берем поле email
+      cy.login(data.email, Cypress.env('password'));
+    });
+  });
+
+  it('Student should answer the lesson', function () {
+    cy.login();
+    cy.visit('/lc/courses');
+    // Find the course by name
+    cy.xpath("//input[@id='search']").type(courseName);
+    cy.wait(200);
+
+    cy.get('.flex.justify-between').eq(4)
+      .invoke('attr', 'aria-expanded')
+      .then(checked => {
+        if (checked === 'false') {
+          cy.get('.flex.justify-between').eq(4).click();
+        }
+        // Если 'true' — ничего не делаем
+      });
+    // Go to the course
+    cy.xpath(`//h3[text()='${courseName}']`).click();
+    cy.wait(200);
+    // Assert that we're in the course
+    cy.xpath("//h1[text()='" + courseName + "']");
+    cy.wait(200);
+    // Start the course (click on run)
+    cy.xpath("//button[@class='my-6 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500']")
+      .click();
+    cy.wait(200);
+
+    //// FIRST LESSON ////
+    // Assert we're in the second lesson
+    cy.contains('Lesson successfully completed!').then($el => {
+      if ($el.length > 0) {
+        // Урок пройден, кликаем на урок с нужным названием
+        cy.contains('QA Test lesson (text)').click();
+      } else {
+        // Урок не пройден — просто продолжаем работу с текущим уроком
+        cy.log('Урок еще не пройден, продолжаем');
+     
+    cy.xpath("//h1[text()='" + Cypress.env('lessonCheckboxRadio') + "']");
+    cy.wait(200);
+    // Select correct radio answer
+    cy.xpath("(//input[@type='radio'])").parent().find(":contains('answer 1')").click();
+
+
+    cy.xpath("//label[text()='answer 1']").click();
+    cy.wait(200);
+    // Select correct checkbox answer
+    // cy.xpath("(//input[@type='checkbox'])").parent().parent().find(":contains('answer 1')").click({multiple: true});
+    // Go to the next lesson
+    cy.wait(2000)
+    cy.xpath('//button[text()=\'Check\']').click();
+     }
     });
 
-    it('Student should answer the lesson', function () {
-        cy.visit('/lc/courses');
-        // Find the course by name
-        cy.xpath("//input[@id='search']").type(Cypress.env('courseName'));
-        // Go to the course
-        cy.xpath("//h3[text()='" + Cypress.env('courseName') + "']").first().click();
-        // Assert that we're in the course
-        cy.xpath("//h1[text()='" + Cypress.env('courseName') + "']");
-        // Start the course (click on run)
-        cy.xpath("//button[@class='my-6 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500']")
-            .click();
+    //// SECOND LESSON ////
+    // Assert we're in the third lesson
+    cy.xpath("//h1[text()='" + Cypress.env('lessonText') + "']");
+    cy.wait(200);
+    // Input answer
+    cy.xpath("//div[@contenteditable='true']").click().type("Lorem ipsum dolor sit amet, consectetur " +
+      "adipisicing elit. Accusamus aspernatur dolorem dolorum eligendi esse facilis impedit ipsa maxime minus " +
+      "molestiae nostrum odit provident quam ratione, sequi similique, tempore. Nemo, sunt?");
+    // Go to the next lesson
+    cy.xpath('//button[text()=\'Check\']').click();
+    //
+    cy.wait(500);
 
-        //// FIRST LESSON ////
-        // Assert we're in the second lesson
-        cy.xpath("//h1[text()='" + Cypress.env('lessonCheckboxRadio') + "']");
-        // Select correct radio answer
-        cy.xpath("(//input[@type='radio'])").parent().find(":contains('answer 1')").click();
+    cy.get('button').contains('Start lesson').should('be.visible').click();
+    cy.wait(1000);
+    cy.get('.ql-editor.ql-blank').eq(1).type(123);
+    cy.get('button').contains('Check').click();
+    cy.wait(200);
 
+    cy.xpath("/html/body/div[3]/div/div/div/div/div[2]/div[2]/button[1]").click();
 
-        cy.xpath("//label[text()='answer 1']").click();
-        // Select correct checkbox answer
-        // cy.xpath("(//input[@type='checkbox'])").parent().parent().find(":contains('answer 1')").click({multiple: true});
-        // Go to the next lesson
-        cy.wait(2000)
-        cy.xpath('//button[text()=\'Check\']').click();
-
-        //// SECOND LESSON ////
-        // Assert we're in the third lesson
-        cy.xpath("//h1[text()='" + Cypress.env('lessonText') + "']");
-        // Input answer
-        cy.xpath("//div[@contenteditable='true']").click().type("Lorem ipsum dolor sit amet, consectetur " +
-            "adipisicing elit. Accusamus aspernatur dolorem dolorum eligendi esse facilis impedit ipsa maxime minus " +
-            "molestiae nostrum odit provident quam ratione, sequi similique, tempore. Nemo, sunt?");
-        // Go to the next lesson
-        cy.xpath('//button[text()=\'Check\']').click();
-      //
-       cy.wait(500);
-      // cy.xpath("/html/body/div[3]/div/div/div/div/div[2]/div[2]/button[1]").click();
-      //
-      // cy.xpath("//h1[text()='" + Cypress.env('lessonTimer') + "']");
-      // // Input answer
-      // cy.xpath("//div[@contenteditable='true']").click().type("Lorem ipsum dolor sit amet, consectetur " +
-      //   "adipisicing elit. Accusamus aspernatur dolorem dolorum eligendi esse facilis impedit ipsa maxime minus " +
-      //   "molestiae nostrum odit provident quam ratione, sequi similique, tempore. Nemo, sunt?");
-      // // Go to the next lesson
-      // cy.xpath('//button[text()=\'Check\']').click();
-      //
-      //
-         cy.get('div').contains('The lesson is awaiting teacher review').should('be.visible')
-      //
-        //// BACK TO THE FIRST LESSON
-      cy.get('p').contains('QA Test lesson (checkbox + radio)').click();
-      cy.get('div').contains('Lesson successfully completed!').should('be.visible')
-    });
+    cy.xpath("//h1[text()='" + Cypress.env('lessonTimer') + "']");
+    cy.wait(200);
+    // Input answer
+    cy.xpath("//div[@contenteditable='true']").click().type("Lorem ipsum dolor sit amet, consectetur " +
+      "adipisicing elit. Accusamus aspernatur dolorem dolorum eligendi esse facilis impedit ipsa maxime minus " +
+      "molestiae nostrum odit provident quam ratione, sequi similique, tempore. Nemo, sunt?");
+    // Go to the next lesson
+    cy.wait(200);
+    cy.xpath('//button[text()=\'Check\']').click();
+    cy.wait(200);
+    //
+    //
+    cy.get('div').contains('The lesson is awaiting teacher review').should('be.visible')
+    cy.wait(200);
+    //
+    //// BACK TO THE FIRST LESSON
+    cy.get('p').contains('QA Test lesson (checkbox + radio)').click();
+    cy.wait(200);
+    cy.get('div').contains('Lesson successfully completed!').should('be.visible')
+  });
 
 });
