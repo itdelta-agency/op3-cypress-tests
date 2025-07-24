@@ -1,10 +1,6 @@
-import { ROUTES } from "../../../support/routes";
-
 describe("LC.A5. Create team", () => {
     const tName = "Qa Test Team";
     const addName = 'sdadas4rwrwerw542345'
-    let userName = 'QA USER';
-
     beforeEach(() => {
         cy.admin();
         cy.changeLang('en');
@@ -12,7 +8,7 @@ describe("LC.A5. Create team", () => {
 
     it('should create new team', function () {
         // Go to add user page
-        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Teams")').click({ multiple: true });
+        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Teams")').click({multiple: true});
         cy.wait(500);
         cy.xpath("//button[text()='Add team']").click();
 
@@ -27,8 +23,7 @@ describe("LC.A5. Create team", () => {
     });
 
     it('should edit team', function () {
-        cy.visit(ROUTES.teams);
-        userName = 'QA Edit USER';
+        cy.visit('admin/teams');
 
         cy.wait(1000);
         cy.accessAllItems();
@@ -39,22 +34,16 @@ describe("LC.A5. Create team", () => {
         cy.xpath("//span[text()='Name *']").next().clear().type(tName);
         cy.wait(500);
 
-
-        cy.get('.css-19bb58m').should('exist')
-            .type('USER', { delay: 50 });
-        cy.get('div[class*="menu"] div')
-            .contains(userName)
-            .first()
-            .click();
-
+        cy.xpath("//span[text()='Users']").next().children().click().type('Qa');
+        cy.xpath("//div[text()='Qa User']").scrollIntoView().click();
+        cy.wait(500);
         cy.xpath("//button[text()='Save']").should('be.visible').click();
         cy.wait(1000);
-        cy.xpath("//p[text()='Success!']", {timeout: 10000}).should('be.visible');
+        cy.xpath("//p[text()='Success!']").should('be.visible');
     })
 
-
     it('check add User Team', function () {
-        cy.admin();
+        cy.login(Cypress.env('authEmail'), Cypress.env('authPassword'));
 
         cy.visit('/my-profile');
         cy.wait(1500);

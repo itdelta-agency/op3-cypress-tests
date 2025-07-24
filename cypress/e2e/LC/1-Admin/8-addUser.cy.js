@@ -1,173 +1,137 @@
-import { ROUTES } from '../../../support/routes';
-console.log('ROUTES:', ROUTES);
-
 describe("US.1 Add User", () => {
 
-  let authEmail;
-  let authPassword;
-  let teemName;
-  let firstName = 'QA';
-  let lastName = 'USER';
-  let fullName = firstName + ' ' + lastName;
-  let editUserFirstName = firstName + ' ' + "Edit";
-  
+    let email = `qaUserManual${Math.random()}@mail.ru`;
+    let password = `Qa${Math.random()}`
+
+    before(() => {
+        cy.admin();
+    })
 
 
+    it('Add user', function () {
+        // Go to add user page
+        cy.changeLang();
+        cy.wait(2000);
+        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Пользователи")').click({multiple: true});
+        cy.xpath("//button[text()='Добавить пользователя']").click();
 
-  beforeEach(() => {
-    return cy.resetAppState()
-      .then(() => cy.login())
-      .then(() => {
-        authEmail = Cypress.env('authEmail');
-        authPassword = Cypress.env('authPassword');
-        teemName = Cypress.env('teemName');
-      });
-  });
+        cy.wait(1000);
 
+        // filling in the fields
+        cy.xpath("//span[text()='Имя *']").next().type('QA');
+        cy.xpath("//span[text()='Фамилия']").next().type('USER')
+        cy.xpath("//span[text()='Почта *']").next().type(email);
+        cy.xpath("//span[text()='Телефон']").next().type('+7 999 999 99 99');
+        cy.xpath("//span[text()='Пароль *']").next().type(password);
+        cy.xpath("//span[text()='Повторите пароль *']").next().type(password);
+        cy.xpath("//span[text()='Статус']").next().children().click();
 
-
-  it('Add user', function () {
-
-    cy.visit(ROUTES.createUser);
-
-    cy.get('.shadow-sm').eq(0).should('be.visible').type(firstName);
-    cy.get('.shadow-sm').eq(1).should('be.visible').type(lastName);
-    cy.get('.shadow-sm').eq(2).should('be.visible').type(authEmail);
-    cy.get('.shadow-sm').eq(3).should('be.visible').type('+7 999 999 99 99');
-    cy.get('.shadow-sm').eq(4).should('be.visible').type(authPassword);
-    cy.get('.shadow-sm').eq(5).should('be.visible').type(authPassword);
-
-    cy.get("button[role='switch']").eq(0)
-      .invoke('attr', 'aria-checked')
-      .then(checked => {
-        if (checked === 'false') {
-          cy.get("button[role='switch']").eq(0).click();
-        }
-      });
-
-    cy.xpath('//input[@id="avatar"]').should('exist').selectFile('cypress/image/qaUser.jpg', { force: true });
-
-    cy.whoCanSee(['Teams']);
-    cy.get('.sm\\:col-start-3').click();
-    cy.wait(1000);
-    // Проверяем, есть ли сообщение об ошибке
-    cy.get('body', { timeout: 10000 }).then(($body) => {
-      if ($body.text().includes('The E-mail has already been taken.')) {
-        cy.log('Пользователь уже существует');
-        cy.get('.sm\\:col-start-1').click();
-      } else {
-        cy.location('pathname', { timeout: 10000 }).should('include', '/user');
-        cy.contains('User created successfully!', { timeout: 10000 }).should('be.visible');
-        cy.log('Пользователь создан');
-      }
-    });
-
-      cy.bulkAction(['Deactivate', 'Activate',], fullName);
-  });
+        // Add IMAGE
+        cy.xpath('//input[@id="avatar"]').selectFile('cypress/image/qaUser.jpg', {force: true});
 
 
-// ---------------------------------------------------------------------------------------
+        // departments
+        // cy.xpath("//button[text()='Выбрать']").click();
+        // cy.wait(500);
+        // cy.contains("Выбрать: Отделы").parent().next().click();
+        // cy.wait(500);
+        // cy.xpath("//div[text()='Marketing']").click();
+        // cy.contains("Выбрать: Отделы").parent().next().next().next().click();
+        // cy.wait(500);
 
-  it('check add User by search', () => {
-    cy.visit(ROUTES.users);
-    // cy.changeLang('en');
-    cy.wait(1000);
-    cy.searchRow(fullName);
+        //Team
+        cy.xpath("//button[text()='Выбрать']").click();
+        cy.wait(500);
+        cy.xpath("(//div[text()='Команды'])").click();
+        cy.wait(500);
+        cy.contains("Выбрать: Команды").parent().next().click();
+        cy.wait(500);
+        cy.xpath("/html/body/div[3]/div/div/div/div/div[2]/div[2]/div/div[1]/div[2]/input").type('Qa');
+        cy.xpath("//div[text()='Qa Test Team']").scrollIntoView().click();
+        cy.wait(500);
+        cy.contains("Выбрать: Команды").parent().next().next().next().click();
 
-    cy.wait(1000);
-    cy.get('input[placeholder="Search"]').eq(1)
-      .should('be.visible')
-      .click()
-      .type(authEmail, { delay: 100 });
-    cy.wait(1000);
-    cy.get('table tbody tr')
-      .contains(authEmail)
-      .should('be.visible')
-      .then(($cell) => {
-        const cellText = $cell.text().trim();
-        expect(cellText).to.eq(authEmail);
-      });
-  });
+        cy.wait(500);
+        //Save
+        cy.xpath("//button[text()='Сохранить']").click();
+        cy.wait(500);
+        cy.contains('Пользователь успешно создан!').should('be.visible');
+    })
 
-// ---------------------------------------------------------------------------------------
+    it('check add User', () => {
+        cy.login()
+        cy.visit('/admin/teams')
+        cy.changeLang('en');
+        cy.wait(2000);
+        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Users")').click({multiple: true});
+        cy.wait(500);
+        cy.accessAllItems();
+        cy.contains('div', email).click()
+    })
 
-  it('edite User', () => {
-    let editPassword = 123 + authPassword;
-    
-    cy.visit(ROUTES.users);
-    cy.changeLang('en');
-    cy.accessAllItems();
-    cy.wait(1000);
+    it('edite User', () => {
+        cy.login()
+        cy.visit('/admin/teams')
+        cy.changeLang('en');
+        cy.wait(2000);
+        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Users")').click({multiple: true});
+        cy.wait(500);
+        cy.accessAllItems();
+        cy.wait(500);
+        cy.contains(email).parent().parent().last().find('div').eq(2).click();
+        cy.wait(1500);
 
-    cy.searchRow(fullName);
-    // Вводим в инпут, который должен быть видим
-    cy.get('input[placeholder="Search"]').eq(1)
-      .should('be.visible')
-      .click()
-      .type(authEmail, { delay: 100 });
-    cy.wait(1000);
+        cy.changeLang();
+        cy.wait(1500);
+        // filling in the fields
+        cy.xpath("//span[text()='Имя *']").next().clear().type('QA QA');
+        cy.xpath("//span[text()='Фамилия']").next().clear().type('USER USER');
 
-    cy.contains('table tbody tr', authEmail)
-      .should('be.visible')
-      .within(() => {
-        // Кликаем по колонке "Имя"
-        cy.get('th').eq(3).click();  // если имя в первом столбце
-      });
+        email = 'Edit' + email;
+        password+=' Edit';
 
-    cy.wait(2000);
-    cy.get('.shadow-sm').eq(0).should('be.visible').clear().type(editUserFirstName);
-    cy.get('.shadow-sm').eq(1).should('be.visible').clear().type(lastName);
-    cy.get('.shadow-sm').eq(2).should('be.visible').clear().type(authEmail);
-    cy.get('.shadow-sm').eq(3).should('be.visible').clear().type('+7 999 999 99 99');
-    cy.get('.shadow-sm').eq(4).should('be.visible').clear().type(editPassword);
-    cy.get('.shadow-sm').eq(5).should('be.visible').clear().type(editPassword);
+        cy.xpath("//span[text()='Почта *']").next().clear().type(email);
+        cy.xpath("//span[text()='Телефон']").next().clear().type('+7 999 999 99 99');
+        cy.xpath("//span[text()='Пароль *']").next().clear().type(password);
+        cy.xpath("//span[text()='Повторите пароль *']").next().clear().type(password);
+        cy.xpath('//input[@id="avatar"]').selectFile('cypress/image/editQaUser.jpg', {force: true});
+        cy.xpath("//span[text()='Администратор']").next().children().click();
 
-    cy.get("button[role='switch']").eq(0)
-      .invoke('attr', 'aria-checked')
-      .then(checked => {
-        if (checked === 'false') {
-          cy.get("button[role='switch']").eq(0).click();
-        }
-      });
+        //Save
+        cy.xpath("//button[text()='Сохранить']").click();
+        cy.wait(2000);
+        cy.contains('Пользователь успешно обновлён!').should('be.visible');
+    })
 
-    cy.get('.sm\\:col-start-3').click();
-    cy.wait(1000);
+    it('check user team/departments', () => {
+        cy.login()
+        cy.visit('/admin/teams')
+        cy.changeLang('en');
+        cy.wait(2000);
+        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Users")').click({multiple: true});
+        cy.wait(500);
+        // cy.xpath("//a[text()='Отделы']").click();
+        // cy.wait(1000);
+        // cy.xpath("//div[text()='Marketing']").click();
+        // cy.wait(500);
+
+        // check User
+//        cy.xpath("//span[text()='Пользователи']").next().contains('QA QA USER USER').should('be.visible');
 
 
-    cy.get('body', { timeout: 10000 }).then(($body) => {
-      if ($body.text().includes('The E-mail has already been taken.')) {
-        cy.log('Пользователь уже существует');
-        cy.get('.sm\\:col-start-1').click();
-      } else {
-        cy.location('pathname', { timeout: 10000 }).should('include', '/user');
-        cy.contains('User updated successfully!', { timeout: 10000 }).should('be.visible');
-        cy.log('Пользователь создан');
-      }
-    });
-  });
+        //check Team
+        cy.visit("admin/teams");
+        cy.wait(1500);
+        cy.accessAllItems();
+        cy.xpath("//div[text()='Qa Test Team']").click();
+        cy.wait(500);
 
-// ---------------------------------------------------------------------------------------
-  it('check user team/departments', () => {
-    cy.visit(ROUTES.teams);
+        cy.xpath("//span[text()='Users']").next().contains('QA QA USER USER').should('be.visible');
+    })
 
-    cy.searchRow(teemName);
-
-    cy.wait(1000); // чтобы таблица обновилась после поиска
-    cy.contains('table tbody tr', teemName)
-      .should('be.visible')
-      .within(() => {
-        cy.get('th').eq(2).click();
-      });
-    cy.wait(1000);
-    cy.get('.px-4.py-3.rounded-md').eq(3)
-      .contains(editUserFirstName + ' ' + lastName)
-      .should('exist');
-
-    // // Навигация по командам с ожиданием элементов
-    cy.visit(ROUTES.teams);
-    cy.accessAllItems();
-
-    cy.xpath("//div[text()='Qa Test Team']").should('be.visible').click({ multiple: true });
-
-  });
-});
+    it("log in account", () => {
+        cy.login(email, password);
+        cy.wait(1500);
+        cy.visit('lc/admin/courses');
+    })
+})

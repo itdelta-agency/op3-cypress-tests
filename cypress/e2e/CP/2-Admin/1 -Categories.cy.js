@@ -1,81 +1,54 @@
-const { ROUTES } = require("../../../support/routes");
-
 describe("CP1. Categories List", () => {
-  let catName = Cypress.env('categoryName');
+    let catName = Cypress.env('categoryName');
 
-  beforeEach(() => {
-    cy.admin();
-  });
-
-  it('should create Category)', function () {
-
-    cy.get('.flex.justify-between', { timeout: 10000 }).eq(1).then($tab => {
-      const isExpanded = $tab.attr('aria-expanded') === 'true';  // true если открыта
-      if (!isExpanded) {
-        cy.wrap($tab).click();
-      }
+    beforeEach(() => {
+        cy.admin();
     });
-    cy.get('a.text-indigo-100',).eq(0).click();
 
-    cy.wait(500);
+    it('should create Category)', function () {
 
-    cy.contains('Add category').click();
+        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Regulations")').click({multiple: true});
+        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Categories")').click({multiple: true});
 
-    // create post
-    cy.get('ul li:first input').type(catName);
-    cy.get("button[role='switch']")
-      .invoke('attr', 'aria-checked')
-      .then(checked => {
-        if (checked === 'true') {
-          cy.get("button[role='switch']").click();
-        }
-      });
-    cy.get('input[type="number"]').clear().type(222);
-    cy.whoCanSee(['Users', 'Teams', 'Others']);
-    cy.get(".sm\\:col-start-3").should('be.visible').click();
-    cy.wait(500);
-    cy.contains("Success!").should('be.visible');
+        cy.wait(1000);
 
-    // check active
-    cy.contains('div', 'QA Test Category')
-      .parents('tr')
-      .within(() => {
-        cy.contains('span', 'Inactive').should('exist');
-      });
-  });
+        cy.contains('Add category').click();
 
-  it('should edit Category)', function () {
+        // create post
+        cy.get('ul li:first input').type(catName);
+        cy.xpath("//button[@role='switch']").click();
+        cy.wait(500);
 
-    cy.visit(ROUTES.categories);
+        cy.xpath("//button[text()='Save']").should('be.visible').click();
+        cy.wait(500);
+        cy.contains("Success!").should('be.visible');
 
-    // cy.accessAllItems();
-    cy.xpath(`(//div[text()='${catName}'])`).click();
-    //
-    cy.contains('Edit category');
+        // // check active
+        cy.xpath(`//div[text()='${catName}']/../../../../../td[6]`).last().contains('Inactive');
+    });
+   
+    it('should edit Category)', function () {
 
-    cy.get("button[role='switch']")
-      .invoke('attr', 'aria-checked')
-      .then(checked => {
-        if (checked === 'false' || checked === undefined) {
-          cy.get("button[role='switch']").click();
-        }
-      });
+        cy.visit('cp/admin/category');
 
-    cy.xpath("//button[text()='Save & Close']").should('be.visible').click();
-    cy.wait(1000);
+        // cy.accessAllItems();
+        cy.xpath(`(//div[text()='${catName}'])`).click();
+        //
+        cy.contains('Edit category');
 
-    cy.xpath("//p[text()='Success!']").should('be.visible');
+        cy.xpath("//button[@role='switch']").click();
+        cy.wait(500);
 
-    cy.contains('div', 'QA Test Category')
-      .parents('tr')
-      .within(() => {
-        cy.contains('span', 'Active').should('exist');
-      });
+        cy.xpath("//button[text()='Save & Close']").should('be.visible').click();
+        cy.wait(1000);
 
-  });
+        cy.xpath("//p[text()='Success!']").should('be.visible');
 
-  after(() => {
-    cy.clearCookies();
-  });
+         cy.xpath(`//div[text()='${catName}']/../../../../../td[6]`).last().contains('Active');
+    });
 
+    after(() => {
+        cy.clearCookies();
+    });
+  
 });

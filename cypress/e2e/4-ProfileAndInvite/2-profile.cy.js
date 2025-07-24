@@ -9,12 +9,20 @@ describe("A3. Profile editing", () => {
     it('should assert profile page', function () {
         cy.visit('/my-profile');
         cy.wait(1000);
+        // cy.closePopup();
 
+        //chnage Avatar
         cy.xpath("//input[@id='avatar']").selectFile('cypress/image/person.jpg', {force: true})
+
+        // change names
         cy.xpath("//h1[text()='User Profile']").should('be.visible');
         cy.xpath("//input[@id='first-name']").clear().type('first-name');
         cy.xpath("//input[@id='last-name']").clear().type('last-name');
+
+        //change Phone
         cy.get('[type="tel"]').clear().type('+7 999 999 99 99');
+
+       //change password
         cy.xpath("//input[@id='new_password']").clear().type(newPassword, {log:false});
         cy.xpath("//button[@type='submit']").should('be.disabled');
         cy.xpath("//input[@id='password']").clear().type(newPassword, {log:false});
@@ -25,10 +33,13 @@ describe("A3. Profile editing", () => {
     });
 
     it('should login with new password and change it back', function () {
+        // Cypress.session.clearAllSavedSessions();
         cy.login(Cypress.env('email'), newPassword);
         cy.visit('/my-profile');
         cy.wait(1500);
+        // cy.closePopup();
 
+        // change password back
         cy.xpath("//input[@id='new_password']").clear().type(Cypress.env("password"), {log:false});
         cy.xpath("//button[@type='submit']").should('be.disabled');
         cy.xpath("//input[@id='password']").clear().type(Cypress.env("password"), {log:false});

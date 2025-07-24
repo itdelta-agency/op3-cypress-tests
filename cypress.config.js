@@ -1,11 +1,7 @@
 const { defineConfig } = require("cypress");
-const makeEmailAccount = require('./cypress/support/email-account');
-const getLastInboxByCreatedDate = require('./cypress/support/get-last-inbox');
-
 const allureWriter = require('@shelex/cypress-allure-plugin/writer');
-const emailApi = require('./cypress/support/emailApi');
-const { MailSlurp } = require('mailslurp-client');
-const mailslurp = new MailSlurp({ apiKey: process.env.MAILSLURP_API_KEY });
+const makeEmailAccount = require('./cypress/support/email-account new');
+const emailApi = require('./cypress/support/emailApi')
 require('dotenv').config();
 
 module.exports = defineConfig({
@@ -13,7 +9,7 @@ module.exports = defineConfig({
   env: {
     lessonSuccess: "Lesson successfully completed!",
     registrationEmail: "QAtest+" + Math.random() * 100 + "@lc.com",
-    email: process.env.EMAIL,
+    email:  process.env.EMAIL,
     password: process.env.PASSWORD,
     authEmail: process.env.QA_TEST_LOGIN,
     authPassword: process.env.QA_TEST_PASSWORD,
@@ -44,70 +40,41 @@ module.exports = defineConfig({
   viewportHeight: 800,
   viewportWidth: 800,
   e2e: {
-    baseUrl: 'https://tenant1.release.company-policy.com/',
+    baseUrl: process.env.URL,
     prodUrl: 'https://qa-testing.org-online.ru/',
     registerUrl: 'https://app.org-online.ru/register',
-    specPattern: 'cypress/e2e/**/*.{cy,spec}.{js,jsx,ts,tsx}',
-
-
-
     setupNodeEvents: async (on, config) => {
-      const emailAccount = await makeEmailAccount(); // один раз — создаём или получаем inbox
-      const account = await emailApi();              // один раз — объект с методами для писем
+  
+      const emailAccount = await makeEmailAccount();
+      const account =  await emailApi();
+
 
       on('task', {
-
-        getLastInbox: async () => {
-          try {
-            const inbox = await getLastInboxByCreatedDate();
-            if (!inbox || !inbox.emailAddress) {
-              throw new Error('Inbox не получен или невалиден в задаче');
-            }
-            return inbox;
-          } catch (err) {
-            console.error('Ошибка в getLastInbox task:', err);
-            return null; // Или выбрасывай ошибку
-          }
-        },
-
-        getLastEmail: async ({ inboxId, timeout = 60000 }) => {
-          try {
-            const email = await mailslurp.waitForLatestEmail(inboxId, timeout);
-            return email;
-          } catch (error) {
-            throw new Error(`Письмо не пришло в течение ${timeout / 1000} секунд`);
-          }
-        },
-
         getUserEmail() {
           return emailAccount.user;
         },
-
+        getLastEmail(params) {
+          return emailAccount.getLastEmail(params);
+        },
         sendEmail() {
-          return emailAccount.sendEmail ? emailAccount.sendEmail() : null;
+          return emailAccount.sendEmail();
         },
-
         getAccount(params) {
-          return emailAccount.openMessage ? emailAccount.openMessage(params) : null;
+          return emailAccount.openMessage(params);
         },
-
         getTestAccount() {
-          return emailAccount.testAccountCreate ? emailAccount.testAccountCreate() : null;
+          return emailAccount.testAccountCreate();
         },
-
-        getConfirmationLink() {
-          return emailAccount.getConfirmationLink();
+        getEmailAccount() {
+          return account.getEmailAccount();
         },
-
         getEmailData() {
-          return account.getEmailData();
-        },
-
-        // Если нужны дополнительные методы, вызывай их через emailAccount или account
+          return account.getEmailData()
+        }
       });
 
       allureWriter(on, config);
       return config;
-    }
+    },
   },
 });

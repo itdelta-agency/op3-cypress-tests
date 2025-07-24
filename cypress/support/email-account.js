@@ -1,85 +1,121 @@
-const mailslurp = require('./mail-client');
+const nodemailer = require('nodemailer')
+const { ImapFlow } = require('imapflow');
+const simpleParser = require('mailparser').simpleParser
 
-const { JSDOM } = require('jsdom');
-const nodemailer = require('nodemailer');
-require('dotenv').config();
-
-const getLastInboxByCreatedDate = require('./get-last-inbox');
 const makeEmailAccount = async () => {
-const inbox = await getLastInboxByCreatedDate();
+    // Generate a new Ethereal email inbox account
+    const testAccount = await nodemailer.createTestAccount()
+    emailApi
+    // console.log(111, testAccount);
 
+    console.log('created new email account %s', testAccount.user)
+    console.log('for debugging, the password is %s', testAccount.pass)
 
+    const userEmail = {
+        user: {
+            email: testAccount.user,
+            pass: testAccount.pass
+        },
 
-  const userEmail = {
-    user: {
-      email: inbox.emailAddress,
-      id: inbox.id,
-    },
+        /**
+         * Utility method for getting the last email
+         * for the Ethereal email account using ImapFlow.
+         */
+        async getLastEmail() {
+            // Create imap client to connect later to the ethereal inbox and retrieve emails using ImapFlow
+            let client = new ImapFlow({
+                host: 'ethereal.email',
+                port: 993,
+                secure: true,
+                auth: {
+                    user: testAccount.user,
+                    pass: testAccount.pass
+                }
+            });
+            // Wait until client connects and authorizes
+            await client.connect();
 
-    async getLastEmail() {
-      console.log('Waiting for the latest email...');
-      try {
-        const email = await mailslurp.waitForLatestEmail(inbox.id, 30000);
-        return {
-          subject: email.subject,
-          text: email.body,
-          html: email.body,
-          attachments: email.attachments || [],
-        };
-      } catch (error) {
-        console.error('Error getting latest email:', error);
-        throw error;
-      }
-    },
+            let message;
 
-    async getConfirmationLink() {
-      console.log('⏳ Ждём письмо и ищем ссылку...');
-      try {
-        const email = await mailslurp.waitForLatestEmail(inbox.id, 30000);
-        const html = email.bodyHTML || email.body;
-        console.log(' HTML письма загружен. Длина:', html?.length);
+            // Select and lock a mailbox. Throws if mailbox does not exist
+            let lock = await client.getMailboxLock('INBOX');
+            try {
+                // fetch latest message source
+                // client.mailbox includes information about currently selected mailbox
+                // "exists" value is also the largest sequence number available in the mailbox
+                message = await client.fetchOne(client.mailbox.exists, { source: true });
+                console.log("The message: %s", message.source?.toString());
 
-        const dom = new JSDOM(html);
-        const document = dom.window.document;
+                // list subjects for all messages
+                // uid value is always included in FETCH response, envelope strings are in unicode.
+                for await (let message of client.fetch('1:*', { envelope: true })) {
+                    console.log(`${message.uid}: ${message.envelope.subject}`);
+                }
+            } finally {
+                // Make sure lock is released, otherwise next `getMailboxLock()` never returns
+                lock.release();
+            }
 
-        const linkElement = document.querySelector('a.button.button-primary');
-        console.log('🔍 Найденный элемент:', linkElement ? linkElement.outerHTML : 'Не найден');
+            // log out and close connection
+            await client.logout();
 
-        const confirmationLink = linkElement ? linkElement.href : null;
-        console.log('🔗 Ссылка из письма:', confirmationLink);
+            const mail = await simpleParser(
+                message.source
+            )
+            console.log(mail.subject)
+            console.log(mail.text)
 
-        return confirmationLink;
-      } catch (error) {
-        console.error('Ошибка при извлечении ссылки:', error);
-        return null;
-      }
-    },
+            // and returns the main fields + attachments array
+            return {
+                subject: mail.subject,
+                text: mail.text,
+                html: mail.html,
+                attachments: mail.attachments
+            }
+        },
 
-    // async sendEmail() {
-    //   const transporter = nodemailer.createTransport({
-    //     host: 'smtp.mailslurp.com',
-    //     port: 587,
-    //     secure: false,
-    //     auth: {
-    //       user: process.env.MAILSLURP_SMTP_USERNAME,
-    //       pass: process.env.MAILSLURP_SMTP_PASSWORD,
-    //     },
-    //   });
+        /**
+         * Utility method for sending an email
+         * to the Ethereal email account created above.
+         */
+        async sendEmail() {
+            // Generate test SMTP service account from ethereal.email
+            // Only needed if you don't have a real mail account for testing
 
-    //   const info = await transporter.sendMail({
-    //     from: `"QA Test" <${inbox.emailAddress}>`,
-    //     to: inbox.emailAddress,
-    //     subject: 'Hello from MailSlurp',
-    //     text: 'Hello world',
-    //     html: '<b>Hello world</b>',
-    //   });
+            // create reusable transporter object using the default SMTP transport
+            let transporter = nodemailer.createTransport({
+                host: "smtp.ethereal.email",
+                port: 587,
+                secure: false, // true for 465, false for other ports
+                auth: {
+                    user: testAccount.user, // generated ethereal user
+                    pass: testAccount.pass, // generated ethereal password
+                },
+            });
 
-    //   console.log(' Письмо отправлено: %s', info.messageId);
-    //   return info.messageId;
-    // },
-  };
+            // send mail with defined transport object
+            let info = await transporter.sendMail({
+                from: '"Fred Foo 👻" <foo@example.com>', // sender address
+                to: "bar@example.com, baz@example.com", // list of receivers
+                subject: "Hello ✔", // Subject line
+                text: "Hello world?", // plain text body
+                html: "<b>Hello world?</b>", // html body
+                attachments: [
+                    {
+                        filename: 'hello.json',
+                        content: JSON.stringify({
+                            name: "Hello World!"
+                        })
+                    }
+                ]
+            });
+            console.log("Message sent: %s", info.messageId);
+            // Preview only available when sending through an Ethereal account
+            console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+            return info.messageId
+        }
+    }
+    return userEmail
+}
 
-  return userEmail;
-};
-
-module.exports = makeEmailAccount;
+module.exports = makeEmailAccount

@@ -1,79 +1,75 @@
-const { ROUTES } = require("../../support/routes");
+const { recurse } = require('cypress-recurse')
 
 describe("C. Invite user by 2 ways", () => {
-  let inbox;
-  let confirmationLink;
+    let userEmail;
+    let passEmail;
+    let userName;
+    let main = Cypress.config('baseUrl').split('.')[1]
+    let subject = 'Learning Center | Invitation to the Learning Center'
+    let confirmationLink;
 
-  before(() => {
-    // Получаем inbox один раз
-    cy.task('getLastInbox').then(result => {
-      expect(result).to.exist;
-      inbox = result;
-      cy.log(' Используем inbox:', inbox.emailAddress);
+    before(() => {
+        cy.task("getEmailAccount").then((user) => {
+            userEmail = user;
+            // userName = user.email.replace("@ethereal.email", "");
+        })
+    })
+
+    it('should invite by user menu', function () {
+        cy.admin();
+
+        // Go to invite user page
+        cy.xpath("//button[@class='max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 z-50']").click();
+        cy.xpath("//a[@href='" +Cypress.config('baseUrl') + "invite-user']").click();
+        // Input credentials
+        cy.xpath("//input[@id='email']").type(userEmail);
+
+
+        // Click on submit button
+        cy.xpath("//button[@type='submit']").click();
+        cy.wait(3000);
+
+        // Assert user invited
+        cy.xpath("//p[text()='Success!']", { timeout: 10000 }).should('be.visible');
+        cy.wait(2500);
+
     });
-  });
 
-  it('should invite by user menu', () => {
-    cy.admin();
-    cy.visit(ROUTES.invite);
+    it('getting last email', function () {
+        cy.wait(3500);
+        cy.log(main);
+        recurse(
+            () => {
+                if(main === 'release') return  cy.task('getAccount', {subject, userEmail})
+                if(main === 'org-online') return cy.task('getEmailData');
+            }, // Cypress commands to retry
+            Cypress._.isObject, // keep retrying until the task returns an object
+            {
+                timeout: 60000, // retry up to 1 minute
+                delay: 5000, // wait 5 seconds between attempts
+            },
+        )
+            .its('html')
+            .then((html) => {
+                console.log(html);
+                cy.document({ log: false }).invoke({ log: false }, 'write', html)
+            })
+        cy.xpath("//a[@class='button button-primary']").should('have.attr', 'href').then((href) => {
+            confirmationLink = href;
+        });
+    });
 
-    cy.xpath("//input[@id='email']").type(inbox.emailAddress);
-    cy.xpath("//button[@type='submit']").click();
-    cy.xpath("//p[text()='Success!']").should('be.visible');
-  });
+    it('accept invitation', function () {
+        cy.visit(confirmationLink);
 
- it('getting last email', () => {
-  expect(inbox).to.exist;
+        cy.xpath("//*[@id='first-name']").type('QA');
+        cy.xpath("//*[@id='last-name']").type('Test')
+        cy.xpath("//*[@id='password']").type(Cypress.env('password'), { log: false });
+        cy.xpath("//*[@id='new_password']").type(Cypress.env('password'), { log: false });
 
-  cy.task('getLastEmail', { inboxId: inbox.id, timeout: 60000 }).then(email => {
-  try {
-    const html = email.bodyHTML || email.body;
-    expect(html).to.exist;
-
-    const jsdom = require("jsdom");
-    const { JSDOM } = jsdom;
-    const dom = new JSDOM(html);
-    const doc = dom.window.document;
-
-    const directLink = doc.querySelector('a.button.button-primary')?.href;
-
-    let fallbackLink;
-    if (!directLink) {
-      const allLinks = Array.from(doc.querySelectorAll('a'));
-      fallbackLink = allLinks.find(a =>
-        a.href.includes('/accept-invite') ||
-        a.textContent.toLowerCase().includes('accept')
-      )?.href;
-
-      allLinks.forEach((a, i) => {
-        cy.log(`🔗 [${i}] ${a.textContent} => ${a.href}`);
-      });
-    }
-
-    const link = directLink || fallbackLink;
-    cy.log('✅ Найденная ссылка:', link);
-    expect(link, 'confirmation link').to.exist;
-
-    confirmationLink = link;
-  } catch (error) {
-    // Логируем ошибку, чтобы видеть причину сбоя
-    cy.log('Ошибка при парсинге письма:', error.message);
-    throw error; // или просто fail тест явно
-  }
-});
+        cy.xpath("(//button[@type='submit'])[1]").click();
+        cy.wait(500);
+        cy.contains("You have registered successfully!").should('be.visible');
+    });
 });
 
-
-  it('accept invitation', () => {
-    expect(confirmationLink, 'confirmation link before visit').to.exist;
-    cy.visit(confirmationLink);
-
-    cy.xpath("//*[@id='first-name']").type('QA');
-    cy.xpath("//*[@id='last-name']").type('Test');
-    cy.xpath("//*[@id='password']").type(Cypress.env('password'), { log: false });
-    cy.xpath("//*[@id='new_password']").type(Cypress.env('password'), { log: false });
-
-    cy.xpath("(//button[@type='submit'])[1]").click();
-    cy.contains("You have registered successfully!").should('be.visible');
-  });
-});
