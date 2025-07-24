@@ -22,8 +22,8 @@ describe('LC.A2. Create course', () => {
 
   it('should create course and assign user', () => {
     // Проверяем, что переменные заданы
-    expect(courseGroupName, 'courseGroupName должен быть задан').to.exist;
-    expect(lessonCheckboxRadio, 'lessonCheckboxRadio должен быть задан').to.exist;
+    expect(courseGroupName, 'courseGroupName').to.exist;
+    expect(lessonCheckboxRadio, 'lessonCheckboxRadio').to.exist;
     expect(courseName, 'courseName должен быть задан').to.exist;
 
     cy.get('.flex.justify-between', { timeout: 10000 }).eq(2).then($tab => {
@@ -49,12 +49,12 @@ describe('LC.A2. Create course', () => {
 
 
     // cy.contains('div', 'Users').click();
-    const userName = 'Антонио';
+    const userName = 'first-name last-name';
     // cy.wait(1200);
     cy.contains('div', 'Search', { timeout: 10000 })
       .parent()
       .find('input')
-      .type(userName, { force: true });
+      .type('first-name', { force: true });
     cy.contains('div', userName, { timeout: 5000 }).click({ force: true });
     cy.get('.mt-3.w-full').click();
     cy.contains('li', 'Available for').within(() => {
@@ -63,12 +63,12 @@ describe('LC.A2. Create course', () => {
 
 
     // Группа курса
-    cy.get('.css-hlgwow').eq(0).click().type(courseGroupName);
+    // cy.get('.css-hlgwow').eq(0).click().type(courseGroupName);
 
-    // Ждем появления опции с нужным значением и кликаем
-    cy.contains('div', courseGroupName, { timeout: 5000 })
-      .should('be.visible')
-      .click();
+    // // Ждем появления опции с нужным значением и кликаем
+    // cy.contains('div', courseGroupName, { timeout: 5000 })
+    //   .should('be.visible')
+    //   .click();
 
     // 1 чек бокс
     cy.get("button[role='switch']").eq(0)

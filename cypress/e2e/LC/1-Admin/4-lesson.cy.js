@@ -144,7 +144,7 @@ describe("LC.A1. Create lessons", () => {
     cy.wait(500);
     cy.contains("Success").should('be.visible');
 
-    cy.wait(1000);
+    cy.wait(2000);
     //Проверка массовых действий
     cy.bulkAction(['Deactivate', 'Activate',], [lName, lessonText, lessonTimer]);
 

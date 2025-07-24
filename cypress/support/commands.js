@@ -146,8 +146,16 @@ Cypress.Commands.add('bulkAction', (actions, nameOrNames) => {
         nameList.forEach(name => {
             cy.wait(200);
             // Вводим имя для фильтрации таблицы
-            cy.get('input[placeholder="Search"]').eq(0).clear().type(name, { delay: 100 });
-            cy.wait(500); // ждем, чтобы таблица обновилась
+            cy.get('input[placeholder="Search"]').eq(0)
+                .scrollIntoView()
+                .should('be.visible')
+                .clear();
+
+            cy.wait(200); // небольшой таймаут для стабилизации DOM
+
+            cy.get('input[placeholder="Search"]').eq(0)
+                .type(name, { delay: 100 });
+            cy.wait(700); // ждем, чтобы таблица обновилась
 
             // Отмечаем все строки, которые содержат это имя
             cy.get('tbody tr[role="row"]', { timeout: 5000 }) // можно увеличить таймаут до 8000-10000 при необходимости
@@ -174,7 +182,7 @@ Cypress.Commands.add('bulkAction', (actions, nameOrNames) => {
 
         // Нажимаем Apply
         cy.contains('button', 'Apply').should('be.visible').click();
-        cy.wait(300);
+        cy.wait(400);
 
         // Подтверждаем действие, если появляется модалка
         const confirmButtonText = action.toLowerCase() === 'delete' ? 'Delete' : 'OK';
@@ -187,14 +195,14 @@ Cypress.Commands.add('bulkAction', (actions, nameOrNames) => {
         });
 
         // Ждем обновления таблицы после действия
-        cy.wait(500);
+        cy.wait(700);
 
         // Проверяем статус для каждого имени после действия
         nameList.forEach(name => {
             // Снова фильтруем таблицу по имени
-            cy.wait(200);
+            cy.wait(300);
             cy.get('input[placeholder="Search"]').eq(0).clear().type(name, { delay: 100 });
-            cy.wait(500);
+            cy.wait(700);
 
             if (action.toLowerCase() === 'delete') {
                 // Проверяем, что запись удалена

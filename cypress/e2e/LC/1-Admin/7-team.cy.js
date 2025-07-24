@@ -28,6 +28,7 @@ describe("LC.A5. Create team", () => {
 
     it('should edit team', function () {
         cy.visit(ROUTES.teams);
+        userName = 'QA Edit USER';
 
         cy.wait(1000);
         cy.accessAllItems();
@@ -40,7 +41,7 @@ describe("LC.A5. Create team", () => {
 
 
         cy.get('.css-19bb58m').should('exist')
-            .type('QA', { delay: 50 });
+            .type('USER', { delay: 50 });
         cy.get('div[class*="menu"] div')
             .contains(userName)
             .first()
@@ -53,7 +54,7 @@ describe("LC.A5. Create team", () => {
 
 
     it('check add User Team', function () {
-        cy.login(Cypress.env('authEmail'), Cypress.env('authPassword'));
+        cy.admin();
 
         cy.visit('/my-profile');
         cy.wait(1500);
