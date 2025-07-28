@@ -45,9 +45,9 @@ describe("CP2. Article List", () => {
     cy.wait(1500);
 
     cy.get('.px-3.py-1.text-sm').click();
-    
-    for (let i = 0; i <= 3; i++){
-    let word = 'QA Cours ' + i;
+
+    for (let i = 0; i <= 3; i++) {
+      let word = 'QA Cours ' + i;
       cy.get('.flex-1.text-sm').click().type(word);
       cy.get('.px-3.py-1').eq(0).click();
       cy.get('.px-3.py-1.text-sm').click();
@@ -65,13 +65,19 @@ describe("CP2. Article List", () => {
       }
     });
 
-        // Продолжение сценария:
+    // Продолжение сценария:
     cy.get('.tab.flex.cursor-pointer').parent().next().find('span').eq(1).click();
     cy.wait(500);
 
     cy.wait(500);
     for (let i = 1; i < 4; i++) {
       cy.xpath("//span[text()='Add question']").click();
+      cy.wait(300);                                       // Обход бага
+      cy.get('div').contains('Text').click();             //
+      cy.wait(300);                                       //
+      cy.get('div').contains('Questions').click();        //
+      cy.wait(300);                                       // После фикса удалить
+
       cy.xpath(`//ul/div/li/div[2]/div/ul/div[1]/li/div[1]/span[2]/a`).click();
       cy.xpath(`//ul/div/li/div[2]/div/ul/div[1]/li/div[1]/span[2]/input`).type(`Questions ${i}`);
       cy.xpath(`//ul/div/li/div[2]/div/ul/div[1]/li`).click();

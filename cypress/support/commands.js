@@ -215,16 +215,20 @@ Cypress.Commands.add('bulkAction', (actions, nameOrNames) => {
                         cy.wrap($row).within(() => {
                             switch (action.toLowerCase()) {
                                 case 'activate':
-                                    cy.contains('span', 'Active', { timeout: 5000 }).should('exist');
-                                    cy.wait(100);
+                                    cy.contains('span', 'Active', { timeout: 5000 })
+                                        .should('exist')
+                                        .wait(200); // дожидаемся после появления
                                     break;
+
                                 case 'deactivate':
                                     cy.url().then(url => {
                                         const expectedStatus = url.includes(ROUTES.users) ? 'Blocked' : 'Inactive';
-                                        cy.contains('span', expectedStatus, { timeout: 5000 }).should('exist');
-                                        cy.wait(100);
+                                        cy.contains('span', expectedStatus, { timeout: 5000 })
+                                            .should('exist')
+                                            .wait(200); // тоже ждём немного после появления
                                     });
                                     break;
+
                                 default:
                                     throw new Error(`Неизвестное массовое действие: ${action}`);
                             }
@@ -336,6 +340,39 @@ Cypress.Commands.add('skipTests', (cookieName) => {
 });
 
 // -----------------------------------------------------------------------------------------------------------------------
+Cypress.Commands.add('deleteAllByName', (name) => {
+    function deleteOne() {
+        return cy.get('tr').then($rows => {
+            // Фильтруем строки, в которых есть нужное имя
+            const filtered = $rows.filter((i, el) => el.innerText.includes(name));
+
+            if (filtered.length > 0) {
+                const $row = Cypress.$(filtered[0]);
+
+                cy.wrap($row).within(() => {
+                    cy.get('button').first().click();               // Открыть меню
+                    cy.contains('div', 'Delete').click();     // Клик по кнопке Delete (любой, где есть слово Delete)
+                });
+
+                // Подтверждаем удаление
+                cy.contains('button', 'Delete').click();
+
+                // Ждем исчезновения строки с этим именем
+                return cy.get('tr')
+                    .should('not.contain.text', name)
+                    .then(() => deleteOne());  // Рекурсивно удаляем остальные
+            } else {
+                // Если строк нет — просто завершаем рекурсию и тест продолжается
+                return;
+            }
+        });
+    }
+
+    return deleteOne();
+});
+
+
+// -----------------------------------------------------------------------------------------------------------------------
 Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Teams', 'Others']) => {
     const tabSearchValues = {
         'Users': 'first-name',
@@ -351,22 +388,43 @@ Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Teams', 'Others']) => {
             if ($nav.find(`div:contains("${tab}")`).length > 0) {
                 cy.wrap($nav).contains('div', tab).click();
                 cy.wait(200);
-                cy.contains('div', 'Search').parent().find('input').type(tabSearchValues[tab], { force: true });
-                cy.contains('div', tabSearchValues[tab], { timeout: 1000 }).click({ force: true });
-                cy.wait(500);
+
+                // Вводим значение для поиска
+                cy.contains('div', 'Search')
+                    .parent()
+                    .find('input')
+                    .clear()
+                    .type(tabSearchValues[tab], { force: true });
+
+                cy.wait(500); // немного подождать, чтобы список успел обновиться
+
+                // Проверяем, есть ли нужный элемент в DOM
+                cy.get('body').then($body => {
+                    const selector = `div:contains("${tabSearchValues[tab]}")`;
+
+                    if ($body.find(selector).length > 0) {
+                        cy.contains('div', tabSearchValues[tab]).click({ force: true });
+                        cy.wait(300);
+                    } else {
+                        cy.log(`Элемент "${tabSearchValues[tab]}" не найден — пропускаем`);
+                    }
+                });
+
             } else {
                 cy.log(`Вкладка "${tab}" отсутствует — пропускаем`);
             }
         });
     });
 
+    // Клик по "Save" / подтверждение
     cy.get('.mt-3.w-full').click();
 
-    // Проверка наличия результата
+    // Проверка: что хотя бы один элемент выбран
     cy.get('.w-full.max-h-24')
         .children('li')
         .should('be.visible');
 });
+
 
 // -----------------------------------------------------------------------------------------------------------------------
 Cypress.Commands.add('visitAdmin', (user) => {

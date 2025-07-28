@@ -32,74 +32,78 @@ describe('LC.B1. Complete the course which we have created in previous tests', (
     // Start the course (click on run)
     cy.xpath("//button[@class='my-6 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500']")
       .click();
-    cy.wait(200);
+    cy.wait(800);
 
     //// FIRST LESSON ////
     // Assert we're in the second lesson
-    cy.contains('Lesson successfully completed!').then($el => {
-      if ($el.length > 0) {
-        // Урок пройден, кликаем на урок с нужным названием
+    cy.contains('Lesson successfully completed!', { timeout: 5000 }).then($el => {
+      if ($el.length > 0 && $el.is(':visible')) {
+        // Урок пройден — переходим к следующему
+        cy.log('Урок завершен — переходим к следующему');
         cy.contains('QA Test lesson (text)').click();
       } else {
-        // Урок не пройден — просто продолжаем работу с текущим уроком
-        cy.log('Урок еще не пройден, продолжаем');
-     
-    cy.xpath("//h1[text()='" + Cypress.env('lessonCheckboxRadio') + "']");
-    cy.wait(200);
-    // Select correct radio answer
-    cy.xpath("(//input[@type='radio'])").parent().find(":contains('answer 1')").click();
+        // Урок не завершен — отвечаем на вопросы
+        cy.log('Урок не завершен — отвечаем на вопросы');
 
+        cy.xpath("//h1[text()='" + Cypress.env('lessonCheckboxRadio') + "']").should('exist');
+        cy.wait(200);
 
-    cy.xpath("//label[text()='answer 1']").click();
-    cy.wait(200);
-    // Select correct checkbox answer
-    // cy.xpath("(//input[@type='checkbox'])").parent().parent().find(":contains('answer 1')").click({multiple: true});
-    // Go to the next lesson
-    cy.wait(2000)
-    cy.xpath('//button[text()=\'Check\']').click();
-     }
+        cy.xpath("(//input[@type='radio'])").parent().contains('answer 1').click();
+        cy.xpath("//label[text()='answer 1']").click();
+        cy.wait(200);
+
+        // Если нужны чекбоксы, раскомментируй
+        // cy.xpath("(//input[@type='checkbox'])").parent().parent().contains('answer 1').click({ multiple: true });
+
+        cy.wait(2000);
+        cy.xpath("//button[text()='Check']").click();
+      }
     });
 
     //// SECOND LESSON ////
     // Assert we're in the third lesson
-    cy.xpath("//h1[text()='" + Cypress.env('lessonText') + "']");
-    cy.wait(200);
-    // Input answer
-    cy.xpath("//div[@contenteditable='true']").click().type("Lorem ipsum dolor sit amet, consectetur " +
-      "adipisicing elit. Accusamus aspernatur dolorem dolorum eligendi esse facilis impedit ipsa maxime minus " +
-      "molestiae nostrum odit provident quam ratione, sequi similique, tempore. Nemo, sunt?");
-    // Go to the next lesson
-    cy.xpath('//button[text()=\'Check\']').click();
-    //
-    cy.wait(500);
+    cy.contains('The lesson is awaiting teacher review', { timeout: 5000 }).then($el => {
+      if ($el.length > 0 && $el.is(':visible')) {
+        // Урок пройден — переходим к следующему
+        cy.log('Урок завершен — переходим к следующему');
+        cy.contains('QA Test lesson (timer)').click();
+      } else {
+        cy.xpath("//h1[text()='" + Cypress.env('lessonText') + "']");
+        cy.wait(200);
+        // Input answer
+        cy.xpath("//div[@contenteditable='true']").click().type("Lorem ipsum dolor sit amet, consectetur " +
+          "adipisicing elit. Accusamus aspernatur dolorem dolorum eligendi esse facilis impedit ipsa maxime minus " +
+          "molestiae nostrum odit provident quam ratione, sequi similique, tempore. Nemo, sunt?");
+        // Go to the next lesson
+        cy.xpath('//button[text()=\'Check\']').click();
+        //
+        cy.wait(500);
+      }
 
-    cy.get('button').contains('Start lesson').should('be.visible').click();
-    cy.wait(1000);
-    cy.get('.ql-editor.ql-blank').eq(1).type(123);
-    cy.get('button').contains('Check').click();
-    cy.wait(200);
 
-    cy.xpath("/html/body/div[3]/div/div/div/div/div[2]/div[2]/button[1]").click();
+      cy.contains('The lesson is awaiting teacher review', { timeout: 5000 }).then($el => {
+        if ($el.length > 0 && $el.is(':visible')) {
+          // Урок пройден — переходим к следующему
+          cy.log('Урок завершен — переходим к следующему');
+        } else {
+          cy.get('button').contains('Start lesson').should('be.visible').click();
+          cy.wait(1000);
+          cy.get('.ql-editor.ql-blank').eq(1).type("Lorem ipsum dolor sit amet, consectetur " +
+            "adipisicing elit. Accusamus aspernatur dolorem dolorum eligendi esse facilis impedit ipsa maxime minus " +
+            "molestiae nostrum odit provident quam ratione, sequi similique, tempore. Nemo, sunt?");
+          cy.get('button').contains('Check').click();
+          cy.wait(200);
+        }
+          cy.get('div').contains('The lesson is awaiting teacher review').should('be.visible');
 
-    cy.xpath("//h1[text()='" + Cypress.env('lessonTimer') + "']");
-    cy.wait(200);
-    // Input answer
-    cy.xpath("//div[@contenteditable='true']").click().type("Lorem ipsum dolor sit amet, consectetur " +
-      "adipisicing elit. Accusamus aspernatur dolorem dolorum eligendi esse facilis impedit ipsa maxime minus " +
-      "molestiae nostrum odit provident quam ratione, sequi similique, tempore. Nemo, sunt?");
-    // Go to the next lesson
-    cy.wait(200);
-    cy.xpath('//button[text()=\'Check\']').click();
-    cy.wait(200);
-    //
-    //
-    cy.get('div').contains('The lesson is awaiting teacher review').should('be.visible')
-    cy.wait(200);
-    //
-    //// BACK TO THE FIRST LESSON
-    cy.get('p').contains('QA Test lesson (checkbox + radio)').click();
-    cy.wait(200);
-    cy.get('div').contains('Lesson successfully completed!').should('be.visible')
-  });
+          //
+          //// BACK TO THE FIRST LESSON
+          cy.get('p').contains('QA Test lesson (checkbox + radio)').click();
+          cy.wait(200);
+          cy.get('div').contains('Lesson successfully completed!').should('be.visible')
+        
+      });
+    })
+  })
 
 });

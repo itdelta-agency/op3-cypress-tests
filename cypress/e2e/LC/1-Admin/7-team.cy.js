@@ -7,7 +7,7 @@ describe("LC.A5. Create team", () => {
 
     beforeEach(() => {
         cy.admin();
-        cy.changeLang('en');
+        // cy.changeLang('en');
     });
 
     it('should create new team', function () {

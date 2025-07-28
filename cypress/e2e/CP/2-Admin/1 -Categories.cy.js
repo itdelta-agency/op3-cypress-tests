@@ -18,7 +18,9 @@ describe("CP1. Categories List", () => {
     cy.get('a.text-indigo-100',).eq(0).click();
 
     cy.wait(500);
-
+    cy.deleteAllByName(catName);
+    
+    cy.wait(500);
     cy.contains('Add category').click();
 
     // create post
@@ -71,7 +73,8 @@ describe("CP1. Categories List", () => {
       .within(() => {
         cy.contains('span', 'Active').should('exist');
       });
-
+    
+      
   });
 
   after(() => {
