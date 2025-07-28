@@ -10,7 +10,8 @@ describe("US.1 Add User", () => {
   let lastName = 'USER';
   let fullName = firstName + ' ' + lastName;
   let editUserFirstName = firstName + ' ' + "Edit";
-  
+  let actualUserName = '';
+
 
 
 
@@ -50,29 +51,35 @@ describe("US.1 Add User", () => {
     cy.whoCanSee(['Teams']);
     cy.get('.sm\\:col-start-3').click();
     cy.wait(1000);
+
     // Проверяем, есть ли сообщение об ошибке
     cy.get('body', { timeout: 10000 }).then(($body) => {
       if ($body.text().includes('The E-mail has already been taken.')) {
         cy.log('Пользователь уже существует');
+        actualUserName = editUserFirstName;
+        cy.wait(3000);
         cy.get('.sm\\:col-start-1').click();
       } else {
+        actualUserName = fullName;
         cy.location('pathname', { timeout: 10000 }).should('include', '/user');
         cy.contains('User created successfully!', { timeout: 10000 }).should('be.visible');
+        cy.wait(3000);
         cy.log('Пользователь создан');
       }
+    }).then(() => {
+      cy.wait(2000); // по необходимости
+      cy.bulkAction(['Deactivate', 'Activate'], actualUserName);
     });
-
-      cy.bulkAction(['Deactivate', 'Activate',], fullName);
   });
 
 
-// ---------------------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------------------
 
   it('check add User by search', () => {
     cy.visit(ROUTES.users);
     // cy.changeLang('en');
     cy.wait(1000);
-    cy.searchRow(fullName);
+    cy.searchRow(actualUserName);
 
     cy.wait(1000);
     cy.get('input[placeholder="Search"]').eq(1)
@@ -89,21 +96,22 @@ describe("US.1 Add User", () => {
       });
   });
 
-// ---------------------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------------------
 
   it('edite User', () => {
     let editPassword = 123 + authPassword;
-    
+
     cy.visit(ROUTES.users);
-    cy.changeLang('en');
+    // cy.changeLang('en');
     cy.accessAllItems();
     cy.wait(1000);
 
-    cy.searchRow(fullName);
+    cy.searchRow(actualUserName);
     // Вводим в инпут, который должен быть видим
     cy.get('input[placeholder="Search"]').eq(1)
       .should('be.visible')
       .click()
+
       .type(authEmail, { delay: 100 });
     cy.wait(1000);
 
@@ -146,11 +154,12 @@ describe("US.1 Add User", () => {
     });
   });
 
-// ---------------------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------------------
   it('check user team/departments', () => {
     cy.visit(ROUTES.teams);
 
     cy.searchRow(teemName);
+    actualUserName = editUserFirstName + ' ' + lastName;
 
     cy.wait(1000); // чтобы таблица обновилась после поиска
     cy.contains('table tbody tr', teemName)
@@ -159,15 +168,17 @@ describe("US.1 Add User", () => {
         cy.get('th').eq(2).click();
       });
     cy.wait(1000);
-    cy.get('.px-4.py-3.rounded-md').eq(3)
-      .contains(editUserFirstName + ' ' + lastName)
+    cy.get('.px-4.py-3.rounded-md').eq(3).click()
+      .contains(actualUserName)
       .should('exist');
 
     // // Навигация по командам с ожиданием элементов
     cy.visit(ROUTES.teams);
     cy.accessAllItems();
 
-    cy.xpath("//div[text()='Qa Test Team']").should('be.visible').click({ multiple: true });
+    cy.xpath("//div[contains(text(),'Qa Test Team')]")
+      .should('be.visible')
+      .click({ multiple: true });
 
   });
 });

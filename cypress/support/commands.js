@@ -147,7 +147,6 @@ Cypress.Commands.add('bulkAction', (actions, nameOrNames) => {
             cy.wait(200);
             // Вводим имя для фильтрации таблицы
             cy.get('input[placeholder="Search"]').eq(0)
-                .scrollIntoView()
                 .should('be.visible')
                 .clear();
 
