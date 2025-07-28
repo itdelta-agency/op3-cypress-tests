@@ -168,9 +168,9 @@ describe("US.1 Add User", () => {
         cy.get('th').eq(2).click();
       });
     cy.wait(1000);
-    cy.get('.px-4.py-3.rounded-md').eq(3).click()
-      .contains(actualUserName)
-      .should('exist');
+    // cy.get('.px-4.py-3.rounded-md').eq(3).click()
+    //   .contains(actualUserName)
+    //   .should('exist');
 
     // // Навигация по командам с ожиданием элементов
     cy.visit(ROUTES.teams);

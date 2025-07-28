@@ -2,8 +2,8 @@ import { ROUTES } from "../../../support/routes";
 
 describe("LC.A5. Create team", () => {
     const tName = "Qa Test Team";
-    const addName = 'sdadas4rwrwerw542345'
-    let userName = 'QA USER';
+    const addName = 'sd'
+    let userProfile = 'QA Edit USER';
 
     beforeEach(() => {
         cy.admin();
@@ -28,7 +28,7 @@ describe("LC.A5. Create team", () => {
 
     it('should edit team', function () {
         cy.visit(ROUTES.teams);
-        userName = 'QA Edit USER';
+
 
         cy.wait(1000);
         cy.accessAllItems();
@@ -41,22 +41,41 @@ describe("LC.A5. Create team", () => {
 
 
         cy.get('.css-19bb58m').should('exist')
-            .type('USER', { delay: 50 });
+            .type('QA Edit', { delay: 50 });
         cy.get('div[class*="menu"] div')
-            .contains(userName)
-            .first()
-            .click();
+            .contains(userProfile)
+            .click({ force: true });
 
         cy.xpath("//button[text()='Save']").should('be.visible').click();
         cy.wait(1000);
-        cy.xpath("//p[text()='Success!']", {timeout: 10000}).should('be.visible');
+        cy.xpath("//p[text()='Success!']", { timeout: 10000 }).should('be.visible');
     })
 
 
     it('check add User Team', function () {
         cy.admin();
 
-        cy.visit('/my-profile');
+
+        cy.visit(ROUTES.users);
+
+        cy.searchRow('QA Edit');
+
+        cy.contains('tr[role="row"]', 'QA Edit USER')
+            .within(() => {
+                // 2. Клик по бургер-иконке
+                cy.get('button').first().click();
+            });
+
+        // 3. Дождаться и кликнуть по первому пункту выпадающего меню
+        cy.get('div.flex.cursor-pointer') // это каждый пункт меню
+            .first()
+            .should('be.visible')
+            .click();
+
+        cy.get('.ml-3.relative').eq(0).click();
+        cy.wait(500);
+        cy.get('a').contains('Profile').click();
+
         cy.wait(1500);
         cy.xpath("//label[text()='Teams']").parent().contains('Qa Test Team').should('be.visible');
     })

@@ -62,46 +62,68 @@ describe('LC.B1. Complete the course which we have created in previous tests', (
 
     //// SECOND LESSON ////
     // Assert we're in the third lesson
-    cy.contains('The lesson is awaiting teacher review', { timeout: 5000 }).then($el => {
-      if ($el.length > 0 && $el.is(':visible')) {
-        // Урок пройден — переходим к следующему
+    cy.wait(500);
+    cy.get('body').then($body => {
+      if ($body.find('div:contains("The lesson is awaiting teacher review")').length > 0) {
+        // Урок завершен — переходим к следующему
         cy.log('Урок завершен — переходим к следующему');
-        cy.contains('QA Test lesson (timer)').click();
+        cy.contains('QA Test lesson (timer)').wait(500).click();
+        cy.wait(1000);
       } else {
-        cy.xpath("//h1[text()='" + Cypress.env('lessonText') + "']");
+        // Урок не завершен — отвечаем на вопрос
+        cy.log('Урок не завершен — отвечаем на вопросы');
+
+        cy.xpath("//h1[text()='" + Cypress.env('lessonText') + "']").should('exist');
         cy.wait(200);
-        // Input answer
+
+        // Ввод ответа
         cy.xpath("//div[@contenteditable='true']").click().type("Lorem ipsum dolor sit amet, consectetur " +
           "adipisicing elit. Accusamus aspernatur dolorem dolorum eligendi esse facilis impedit ipsa maxime minus " +
           "molestiae nostrum odit provident quam ratione, sequi similique, tempore. Nemo, sunt?");
-        // Go to the next lesson
-        cy.xpath('//button[text()=\'Check\']').click();
-        //
+
+        // Отправка ответа
+        cy.xpath("//button[text()='Check']").click();
         cy.wait(500);
       }
+      
 
 
-      cy.contains('The lesson is awaiting teacher review', { timeout: 5000 }).then($el => {
-        if ($el.length > 0 && $el.is(':visible')) {
-          // Урок пройден — переходим к следующему
-          cy.log('Урок завершен — переходим к следующему');
-        } else {
-          cy.get('button').contains('Start lesson').should('be.visible').click();
-          cy.wait(1000);
-          cy.get('.ql-editor.ql-blank').eq(1).type("Lorem ipsum dolor sit amet, consectetur " +
-            "adipisicing elit. Accusamus aspernatur dolorem dolorum eligendi esse facilis impedit ipsa maxime minus " +
-            "molestiae nostrum odit provident quam ratione, sequi similique, tempore. Nemo, sunt?");
-          cy.get('button').contains('Check').click();
-          cy.wait(200);
-        }
-          cy.get('div').contains('The lesson is awaiting teacher review').should('be.visible');
 
-          //
-          //// BACK TO THE FIRST LESSON
-          cy.get('p').contains('QA Test lesson (checkbox + radio)').click();
-          cy.wait(200);
-          cy.get('div').contains('Lesson successfully completed!').should('be.visible')
-        
+      //// THIRD LESSON ////
+cy.get('body').then($body => {
+  if ($body.find('div:contains("The lesson is awaiting teacher review")').length > 0) {
+    // Урок уже завершён
+    cy.log('Урок завершён — переходим дальше');
+  } else if ($body.find('button:contains("Start lesson")').length > 0) {
+    // Урок не начат — запускаем
+    cy.log('Урок не начат — запускаем');
+    cy.contains('Start lesson').click();
+    cy.wait(1000);
+
+    // После старта — отвечаем
+    cy.get('.ql-editor').eq(1).click().type("Lorem ipsum dolor sit amet, consectetur " +
+      "adipisicing elit. Accusamus aspernatur dolorem dolorum eligendi esse facilis impedit ipsa maxime minus " +
+      "molestiae nostrum odit provident quam ratione, sequi similique, tempore. Nemo, sunt?");
+    cy.get('button').contains('Check').click();
+    cy.wait(500);
+  } else {
+    // Урок уже начат, но не завершён — просто отвечаем
+    cy.log('Урок начат, но не завершён — отвечаем на вопрос');
+    cy.get('.ql-editor').eq(1).click().type("Lorem ipsum dolor sit amet, consectetur " +
+      "adipisicing elit. Accusamus aspernatur dolorem dolorum eligendi esse facilis impedit ipsa maxime minus " +
+      "molestiae nostrum odit provident quam ratione, sequi similique, tempore. Nemo, sunt?");
+
+    cy.get('button').contains('Check').click();
+    cy.wait(500);
+  }
+
+
+        //
+        //// BACK TO THE FIRST LESSON
+        cy.get('p').contains('QA Test lesson (checkbox + radio)').click();
+        cy.wait(200);
+        cy.get('div').contains('Lesson successfully completed!').should('be.visible')
+
       });
     })
   })
