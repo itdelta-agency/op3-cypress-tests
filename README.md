@@ -29,7 +29,6 @@ allure open
 ```
 `````Mailslurp``````````
 https://app.mailslurp.com/
-Login:  qa2@itdelta.dev
 
 npm install --save mailslurp-client
 ```````````````````````````````````
