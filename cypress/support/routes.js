@@ -11,5 +11,6 @@ export const ROUTES = {
   report: 'cp/admin/report',
   articles: 'cp/admin/post',
   lessons: '/lc/admin/lessons',
+  position: '/ob/admin/positions',
 
 };
