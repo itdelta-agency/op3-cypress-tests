@@ -13,7 +13,6 @@ Installed [allure](https://docs.qameta.io/allure/#_installing_a_commandline)
 yarn
 cp .env. example .env
 ```
-
 Fill .env file
 
 Interactive tests
@@ -28,6 +27,12 @@ yarn cy:run
 yarn allure:report
 allure open
 ```
+`````Mailslurp``````````
+https://app.mailslurp.com/
+Login:  qa2@itdelta.dev
+
+npm install --save mailslurp-client
+```````````````````````````````````
 
 # Additional info
 
