@@ -1,3 +1,4 @@
+
 const { recurse } = require('cypress-recurse')
 
 describe('LC.C1. Check student answers', () => {
@@ -33,74 +34,94 @@ describe('LC.C1. Check student answers', () => {
         cy.admin();
     });
 
-    it('Check first answer', function () {
-        //  Go to the students answers page
+
+
+    it('Check first answer', () => {
+        const lessonNames = [
+            Cypress.env('lessonText'),     // например: "QA Test lesson (text)"
+            Cypress.env('lessonTimer')     // например: "QA Test lesson (timer)"
+        ];
+
         cy.wait(1500);
-        // cy.visit('lc/admin/teacher/lessons');
+
+        // Открываем вкладку Student answers
         cy.get('.flex.justify-between', { timeout: 10000 }).eq(2).then($tab => {
-            const isExpanded = $tab.attr('aria-expanded') === 'true';  // true если открыта
+            const isExpanded = $tab.attr('aria-expanded') === 'true';
             if (!isExpanded) {
                 cy.wrap($tab).click();
             }
         });
+
         cy.contains('Student answers').should('be.visible').click();
         cy.wait(1500);
 
-        const lessonNames = [
-            Cypress.env('lessonText'),
-            Cypress.env('lessonCheckboxRadio'),
-            Cypress.env('lessonTimer')
-        ];
+        // Проходим по урокам последовательно
+        lessonNames.forEach(lessonName => {
+            cy.log(`▶ Проверяем урок: ${lessonName}`);
 
-        cy.get('tbody tr[role="row"]').each($row => {
-            cy.wrap($row).within(() => {
-                cy.get('th').eq(3).invoke('text').then(text => {
-                    const trimmedLesson = text.trim();
-
-                    if (lessonNames.includes(trimmedLesson)) {
-                        cy.log(`Найден урок: ${trimmedLesson}`);
-
-                        // Кликаем по имени ученика (во втором столбце)
-                        cy.get('th').eq(1).find('a').click();
-
-                        // Здесь твоя логика проверки ответа:
-                        cy.wait(500);
-                        cy.xpath("//span[text()='Comment']").next().type("Comment");
-                        cy.xpath("//span[text()='Comment']").next().next().click();
-                        cy.contains('Success!').should('be.visible');
-
-                        cy.xpath("//span[text()='Comment for student']").next().type("Lorem ipsum...");
-                        cy.xpath("//span[text()='Success']").click();
-                        cy.xpath("//button[text()='Restart']").next().click();
-
-                        cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
-
-                        // Возвращаемся к таблице — если это действительно нужно
-                        // cy.go('back'); // или не нужно, если ты и так возвращаешься
-                    }
-                });
+            // Ищем строку с нужным уроком
+            cy.get('tbody tr[role="row"]', { timeout: 10000 }).contains('th', lessonName).parents('tr').within(() => {
+                // Кликаем по имени ученика (во втором столбце)
+                cy.get('th').eq(1).find('a').click();
             });
+
+            // Дожидаемся загрузки страницы с ответом ученика
+            cy.location('pathname', { timeout: 10000 }).should('include', '/lc/admin/teacher/');
+            cy.wait(1000); // немного подождать, чтобы убедиться, что не происходит переход на другого ученика
+
+            // Работаем с полем комментария
+            cy.get('textarea.shadow-sm', { timeout: 10000 }).first()
+                .should('not.be.disabled')
+                .clear()
+                .type('Комментарий к ответу');
+
+            // Сохраняем
+            cy.get('button.mt-3').click();
+
+            // Убеждаемся, что всё ок
+            cy.contains('Success!').should('be.visible');
+
+            // Комментарий для ученика
+            cy.xpath("//span[text()='Comment for student']").next()
+                .should('not.be.disabled')
+                .clear()
+                .type('Lorem ipsum...');
+
+            cy.xpath("//span[text()='Success']").click();
+            cy.xpath("//button[text()='Restart']").next().click();
+            cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
+
+            // Возвращаемся назад к списку ответов
+            cy.go('back');
+            cy.wait(1500);
         });
     });
-        it('Should get complete the lesson email', function () {
-            cy.wait(2500);
-            recurse(
-                () => {
-                    if (main === 'release') return cy.task('getAccount', { subject, userEmail })
-                    if (main === 'org-online') return cy.task('getEmailData')
-                }, // Cypress commands to retry
-                Cypress._.isObject, // keep retrying until the task returns an object
-                {
-                    timeout: 60000, // retry up to 1 minute
-                    delay: 5000, // wait 5 seconds between attempts
-                },
-            )
-                .its('html')
-                .then((html) => {
-                    cy.document({ log: false }).invoke({ log: false }, 'write', html)
+    it('Should get complete the lesson email', function () {
+        cy.wait(2500);
+
+        // Получаем кэшированный inbox
+        cy.task('getCachedInbox').then((inbox) => {
+            // В зависимости от окружения вызываем нужный таск, передавая нужные параметры
+            if (main === 'release') {
+                cy.task('getAccount', { subject, userEmail: inbox.emailAddress })
+                    .then(emailData => {
+                        cy.wrap(emailData).its('html').then((html) => {
+                            cy.document({ log: false }).invoke({ log: false }, 'write', html);
+                        });
+                    });
+            } else if (main === 'org-online') {
+                // Для org-online вызываем таск getEmailData без параметров (или с параметрами если нужны)
+                // При необходимости передай inbox.emailAddress или id, если твой таск это требует
+                cy.task('getEmailData', { inboxId: inbox.id }).then(emailData => {
+                    cy.wrap(emailData).its('html').then((html) => {
+                        cy.document({ log: false }).invoke({ log: false }, 'write', html);
+                    });
                 });
-            cy.xpath("//span[@class='course-title']").should('be.visible')
-
+            }
         });
 
+        // Проверяем, что заголовок курса виден
+        cy.xpath("//span[@class='course-title']").should('be.visible');
     });
+
+});

@@ -38,6 +38,10 @@ module.exports = defineConfig({
     categoryName: 'QA Test Category',
     articleName: 'QA Test Article',
     usersArticle: "first-name last-name",
+    editUser: 'QA Edit USER',
+    firstName: 'QA',
+    lastName: 'USER',
+    fullName: 'QA USER'
   },
   defaultCommandTimeout: 3000,
   requestTimeout: 30000,
@@ -77,6 +81,16 @@ module.exports = defineConfig({
           } catch (error) {
             throw new Error(`Письмо не пришло в течение ${timeout / 1000} секунд`);
           }
+        },
+        async getCachedInbox() {
+          if (!cachedInbox) {
+            cachedInbox = await getLastInboxByDate();
+          }
+          return cachedInbox;
+        },
+        resetInboxCache() {
+          cachedInbox = null;
+          return null;
         },
 
         getUserEmail() {

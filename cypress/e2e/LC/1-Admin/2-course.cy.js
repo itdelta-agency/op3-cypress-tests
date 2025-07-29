@@ -8,13 +8,14 @@ describe('LC.A2. Create course', () => {
   const lessonCheckboxRadio = Cypress.env('lessonCheckboxRadio');
   const courseName = Cypress.env('courseName');
 
-  before(() => {
-    cy.task('getLastInbox').then(result => {
-      expect(result, 'Inbox должен быть получен').to.exist;
-      inbox = result;
-      cy.log('📬 Используем email:', inbox.emailAddress);
-    });
+before(() => {
+  // Получаем последний inbox один раз и кешируем
+  cy.task('getLastInbox').then(result => {
+    expect(result).to.exist;
+    inbox = result;
+    cy.log('Используем кешированный inbox:', inbox.emailAddress);
   });
+});
 
   beforeEach(() => {
     cy.admin(); // Авторизация
@@ -103,32 +104,36 @@ describe('LC.A2. Create course', () => {
     cy.bulkAction(['Deactivate', 'Activate',], [courseName]);
 
   });
+    ////Код рабочий, но пока на сайте эта функция не работает\\\
+//   it('should get course email and extract link', () => {
+//   expect(inbox, 'inbox должен быть доступен').to.exist;
 
-  // it('should get course email and extract link', () => {
-  //   cy.task('getLastEmail', { inboxId: inbox.id, timeout: 60000 }).then(email => {
-  //     expect(email, 'Письмо должно быть получено').to.exist;
+//   cy.task('getLastEmail', { inboxId: inbox.id, timeout: 60000 }).then(email => {
+//     expect(email, 'Письмо должно быть получено').to.exist;
 
-  //     const html = email.bodyHTML || email.body;
+//     const html = email.bodyHTML || email.body;
+//     expect(html, 'Тело письма должно быть не пустым').to.exist;
 
-  //     const dom = new JSDOM(html);
-  //     const doc = dom.window.document;
+//     const { JSDOM } = require('jsdom');
+//     const dom = new JSDOM(html);
+//     const doc = dom.window.document;
 
-  //     // Ищем ссылку на курс в письме
-  //     const link = doc.querySelector('a[href*="/course"]')?.href;
+//     // Ищем ссылку на курс в письме
+//     const link = doc.querySelector('a[href*="/course"]')?.href;
 
-  //     cy.log('🔗 Найденная ссылка:', link);
-  //     expect(link, 'Ссылка на курс должна быть найдена в письме').to.exist;
+//     cy.log('Найденная ссылка:', link);
+//     expect(link, 'Ссылка на курс должна быть найдена в письме').to.exist;
 
-  //     emailLink = link;
-  //   });
-  // });
+//     emailLink = link;
+//   });
+// });
 
-  // it('should open assigned course from email', () => {
-  //   expect(emailLink, 'email link должен быть доступен').to.exist;
+// it('should open assigned course from email', () => {
+//   expect(emailLink, 'email link должен быть доступен').to.exist;
 
-  //   cy.visit(emailLink);
+//   cy.visit(emailLink);
 
-  //   // Проверяем, что курс открылся (замени селектор на актуальный для твоего UI)
-  //   cy.contains('Course Overview').should('be.visible');
-  // });
+//   // Проверяем, что курс открылся (замени селектор на актуальный для твоего UI)
+//   cy.contains('Course Overview').should('be.visible');
+// });
 });

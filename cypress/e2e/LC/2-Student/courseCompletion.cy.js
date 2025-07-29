@@ -36,13 +36,15 @@ describe('LC.B1. Complete the course which we have created in previous tests', (
 
     //// FIRST LESSON ////
     // Assert we're in the second lesson
-    cy.contains('Lesson successfully completed!', { timeout: 5000 }).then($el => {
-      if ($el.length > 0 && $el.is(':visible')) {
-        // Урок пройден — переходим к следующему
+    cy.document().then(doc => {
+      // Ищем элемент с точным текстом 'Lesson successfully completed!'
+      const elements = [...doc.querySelectorAll('body *')];
+      const found = elements.find(el => el.textContent.trim() === 'Lesson successfully completed!' && el.offsetParent !== null);
+
+      if (found) {
         cy.log('Урок завершен — переходим к следующему');
         cy.contains('QA Test lesson (text)').click();
       } else {
-        // Урок не завершен — отвечаем на вопросы
         cy.log('Урок не завершен — отвечаем на вопросы');
 
         cy.xpath("//h1[text()='" + Cypress.env('lessonCheckboxRadio') + "']").should('exist');
@@ -51,9 +53,6 @@ describe('LC.B1. Complete the course which we have created in previous tests', (
         cy.xpath("(//input[@type='radio'])").parent().contains('answer 1').click();
         cy.xpath("//label[text()='answer 1']").click();
         cy.wait(200);
-
-        // Если нужны чекбоксы, раскомментируй
-        // cy.xpath("(//input[@type='checkbox'])").parent().parent().contains('answer 1').click({ multiple: true });
 
         cy.wait(2000);
         cy.xpath("//button[text()='Check']").click();
@@ -85,37 +84,37 @@ describe('LC.B1. Complete the course which we have created in previous tests', (
         cy.xpath("//button[text()='Check']").click();
         cy.wait(500);
       }
-      
+
 
 
 
       //// THIRD LESSON ////
-cy.get('body').then($body => {
-  if ($body.find('div:contains("The lesson is awaiting teacher review")').length > 0) {
-    // Урок уже завершён
-    cy.log('Урок завершён — переходим дальше');
-  } else if ($body.find('button:contains("Start lesson")').length > 0) {
-    // Урок не начат — запускаем
-    cy.log('Урок не начат — запускаем');
-    cy.contains('Start lesson').click();
-    cy.wait(1000);
+      cy.get('body').then($body => {
+        if ($body.find('div:contains("The lesson is awaiting teacher review")').length > 0) {
+          // Урок уже завершён
+          cy.log('Урок завершён — переходим дальше');
+        } else if ($body.find('button:contains("Start lesson")').length > 0) {
+          // Урок не начат — запускаем
+          cy.log('Урок не начат — запускаем');
+          cy.contains('Start lesson').click();
+          cy.wait(1000);
 
-    // После старта — отвечаем
-    cy.get('.ql-editor').eq(1).click().type("Lorem ipsum dolor sit amet, consectetur " +
-      "adipisicing elit. Accusamus aspernatur dolorem dolorum eligendi esse facilis impedit ipsa maxime minus " +
-      "molestiae nostrum odit provident quam ratione, sequi similique, tempore. Nemo, sunt?");
-    cy.get('button').contains('Check').click();
-    cy.wait(500);
-  } else {
-    // Урок уже начат, но не завершён — просто отвечаем
-    cy.log('Урок начат, но не завершён — отвечаем на вопрос');
-    cy.get('.ql-editor').eq(1).click().type("Lorem ipsum dolor sit amet, consectetur " +
-      "adipisicing elit. Accusamus aspernatur dolorem dolorum eligendi esse facilis impedit ipsa maxime minus " +
-      "molestiae nostrum odit provident quam ratione, sequi similique, tempore. Nemo, sunt?");
+          // После старта — отвечаем
+          cy.get('.ql-editor').eq(1).click().type("Lorem ipsum dolor sit amet, consectetur " +
+            "adipisicing elit. Accusamus aspernatur dolorem dolorum eligendi esse facilis impedit ipsa maxime minus " +
+            "molestiae nostrum odit provident quam ratione, sequi similique, tempore. Nemo, sunt?");
+          cy.get('button').contains('Check').click();
+          cy.wait(500);
+        } else {
+          // Урок уже начат, но не завершён — просто отвечаем
+          cy.log('Урок начат, но не завершён — отвечаем на вопрос');
+          cy.get('.ql-editor').eq(1).click().type("Lorem ipsum dolor sit amet, consectetur " +
+            "adipisicing elit. Accusamus aspernatur dolorem dolorum eligendi esse facilis impedit ipsa maxime minus " +
+            "molestiae nostrum odit provident quam ratione, sequi similique, tempore. Nemo, sunt?");
 
-    cy.get('button').contains('Check').click();
-    cy.wait(500);
-  }
+          cy.get('button').contains('Check').click();
+          cy.wait(500);
+        }
 
 
         //

@@ -10,7 +10,7 @@ async function getLastInboxByCreatedDate() {
     console.log('Создан новый inbox:', created.emailAddress);
     return created;
   } catch (err) {
-    console.warn('❗ Не удалось создать inbox:', err.message);
+    console.warn(' Не удалось создать inbox:', err.message);
 
     try {
       const allInboxes = await mailslurp.getAllInboxes();
@@ -31,8 +31,8 @@ async function getLastInboxByCreatedDate() {
       console.log('📬 Используется последний inbox:', lastInbox.emailAddress);
       return lastInbox;
     } catch (e) {
-      console.error('❌ Не удалось получить список inbox-ов:', e.message);
-      return null; // <--- важно! чтобы Cypress не упал
+      console.error('Не удалось получить список inbox-ов:', e.message);
+      return null; 
     }
   }
 }

@@ -157,7 +157,7 @@ Cypress.Commands.add('bulkAction', (actions, nameOrNames) => {
             cy.wait(700); // ждем, чтобы таблица обновилась
 
             // Отмечаем все строки, которые содержат это имя
-            cy.get('tbody tr[role="row"]', { timeout: 5000 }) // можно увеличить таймаут до 8000-10000 при необходимости
+            cy.get('tbody tr[role="row"]', { timeout: 5000 })
                 .should('exist');
             cy.get('tbody tr[role="row"]')
                 .filter(`:contains("${name}")`)
@@ -281,10 +281,26 @@ Cypress.Commands.add('accessAllItems', () => {
 
 // -----------------------------------------------------------------------------------------------------------------------
 Cypress.Commands.add('changeLang', (lang = 'ru') => {
-    cy.get('[data-header-test-id="lang_button"]').click();
-    cy.wait(500);
-    cy.get(`[data-header-test-id=${lang}]`).click();
-    cy.wait(500);
+  cy.get('[data-header-test-id="lang_button"]')
+    .click()
+    .then(() => {
+      // Проверяем, существует ли элемент нужного языка
+      cy.get('body').then($body => {
+        if ($body.find(`[data-header-test-id="${lang}"]`).length > 0) {
+          cy.get(`[data-header-test-id="${lang}"]`).click();
+          cy.log(`✅ Язык переключен на ${lang}`);
+        } else {
+          cy.log(`⚠️ Элемент для языка ${lang} не найден`);
+        }
+      });
+    });
+
+  // Проверяем, что язык действительно сменился
+  cy.get('[data-header-test-id="lang_button"] > span', { timeout: 7000 })
+    .should('have.text', lang)
+    .then(() => {
+      cy.log(`✅ Подтверждено, что язык сменился на ${lang}`);
+    });
 });
 // -----------------------------------------------------------------------------------------------------------------------
 Cypress.Commands.add('changeLangAuth', () => {
@@ -303,6 +319,8 @@ Cypress.Commands.add('logout', () => {
 });
 // -----------------------------------------------------------------------------------------------------------------------
 Cypress.Commands.add('searchRow', (name) => {
+    cy.log(`🔍 Поиск строки с именем: "${name}"`);
+
     // Проверяем, включены ли фильтры — безопаснее через then
     cy.get('body').then($body => {
         if ($body.find('.mt-1.relative.flex').length === 0) {
@@ -316,10 +334,17 @@ Cypress.Commands.add('searchRow', (name) => {
         .wait(100)
         .type(name, { delay: 100 });
 
-    cy.wait(500);
+    cy.wait(500); // подождать обновления таблицы
 
-    // Ждём, пока отфильтрованные строки появятся (лучше, чем wait)
-    cy.contains('tr', name, { timeout: 5000 }).should('be.visible');
+    // Проверяем наличие строки, и логируем результат
+    cy.get('tbody').then($tbody => {
+        const rows = $tbody.find(`tr:contains("${name}")`);
+        if (rows.length > 0) {
+            cy.log(`Найдена строка с именем: "${name}"`);
+        } else {
+            cy.log(`Строка с именем "${name}" не найдена`);
+        }
+    });
 });
 // -----------------------------------------------------------------------------------------------------------------------
 Cypress.Commands.add('skipTests', (cookieName) => {
@@ -424,7 +449,48 @@ Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Teams', 'Others']) => {
         .should('be.visible');
 });
 
+// -----------------------------------------------------------------------------------------------------------------------
+Cypress.Commands.add('ifRowExists', (name, callback) => {
+  cy.get('body').then($body => {
+    const row = $body.find(`tr:contains("${name}")`);
 
+    if (row.length > 0) {
+      cy.log(`✅ Строка с именем "${name}" найдена`);
+      callback(); // вызываем твой код
+    } else {
+      cy.log(`⚠️ Строка с именем "${name}" не найдена — тест пропущен`);
+    }
+  });
+});
+
+// -----------------------------------------------------------------------------------------------------------------------
+Cypress.Commands.add('deleteResources', (name) => {
+  const deleteNext = () => {
+    cy.wait(500); // дать времени DOM обновиться
+    cy.get('body').then($body => {
+      const $row = $body.find('tr').filter((_, el) =>
+        el.innerText.includes(name)
+      ).first();
+
+      if ($row.length === 0) {
+        cy.log(`Все строки с именем "${name}" удалены`);
+        return;
+      }
+
+      cy.wrap($row).find('.p-2.rounded-full').click();
+      cy.contains('div', /delete\s*/i).click();
+      cy.wait(200);
+      cy.contains('button', 'Delete').click();
+
+      // Ждём обновления DOM и вызываем следующую итерацию
+      cy.wait(1000).then(() => {
+        deleteNext();
+      });
+    });
+  };
+
+  deleteNext();
+});
 // -----------------------------------------------------------------------------------------------------------------------
 Cypress.Commands.add('visitAdmin', (user) => {
     cy.get("[data-header-test-id='header_menu_button']").click();

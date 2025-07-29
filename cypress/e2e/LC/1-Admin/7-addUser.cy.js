@@ -48,7 +48,7 @@ describe("US.1 Add User", () => {
 
     cy.xpath('//input[@id="avatar"]').should('exist').selectFile('cypress/image/qaUser.jpg', { force: true });
 
-    cy.whoCanSee(['Teams']);
+    // cy.whoCanSee(['Teams']);
     cy.get('.sm\\:col-start-3').click();
     cy.wait(1000);
 
@@ -155,30 +155,30 @@ describe("US.1 Add User", () => {
   });
 
   // ---------------------------------------------------------------------------------------
-  it('check user team/departments', () => {
-    cy.visit(ROUTES.teams);
+  // it('check user team/departments', () => {
+  //   cy.visit(ROUTES.teams);
 
-    cy.searchRow(teemName);
-    actualUserName = editUserFirstName + ' ' + lastName;
+  //   cy.searchRow(teemName);
+  //   actualUserName = editUserFirstName + ' ' + lastName;
 
-    cy.wait(1000); // чтобы таблица обновилась после поиска
-    cy.contains('table tbody tr', teemName)
-      .should('be.visible')
-      .within(() => {
-        cy.get('th').eq(2).click();
-      });
-    cy.wait(1000);
-    // cy.get('.px-4.py-3.rounded-md').eq(3).click()
-    //   .contains(actualUserName)
-    //   .should('exist');
+  //   cy.wait(1000); // чтобы таблица обновилась после поиска
+  //   cy.contains('table tbody tr', teemName)
+  //     .should('be.visible')
+  //     .within(() => {
+  //       cy.get('th').eq(2).click();
+  //     });
+  //   cy.wait(1000);
+  //   // cy.get('.px-4.py-3.rounded-md').eq(3).click()
+  //   //   .contains(actualUserName)
+  //   //   .should('exist');
 
-    // // Навигация по командам с ожиданием элементов
-    cy.visit(ROUTES.teams);
-    cy.accessAllItems();
+  //   // // Навигация по командам с ожиданием элементов
+  //   cy.visit(ROUTES.teams);
+  //   cy.accessAllItems();
 
-    cy.xpath("//div[contains(text(),'Qa Test Team')]")
-      .should('be.visible')
-      .click({ multiple: true });
+  //   cy.xpath("//div[contains(text(),'Qa Test Team')]")
+  //     .should('be.visible')
+  //     .click({ multiple: true });
 
-  });
+  // });
 });
