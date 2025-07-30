@@ -14,5 +14,6 @@ export const ROUTES = {
   position: '/ob/admin/positions',
   orgScheme: '/ob/admin/departments/scheme',
   settings: '/admin/settings/lc',
+  statistics: '/st/admin/index',
 
 };

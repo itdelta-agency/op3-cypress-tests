@@ -46,6 +46,9 @@ module.exports = defineConfig({
     lastName: 'USER',
     fullName: 'QA USER',
     sortNumb: 666,
+    statisticName: 'Statistic name',
+
+
   },
   defaultCommandTimeout: 3000,
   requestTimeout: 30000,

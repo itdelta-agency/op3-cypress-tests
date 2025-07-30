@@ -58,7 +58,7 @@ describe("CP1. Categories List", () => {
     cy.get("button[role='switch']")
       .invoke('attr', 'aria-checked')
       .then(checked => {
-        if (checked === 'false' || checked === undefined) {
+        if (checked === 'false') {
           cy.get("button[role='switch']").click();
         }
       });

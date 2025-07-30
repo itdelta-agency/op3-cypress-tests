@@ -417,12 +417,13 @@ Cypress.Commands.add('deleteAllByName', (name) => {
 
 // -----------------------------------------------------------------------------------------------------------------------
 
-Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Teams', 'Others', 'Department']) => {
+Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Departments', 'Teams', 'Others']) => {
     const tabSearchValues = {
         'Users': 'first-name',
+        'Departments': 'QA Department name',
         'Teams': 'Qa Test Team',
         'Others': 'All users',
-        'Department':'QA Department name',
+        
     };
 
     cy.get('.w-20.text-xs').click();
