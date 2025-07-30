@@ -51,13 +51,8 @@ describe('OrgBoard.A2. Create department', () => {
             .first()
             .click({ force: true });
 
-        // cy.get('input[role="combobox"]').eq(1).type(namePosition);
-        // cy.get('div[role="listbox"]')
-        //     .should('be.visible')
-        //     .find('div[role="option"]')
-        //     .first()
-        //     .click({ force: true });
 
+        cy.log("Сохраняем");
         cy.xpath("//button[text()='Save']").click();
     })
 

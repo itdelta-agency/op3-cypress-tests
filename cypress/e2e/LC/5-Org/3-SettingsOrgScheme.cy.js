@@ -52,5 +52,6 @@ describe('OrgBoard.A4.Settings', () => {
         cy.xpath("//button[text()='Save']").click();
         cy.wait(500);
         cy.contains("Success").should('be.visible');
+        
     })
 })
