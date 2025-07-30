@@ -10,7 +10,7 @@ describe('LC.B1. Complete the course which we have created in previous tests', (
 
   it('Student should answer the lesson', function () {
     cy.login();
-    cy.visit('/lc/courses');
+    cy.visit(ROUTES.studCourse);
     // Find the course by name
     cy.xpath("//input[@id='search']").type(courseName);
     cy.wait(200);

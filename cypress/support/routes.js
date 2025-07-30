@@ -5,12 +5,14 @@ export const ROUTES = {
   categories: '/cp/admin/category',
   createCategories: '/cp/admin/category/create',
   courses: '/lc/admin/courses',
+  studCourse: '/lc/courses',
   teams : '/admin/teams',
-  settings: '/settings',
   invite: 'invite-user',
   report: 'cp/admin/report',
   articles: 'cp/admin/post',
   lessons: '/lc/admin/lessons',
   position: '/ob/admin/positions',
+  orgScheme: '/ob/admin/departments/scheme',
+  settings: '/admin/settings/lc',
 
 };

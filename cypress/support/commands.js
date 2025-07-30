@@ -25,6 +25,7 @@ Cypress.Commands.add('login', (username = Cypress.env('email'), password = Cypre
     });
 
 });
+
 // -----------------------------------------------------------------------------------------------------------------------
 
 Cypress.Commands.add('resetAppState', () => {
@@ -36,6 +37,7 @@ Cypress.Commands.add('resetAppState', () => {
 });
 
 // -----------------------------------------------------------------------------------------------------------------------
+
 Cypress.Commands.add('checkTextPresence', (text) => {
     return cy.get('body').then(($body) => {
         return $body.text().includes(text);
@@ -43,6 +45,7 @@ Cypress.Commands.add('checkTextPresence', (text) => {
 });
 
 // -----------------------------------------------------------------------------------------------------------------------
+
 Cypress.Commands.add('admin', () => {
     cy.login();
     cy.visit('/')
@@ -63,6 +66,7 @@ Cypress.Commands.add('admin', () => {
 });
 
 // -----------------------------------------------------------------------------------------------------------------------
+
 Cypress.Commands.add('createAnswerForQuestion', (questionName) => {
     cy.wait(1500);
     cy.xpath("//span[text()='Add answer']").click();
@@ -77,7 +81,9 @@ Cypress.Commands.add('createAnswerForQuestion', (questionName) => {
     cy.xpath("(//button[text()='Save'])[1]").click();
     // cy.xpath("//p[text()='Success!']").should('be.visible');
 });
+
 // -----------------------------------------------------------------------------------------------------------------------
+
 Cypress.Commands.add('addAnswers', () => {
 
     cy.xpath("//span[text()='Add answer']").click();
@@ -129,6 +135,7 @@ Cypress.Commands.add('question', (questionName, questionType) => {
     cy.wait(1500);
     cy.contains("Success").should('be.visible');
 });
+
 // -----------------------------------------------------------------------------------------------------------------------
 
 Cypress.Commands.add('bulkAction', (actions, nameOrNames) => {
@@ -251,6 +258,7 @@ Cypress.Commands.add('bulkAction', (actions, nameOrNames) => {
 });
 
 // -----------------------------------------------------------------------------------------------------------------------
+
 Cypress.Commands.add('closePopup', () => {
     const isNonExistentOrHidden = ($el => Cypress.dom.isElement($el));
 
@@ -268,7 +276,9 @@ Cypress.Commands.add('closePopup', () => {
     })
     cy.wait(1000)
 });
+
 // -----------------------------------------------------------------------------------------------------------------------
+
 Cypress.Commands.add('accessAllItems', () => {
     cy.wait(2000);
     // cy.xpath('(//button/span[starts-with(text(), \'Show\')])[last()]').click();
@@ -278,8 +288,8 @@ Cypress.Commands.add('accessAllItems', () => {
     cy.wait(1000);
 });
 
-
 // -----------------------------------------------------------------------------------------------------------------------
+
 Cypress.Commands.add('changeLang', (lang = 'ru') => {
   cy.get('[data-header-test-id="lang_button"]')
     .click()
@@ -302,14 +312,18 @@ Cypress.Commands.add('changeLang', (lang = 'ru') => {
       cy.log(`✅ Подтверждено, что язык сменился на ${lang}`);
     });
 });
+
 // -----------------------------------------------------------------------------------------------------------------------
+
 Cypress.Commands.add('changeLangAuth', () => {
     cy.xpath("/html/body/div[2]/div/nav/div/div/div[2]/div/div/button").click();
     cy.wait(500);
     cy.xpath("/html/body/div[2]/div/nav/div/div/div[2]/div/div").find('a').last().click();
     cy.wait(500);
 })
+
 // -----------------------------------------------------------------------------------------------------------------------
+
 Cypress.Commands.add('logout', () => {
     cy.wait(1500);
     cy.xpath("//button[@class='max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 z-50']").click();
@@ -317,7 +331,9 @@ Cypress.Commands.add('logout', () => {
     cy.xpath("//a[@href='" + Cypress.config('baseUrl') + "logout']").click();
     cy.wait(1500);
 });
+
 // -----------------------------------------------------------------------------------------------------------------------
+
 Cypress.Commands.add('searchRow', (name) => {
     cy.log(`🔍 Поиск строки с именем: "${name}"`);
 
@@ -346,7 +362,9 @@ Cypress.Commands.add('searchRow', (name) => {
         }
     });
 });
+
 // -----------------------------------------------------------------------------------------------------------------------
+
 Cypress.Commands.add('skipTests', (cookieName) => {
     if (Cypress.browser.isHeaded) {
         cy.clearCookie(cookieName)
@@ -364,6 +382,7 @@ Cypress.Commands.add('skipTests', (cookieName) => {
 });
 
 // -----------------------------------------------------------------------------------------------------------------------
+
 Cypress.Commands.add('deleteAllByName', (name) => {
     function deleteOne() {
         return cy.get('tr').then($rows => {
@@ -397,18 +416,20 @@ Cypress.Commands.add('deleteAllByName', (name) => {
 
 
 // -----------------------------------------------------------------------------------------------------------------------
-Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Teams', 'Others']) => {
+
+Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Teams', 'Others', 'Department']) => {
     const tabSearchValues = {
         'Users': 'first-name',
         'Teams': 'Qa Test Team',
         'Others': 'All users',
+        'Department':'QA Department name',
     };
 
-    cy.xpath('//button[text()="Select"]').click();
-    cy.wait(200);
+    cy.get('.w-20.text-xs').click();
+    cy.wait(500);
 
     Cypress._.each(tabs, (tab) => {
-        cy.get('.-mb-px.flex').then(($nav) => {
+        cy.get('.-mb-px.flex', { timeout: 5000 }).then(($nav) => {
             if ($nav.find(`div:contains("${tab}")`).length > 0) {
                 cy.wrap($nav).contains('div', tab).click();
                 cy.wait(200);
@@ -450,6 +471,7 @@ Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Teams', 'Others']) => {
 });
 
 // -----------------------------------------------------------------------------------------------------------------------
+
 Cypress.Commands.add('ifRowExists', (name, callback) => {
   cy.get('body').then($body => {
     const row = $body.find(`tr:contains("${name}")`);
@@ -464,6 +486,7 @@ Cypress.Commands.add('ifRowExists', (name, callback) => {
 });
 
 // -----------------------------------------------------------------------------------------------------------------------
+
 Cypress.Commands.add('deleteResources', (name) => {
   const deleteNext = () => {
     cy.wait(500); // дать времени DOM обновиться
@@ -491,6 +514,7 @@ Cypress.Commands.add('deleteResources', (name) => {
 
   deleteNext();
 });
+
 // -----------------------------------------------------------------------------------------------------------------------
 Cypress.Commands.add('visitAdmin', (user) => {
     cy.get("[data-header-test-id='header_menu_button']").click();
