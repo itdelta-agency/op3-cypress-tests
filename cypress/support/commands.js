@@ -350,7 +350,7 @@ Cypress.Commands.add('searchRow', (name) => {
         .wait(100)
         .type(name, { delay: 100 });
 
-    cy.wait(500); // подождать обновления таблицы
+    cy.wait(800); // подождать обновления таблицы
 
     // Проверяем наличие строки, и логируем результат
     cy.get('tbody').then($tbody => {
@@ -490,7 +490,7 @@ Cypress.Commands.add('ifRowExists', (name, callback) => {
 
 Cypress.Commands.add('deleteResources', (name) => {
   const deleteNext = () => {
-    cy.wait(500); // дать времени DOM обновиться
+    cy.wait(800); // дать времени DOM обновиться
     cy.get('body').then($body => {
       const $row = $body.find('tr').filter((_, el) =>
         el.innerText.includes(name)

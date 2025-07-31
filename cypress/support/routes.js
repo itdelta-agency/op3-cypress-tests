@@ -15,5 +15,8 @@ export const ROUTES = {
   orgScheme: '/ob/admin/departments/scheme',
   settings: '/admin/settings/lc',
   statistics: '/st/admin/index',
+  tasks: '/task',
+  curriculums: '/lc/admin/curriculums',
+  groupCourse: '/lc/admin/groups',
 
 };

@@ -1,7 +1,8 @@
 import { ROUTES } from "../../../support/routes";
 
 describe("LC.A5. Create team", () => {
-    const tName = "Qa Test Team";
+    let teamName = Cypress.env('teamName');
+
     const addName = 'sd'
     let userProfile = 'QA Edit USER';
 
@@ -17,7 +18,7 @@ describe("LC.A5. Create team", () => {
         cy.xpath("//button[text()='Add team']").click();
 
         // Input credentials
-        cy.xpath("//span[text()='Name *']").next().type(tName + addName);
+        cy.xpath("//span[text()='Name *']").next().type(teamName + addName);
         cy.xpath("//textarea").type("Lorem ipsum dolor sit amet, consectetur adipisicing elit.");
 
         cy.xpath("//button[text()='Save']").click();
@@ -32,11 +33,11 @@ describe("LC.A5. Create team", () => {
 
         cy.wait(1000);
         cy.accessAllItems();
-        cy.xpath(`(//div[text()='${tName + addName}'])`).last().click();
+        cy.xpath(`(//div[text()='${teamName + addName}'])`).last().click();
 
         cy.contains('Edit team').click();
 
-        cy.xpath("//span[text()='Name *']").next().clear().type(tName);
+        cy.xpath("//span[text()='Name *']").next().clear().type(teamName);
         cy.wait(500);
 
 

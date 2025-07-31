@@ -1,3 +1,5 @@
+import { ROUTES } from "../../../support/routes";
+
 describe('Task.T1. Create Task', () => {
 
     let taskName = 'Qa Task 1';
@@ -7,15 +9,6 @@ describe('Task.T1. Create Task', () => {
         cy.admin()
     });
 
-    const visitPage = () => {
-        cy.get('.flex.justify-between', { timeout: 10000 }).eq(6).then($tab => {
-            const isExpanded = $tab.attr('aria-expanded') === 'true';  // true если открыта
-            if (!isExpanded) {
-                cy.wrap($tab).click();
-            }
-        });
-        cy.contains('Tasks list').click();
-    }
 
     const checkDays = () => new Date().getDay() > 25
 
@@ -51,7 +44,7 @@ describe('Task.T1. Create Task', () => {
 
 
     it('should create task', function () {
-        visitPage()
+        cy.visit(ROUTES.tasks);
         cy.wait(1500);
         cy.contains('button', 'Add').click();
         cy.wait(500);
@@ -74,9 +67,8 @@ describe('Task.T1. Create Task', () => {
 
     it('Edit task', function () {
         cy.login();
-        cy.visit('/admin/user');
+        cy.visit(ROUTES.tasks);
         cy.wait(1000);
-        visitPage()
 
         cy.xpath(`//div[text()="${taskName}"]`).closest('tr').first().within(() => {
             cy.get('th').eq(0).find('div').click();
@@ -90,12 +82,17 @@ describe('Task.T1. Create Task', () => {
         cy.xpath("//span[text()='Deadline']").next().find('button').click(); cy.wait(500);
 
         if (checkDays()) {
-            cy.get("[data-slot='next-button']").click();
+
             cy.contains("span", day.getDate()).click();
         }
         else {
-            cy.contains("span", day.getDate()).click();
+            cy.get("[data-slot='next-button']").click();
+            cy.wait(500);
+            cy.get('[data-react-aria-pressable="true"').contains("span", day.getDate()).click();
         }
+
+        cy.get('.focus\\:border-indigo-500').eq(2).clear().type(10);
+        cy.get('.focus\\:border-indigo-500').eq(4).clear().type(10);
 
         cy.contains('Save').click()
     })
@@ -103,22 +100,14 @@ describe('Task.T1. Create Task', () => {
     it('check edits', function () {
         const commentText = 'Текст комментария!';
         cy.login();
-        cy.visit('/admin/user');
+        cy.visit(ROUTES.tasks);
         cy.wait(1000);
-        visitPage()
 
-        // cy.contains('button', 'Add').next().click()
-        // cy.wait(1500);
-
-        // if(checkDays()) {
-        //     cy.get("[title='Next month']").click();
-        // }
-        // cy.contains('div', 'Task 1').should('be.visible');
         cy.wait(1000);
         cy.searchRow(taskName);
         cy.wait(500);
         cy.contains('tr', taskName).within(() => {
-    
+
             cy.get('th').first().find('button').click();
 
             cy.contains('div', 'View').click();
@@ -156,9 +145,8 @@ describe('Task.T1. Create Task', () => {
 
     it('delete task', function () {
         cy.login();
-        cy.visit('/admin/user');
+        cy.visit(ROUTES.tasks);
         cy.wait(1000);
-        visitPage();
 
         cy.xpath(`//div[text()="${taskName}"]`).closest('tr').first().within(() => {
             cy.get('th').eq(0).find('div').click();
