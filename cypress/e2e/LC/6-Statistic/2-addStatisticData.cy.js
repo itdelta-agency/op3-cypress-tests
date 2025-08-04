@@ -4,6 +4,7 @@ describe("Statistic.ST2. adding a value to statistics", () => {
 
 
     before(() => {
+        cy.resetAppState();
         cy.admin();
     });
 
@@ -16,7 +17,6 @@ describe("Statistic.ST2. adding a value to statistics", () => {
         cy.get('[placeholder="Value"]').type(40);
         cy.get('[placeholder="Description"]').type("Description statistic");
         cy.contains("button", "Add").click();
-        cy.wait(500);
-        cy.contains("Success").should("be.visible");
+        cy.checkTextInParagraph();
     });
 });

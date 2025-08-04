@@ -1,16 +1,12 @@
 const { ROUTES } = require("../../../support/routes");
 
 describe('LC.Z. Clear all created learning items', () => {
-    let userEmail;
 
-    const isNonExistentOrHidden = ($el => Cypress.dom.isElement($el));
 
-    // before(() => {
-    //     cy.task("getEmailAccount").then((email) => {
-    //         cy.log(email);
-    //         userEmail = email;
-    //     })
-    // })
+    before(() => {
+        cy.resetAppState();
+    })
+
 
     beforeEach(() => {
         cy.admin();
@@ -28,6 +24,7 @@ describe('LC.Z. Clear all created learning items', () => {
         cy.ifRowExists(catName, () => {
             cy.deleteResources(catName);
         });
+        cy.checkTextInParagraph();
     });
 
 
@@ -43,6 +40,7 @@ describe('LC.Z. Clear all created learning items', () => {
         cy.ifRowExists(articleName, () => {
             cy.deleteResources(articleName);
         });
+        cy.checkTextInParagraph();
     });
 
 

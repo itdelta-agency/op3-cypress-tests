@@ -5,6 +5,7 @@ describe("CP6. Check Acquainted", () => {
 
 
   beforeEach(() => {
+    cy.resetAppState();
     cy.admin();
   });
 

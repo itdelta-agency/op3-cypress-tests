@@ -9,6 +9,7 @@ describe('OrgBoard.A1. Create position', () => {
 
 
     beforeEach(() => {
+        cy.resetAppState();
         cy.admin();
     });
 
@@ -35,7 +36,6 @@ describe('OrgBoard.A1. Create position', () => {
         cy.xpath("//span[text()='VFP']").next().type(descriptionPosition);
 
         cy.xpath("//button[text()='Save']").click();
-        cy.wait(500);
-        cy.contains("Success").should('be.visible');
+        cy.checkTextInParagraph();
     })
 })

@@ -1,12 +1,14 @@
+require('dotenv').config();
 const { defineConfig } = require("cypress");
 const makeEmailAccount = require('./cypress/support/email-account');
 const getLastInboxByCreatedDate = require('./cypress/support/get-last-inbox');
-
+const {getLoggingTasks} = require('./setupLogging');
+let cachedInbox = null;
 const allureWriter = require('@shelex/cypress-allure-plugin/writer');
 const emailApi = require('./cypress/support/emailApi');
 const { MailSlurp } = require('mailslurp-client');
 const mailslurp = new MailSlurp({ apiKey: process.env.MAILSLURP_API_KEY });
-require('dotenv').config();
+
 
 module.exports = defineConfig({
   chromeWebSecurity: false,
@@ -47,13 +49,21 @@ module.exports = defineConfig({
     fullName: 'QA USER',
     sortNumb: 666,
     statisticName: 'Statistic name',
+    // Pass data
+    passName: 'AT-Delta',
+    passUrl:  process.env.URL,
+    passLogin: process.env.EMAIL,
+    passPasword: process.env.PASSWORD,
+    passDescription: 'Pass description: Convenient application!'
 
 
+    
   },
   defaultCommandTimeout: 3000,
   requestTimeout: 30000,
   viewportHeight: 800,
   viewportWidth: 800,
+
   e2e: {
     baseUrl: process.env.URL,
     prodUrl: 'https://qa-testing.org-online.ru/',
@@ -62,39 +72,43 @@ module.exports = defineConfig({
 
 
 
-    setupNodeEvents: async (on, config) => {
-      const emailAccount = await makeEmailAccount(); // один раз — создаём или получаем inbox
-      const account = await emailApi();              // один раз — объект с методами для писем
+     setupNodeEvents: async (on, config) => {
+      // Кешируем inbox один раз
+      if (!cachedInbox) {
+        cachedInbox = await getLastInboxByCreatedDate();
+        if (!cachedInbox || !cachedInbox.emailAddress) {
+          throw new Error('Не удалось получить или создать Inbox');
+        }
+        console.log('📬 Кешируем inbox:', cachedInbox.emailAddress);
+      }
+
+      // Создаём объект emailAccount с уже кешированным inbox
+      const emailAccount = await makeEmailAccount(cachedInbox); // Если makeEmailAccount принимает inbox, передай его
+      const account = await emailApi();
+      const loggingTasks = getLoggingTasks();
 
       on('task', {
+        ...loggingTasks,
 
-        getLastInbox: async () => {
-          try {
-            const inbox = await getLastInboxByCreatedDate();
-            if (!inbox || !inbox.emailAddress) {
-              throw new Error('Inbox не получен или невалиден в задаче');
-            }
-            return inbox;
-          } catch (err) {
-            console.error('Ошибка в getLastInbox task:', err);
-            return null; // Или выбрасывай ошибку
-          }
+        // Возвращаем кешированный inbox, не создаём новый
+        getCachedInbox() {
+          return cachedInbox;
         },
 
-        getLastEmail: async ({ inboxId, timeout = 60000 }) => {
+        getLastInbox: async () => {
+          // Можно обновить кеш, если нужно
+          cachedInbox = await getLastInboxByCreatedDate();
+          return cachedInbox;
+        },
+
+        getLastEmail: async ({ timeout = 60000 }) => {
           try {
-            const email = await mailslurp.waitForLatestEmail(inboxId, timeout);
-            return email;
+            return await mailslurp.waitForLatestEmail(cachedInbox.id, timeout);
           } catch (error) {
             throw new Error(`Письмо не пришло в течение ${timeout / 1000} секунд`);
           }
         },
-        async getCachedInbox() {
-          if (!cachedInbox) {
-            cachedInbox = await getLastInboxByDate();
-          }
-          return cachedInbox;
-        },
+
         resetInboxCache() {
           cachedInbox = null;
           return null;
@@ -124,7 +138,7 @@ module.exports = defineConfig({
           return account.getEmailData();
         },
 
-        // Если нужны дополнительные методы, вызывай их через emailAccount или account
+       
       });
 
       allureWriter(on, config);

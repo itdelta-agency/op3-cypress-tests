@@ -5,6 +5,7 @@ describe("CP7. Clear Data", () => {
   let catName = Cypress.env('categoryName');
 
   beforeEach(() => {
+    cy.resetAppState();
     cy.admin();
   });
 
@@ -27,7 +28,7 @@ describe("CP7. Clear Data", () => {
 
     cy.contains('div', 'Delete category').click({ force: true });
     cy.contains('button', 'Delete').click();
-    cy.contains('p', 'Success!').should('be.visible');
+    cy.checkTextInParagraph();
   });
 
   it('delete articles', function () {
@@ -41,7 +42,6 @@ describe("CP7. Clear Data", () => {
     cy.wait(300);
     cy.contains('div', 'Delete article').click();
     cy.get('button[type="button"]').contains('Delete').click();
-    cy.wait(500);
-    cy.contains('p', 'Success!').should('be.visible');
+    cy.checkTextInParagraph();
   });
 });

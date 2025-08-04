@@ -1,12 +1,12 @@
 const mailslurp = require('./mail-client');
+const { getCachedInbox } = require('./getSession'); 
 
 const { JSDOM } = require('jsdom');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 
-const getLastInboxByCreatedDate = require('./get-last-inbox');
 const makeEmailAccount = async () => {
-const inbox = await getLastInboxByCreatedDate();
+const inbox = await getCachedInbox();
 
 
 

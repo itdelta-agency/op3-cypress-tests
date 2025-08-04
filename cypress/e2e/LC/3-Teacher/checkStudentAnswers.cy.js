@@ -8,27 +8,9 @@ describe('LC.C1. Check student answers', () => {
     let subject = 'Learning Center | Your answer has been reviewed!';
     let userEmail;
 
-    // before(() => {
-    //     // if ( Cypress.browser.isHeaded ) {
-    //     //     cy.clearCookie(skipCookie)
-    //     // } else {
-    //     //     cy.getCookie(skipCookie).then(cookie => {
-    //     //         if (
-    //     //             cookie &&
-    //     //             typeof cookie === 'object' &&
-    //     //             cookie.value === 'true'
-    //     //         ) {
-    //     //             Cypress.runner.stop();
-    //     //         }
-    //     //     });
-    //     // }
-    //     //
-    //     // cy.admin();
-    //     cy.task("getEmailAccount").then((email) => {
-    //         cy.log(email);
-    //         userEmail = email;
-    //     })
-    // });
+    before(() => {
+        cy.resetAppState();
+    });
 
     beforeEach(() => {
         cy.admin();
@@ -78,8 +60,7 @@ describe('LC.C1. Check student answers', () => {
             // Сохраняем
             cy.get('button.mt-3').click();
 
-            // Убеждаемся, что всё ок
-            cy.contains('Success!').should('be.visible');
+            cy.checkTextInParagraph();
 
             // Комментарий для ученика
             cy.xpath("//span[text()='Comment for student']").next()
@@ -89,7 +70,7 @@ describe('LC.C1. Check student answers', () => {
 
             cy.xpath("//span[text()='Success']").click();
             cy.xpath("//button[text()='Restart']").next().click();
-            cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
+            cy.checkTextInParagraph();
 
             // Возвращаемся назад к списку ответов
             cy.go('back');

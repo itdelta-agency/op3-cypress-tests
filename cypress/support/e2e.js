@@ -24,3 +24,12 @@ import '@shelex/cypress-allure-plugin';
 // require('./commands')
 
 require('@cypress/xpath');
+
+
+['log', 'warn', 'error'].forEach((level) => {
+  const original = console[level];
+  console[level] = function (...args) {
+    cy.task(`log${level.charAt(0).toUpperCase() + level.slice(1)}`, args.join(' '));
+    original.apply(console, args);
+  };
+});

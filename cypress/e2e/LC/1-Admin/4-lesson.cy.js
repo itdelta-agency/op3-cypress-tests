@@ -10,20 +10,8 @@ describe("LC.A1. Create lessons", () => {
   let qName = Cypress.env('questionText');
 
   before(() => {
+    cy.resetAppState();
     cy.admin();
-    if (Cypress.browser.isHeaded) {
-      cy.clearCookie(skipCookie)
-    } else {
-      cy.getCookie(skipCookie).then(cookie => {
-        if (
-          cookie &&
-          typeof cookie === 'object' &&
-          cookie.value === 'true'
-        ) {
-          Cypress.runner.stop();
-        }
-      });
-    }
   });
 
   it('should create lesson(checkbox + radio)', function () {
@@ -68,8 +56,7 @@ describe("LC.A1. Create lessons", () => {
     //
     // // SAVE LESSON
     cy.xpath("/html/body/div[2]/div/div/div[2]/div[2]/main/div/div/button[2]").click();
-    cy.wait(500);
-    cy.contains("Success").should('be.visible');
+    cy.checkTextInParagraph();
 
 
   });
@@ -94,8 +81,7 @@ describe("LC.A1. Create lessons", () => {
     cy.xpath("/html/body/div[3]/div/div/div/div/div[2]/div[2]/button[1]").click();
     cy.question(qName, 1);
     cy.xpath("//button[text()='Save']").click();
-    cy.wait(500);
-    cy.contains("Success").should('be.visible');
+    cy.checkTextInParagraph();
 
   });
 
@@ -141,8 +127,7 @@ describe("LC.A1. Create lessons", () => {
     cy.wait(1500);
 
     cy.xpath("//button[text()='Save']").click();
-    cy.wait(500);
-    cy.contains("Success").should('be.visible');
+    cy.checkTextInParagraph();
 
     cy.wait(2000);
     //Проверка массовых действий
@@ -184,7 +169,7 @@ describe("LC.A1. Create lessons", () => {
 
     // Сохранить курс
     cy.xpath("//button[text()='Save']").click();
-    cy.contains("Success", { timeout: 10000 }).should('be.visible');
+    cy.checkTextInParagraph();
   });
 
 

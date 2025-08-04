@@ -2,6 +2,12 @@ import { ROUTES } from "../../../support/routes";
 
 describe('Statistic.ST3. clear data statistic', () => {
     let statisticName = Cypress.env('statisticName');
+
+    before(() => {
+        cy.resetAppState();
+    })
+
+
     beforeEach(() => {
         cy.admin();
     });
@@ -44,7 +50,7 @@ describe('Statistic.ST3. clear data statistic', () => {
         cy.contains('div', /Delete\s*/i).click();
         cy.wait(200);
         cy.contains('button', 'Delete').click();
-        cy.contains('Success').should('be.visible');
+        cy.checkTextInParagraph();
     })
 
     it('delete statistic', function () {
@@ -77,7 +83,7 @@ describe('Statistic.ST3. clear data statistic', () => {
 
         cy.wait(200);
         cy.contains('button', 'Delete').click();
-        cy.contains("Success").should('be.visible');
+        cy.checkTextInParagraph();;
     })
 
 })

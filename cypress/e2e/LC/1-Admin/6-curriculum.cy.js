@@ -18,6 +18,7 @@ describe('LC.A4. Create curriculum', () => {
     // });
 
     beforeEach(() => {
+        cy.resetAppState();
         cy.admin();
     });
 
@@ -48,7 +49,7 @@ describe('LC.A4. Create curriculum', () => {
 
         //Save curriculum
         cy.xpath("//button[text()='Save']").should('be.visible').click();
-        cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
+        cy.checkTextInParagraph();
     });
 
 

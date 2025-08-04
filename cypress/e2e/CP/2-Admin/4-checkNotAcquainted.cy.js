@@ -4,6 +4,7 @@ describe("CP4. Check Not Acquainted", () => {
   let articleName = Cypress.env('articleName');
 
   beforeEach(() => {
+    cy.resetAppState();
     cy.admin();
   });
 

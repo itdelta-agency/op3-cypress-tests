@@ -7,6 +7,8 @@ describe("LC.A5. Create team", () => {
     let userProfile = 'QA Edit USER';
 
     beforeEach(() => {
+        cy.clearAllCookies();
+        cy.wait(500);
         cy.admin();
         // cy.changeLang('en');
     });
@@ -23,8 +25,7 @@ describe("LC.A5. Create team", () => {
 
         cy.xpath("//button[text()='Save']").click();
 
-        // Assert team created
-        cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
+        cy.checkTextInParagraph();
     });
 
     it('should edit team', function () {
@@ -48,8 +49,7 @@ describe("LC.A5. Create team", () => {
             .click({ force: true });
 
         cy.xpath("//button[text()='Save']").should('be.visible').click();
-        cy.wait(1000);
-        cy.xpath("//p[text()='Success!']", { timeout: 10000 }).should('be.visible');
+        cy.checkTextInParagraph();
     })
 
 

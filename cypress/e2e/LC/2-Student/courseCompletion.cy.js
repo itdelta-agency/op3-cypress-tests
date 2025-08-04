@@ -1,7 +1,14 @@
+import { ROUTES } from "../../../support/routes";
+
 describe('LC.B1. Complete the course which we have created in previous tests', () => {
 
+
+  before(() => {
+    cy.login();
+  })
   const courseName = Cypress.env('courseName');
   beforeEach(() => {
+    cy.resetAppState();
     cy.task("getUserEmail").then((data) => {
       // data — объект, берем поле email
       cy.login(data.email, Cypress.env('password'));

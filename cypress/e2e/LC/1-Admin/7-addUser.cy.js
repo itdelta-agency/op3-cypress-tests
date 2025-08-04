@@ -1,5 +1,5 @@
 import { ROUTES } from '../../../support/routes';
-console.log('ROUTES:', ROUTES);
+// console.log('ROUTES:', ROUTES);
 
 describe("US.1 Add User", () => {
 
@@ -24,6 +24,10 @@ describe("US.1 Add User", () => {
         teemName = Cypress.env('teemName');
       });
   });
+
+  before(() => {
+    cy.admin();
+  })
 
 
 
@@ -73,7 +77,7 @@ describe("US.1 Add User", () => {
   });
 
 
-  // ---------------------------------------------------------------------------------------
+
 
   it('check add User by search', () => {
     cy.visit(ROUTES.users);
@@ -96,7 +100,6 @@ describe("US.1 Add User", () => {
       });
   });
 
-  // ---------------------------------------------------------------------------------------
 
   it('edite User', () => {
     let editPassword = 123 + authPassword;

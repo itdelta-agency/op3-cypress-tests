@@ -38,7 +38,7 @@ describe('4-Auth-RU-forgot-password.cy.js', () => {
             }, // Cypress commands to retry
             Cypress._.isObject, // keep retrying until the task returns an object
             {
-                timeout: 180000, // retry up to 3 minutes
+                timeout: 60000, // retry up to 3 minutes
                 delay: 5000, // wait 5 seconds between attempts
             },
         )

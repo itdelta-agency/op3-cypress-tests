@@ -22,15 +22,6 @@ describe('LC.A3. Create course group', () => {
         cy.contains('div', Cypress.env('courseName')).click()
         cy.xpath("//button[text()='Save']").click();
 
-        cy.wait(5000).then(() => {
-            cy.document().then((doc) => {
-                const el = doc.querySelector("p"); // Найдёт любой <p>, можно уточнить через textContent
-                if (el && el.textContent.includes("Success!")) {
-                    cy.log('Элемент "Success!" найден и виден');
-                } else {
-                    cy.log('Элемент "Success!" не появился или не виден');
-                }
-            });
-        });
+        cy.checkTextInParagraph();
     });
 });

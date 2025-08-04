@@ -3,6 +3,10 @@ import { ROUTES } from "../../../support/routes";
 describe('OrgBoard.A4.Settings', () => {
 
     let namePosition = Cypress.env('namePosition');
+    before(() => {
+        cy.resetAppState();
+    })
+    
     beforeEach(() => {
         cy.admin();
     });
@@ -27,8 +31,7 @@ describe('OrgBoard.A4.Settings', () => {
 
 
         cy.xpath("//button[text()='Save']").click();
-        cy.wait(500);
-        cy.contains("Success").should('be.visible');
+        cy.checkTextInParagraph();
     })
 
     it('check save data', function () {
@@ -50,8 +53,7 @@ describe('OrgBoard.A4.Settings', () => {
         cy.xpath("//span[text()='VFP']").next().clear().type('Изделия из металла высокого качества, используемые широким кругом профессионалов при строительстве сооружений по всей России');
         cy.contains(namePosition).next().click();
         cy.xpath("//button[text()='Save']").click();
-        cy.wait(500);
-        cy.contains("Success").should('be.visible');
-        
+        cy.checkTextInParagraph();
+
     })
 })

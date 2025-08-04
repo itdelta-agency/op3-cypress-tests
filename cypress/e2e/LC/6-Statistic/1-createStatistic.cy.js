@@ -2,8 +2,11 @@ import { ROUTES } from "../../../support/routes";
 
 describe('Statistic.ST1. Create Statistic', () => {
     let namePosition = Cypress.env('namePosition');
-    let descriptionPosition = Cypress.env('descriptionPosition');
     let statisticName = Cypress.env('statisticName');
+
+    before(() => {
+        cy.resetAppState();
+    })
 
 
     before(() => {
@@ -66,7 +69,6 @@ describe('Statistic.ST1. Create Statistic', () => {
                 }
             });
         cy.xpath("//button[text()='Save']").click();
-        cy.wait(500);
-        cy.contains("Success").should('be.visible');
+        cy.checkTextInParagraph();
     })
 })

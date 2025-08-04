@@ -3,6 +3,7 @@ describe("CP5. Familiarization with the article", () => {
   const article = Cypress.env('articleName');
 
   before(() => {
+     cy.resetAppState();
      cy.login();
   });
 

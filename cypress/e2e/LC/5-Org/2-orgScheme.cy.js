@@ -4,7 +4,10 @@ describe('OrgBoard.A2. Create department', () => {
     let department = Cypress.env('department');
     let sortNumb = Cypress.env('sortNumb');
     let namePosition = Cypress.env('namePosition');
-    let userEmail
+  
+    before(() => {
+        cy.resetAppState();
+    })
 
 
     beforeEach(() => {
@@ -29,8 +32,7 @@ describe('OrgBoard.A2. Create department', () => {
 
 
         cy.xpath("//button[text()='Save']").click();
-        cy.wait(500);
-        cy.contains("Success").should('be.visible');
+        cy.checkTextInParagraph();
     })
 
     it('should create sub position', function () {

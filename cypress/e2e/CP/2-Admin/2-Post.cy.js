@@ -9,6 +9,7 @@ describe("CP2. Article List", () => {
 
 
   beforeEach(() => {
+    cy.resetAppState();
     cy.admin();
   });
 
@@ -98,11 +99,9 @@ describe("CP2. Article List", () => {
       cy.xpath(`//ul/div/li/div[2]/div/ul/div[1]/li/div[2]/ul/div[${i}]/li/div[2]/div/div`).click();
     }
     cy.xpath("//button[text()='Save & Close']").click();
+  
+    cy.checkTextInParagraph();
 
-    // cy.xpath("//span[text()='Confirmation']").parent().parent().next().contains('button', 'No').click();
-    cy.wait(500);
-
-    cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
   });
 
   it('edit articles', function () {
@@ -140,10 +139,7 @@ describe("CP2. Article List", () => {
     cy.wait(500);
 
     cy.get('.text-center.w-full').eq(2).click();
-    cy.wait(1000);
-
-    // Подтверждение: проверка "Success!"
-    cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
+    cy.checkTextInParagraph();
 
     cy.wait(1500);
     cy.bulkAction(['Activate', 'Deactivate'], [articleName]);

@@ -4,11 +4,12 @@ describe("CP1. Categories List", () => {
   let catName = Cypress.env('categoryName');
 
   beforeEach(() => {
+    cy.resetAppState();
     cy.admin();
   });
 
   it('should create Category)', function () {
-
+    cy.task('logInfo', 'Начало теста!');
     cy.get('.flex.justify-between', { timeout: 10000 }).eq(1).then($tab => {
       const isExpanded = $tab.attr('aria-expanded') === 'true';  // true если открыта
       if (!isExpanded) {
@@ -36,9 +37,12 @@ describe("CP1. Categories List", () => {
     cy.whoCanSee(['Users', 'Teams', 'Others']);
     cy.get(".sm\\:col-start-3").should('be.visible').click();
     cy.wait(500);
-    cy.contains("Success!").should('be.visible');
+    
+    cy.checkTextInParagraph();
 
     // check active
+    cy.task('logInfo', 'Проверка ативности');
+    cy.searchRow(catName);
     cy.contains('div', 'QA Test Category')
       .parents('tr')
       .within(() => {
@@ -64,10 +68,10 @@ describe("CP1. Categories List", () => {
       });
 
     cy.xpath("//button[text()='Save & Close']").should('be.visible').click();
-    cy.wait(1000);
+    cy.wait(500);
+    cy.checkTextInParagraph();
 
-    cy.xpath("//p[text()='Success!']").should('be.visible');
-
+    cy.searchRow(catName);
     cy.contains('div', 'QA Test Category')
       .parents('tr')
       .within(() => {

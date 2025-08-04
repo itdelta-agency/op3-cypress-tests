@@ -6,7 +6,7 @@ describe("CP3. Article List", () => {
   const userNames = Cypress.env('usersArticle');
 
   before(() => {
-    cy.clearCookies();
+    cy.resetAppState();
     cy.admin();
 
   });
@@ -35,8 +35,7 @@ describe("CP3. Article List", () => {
       });
     cy.wait(500);
     cy.xpath('//button[text()="Save"]').click();
-    cy.wait(500);
-    cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
+    cy.checkTextInParagraph();
     cy.clearCookies();
   });
 
@@ -79,8 +78,7 @@ describe("CP3. Article List", () => {
       });
     cy.wait(100);
     cy.xpath('//button[text()="Save"]').click();
-    cy.wait(100);
-    cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
+    cy.checkTextInParagraph();
   })
 
 
