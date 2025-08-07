@@ -8,8 +8,8 @@ describe('LC.A2. Create course', () => {
   const lessonCheckboxRadio = Cypress.env('lessonCheckboxRadio');
   const courseName = Cypress.env('courseName');
 
-  before(() => {
-    cy.resetAppState();
+  beforeEach(function () {
+    cy.logTestName.call(this);
     cy.task('getCachedInbox').then(result => {
       expect(result).to.exist;
       inbox = result;

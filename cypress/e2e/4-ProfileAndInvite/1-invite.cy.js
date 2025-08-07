@@ -4,7 +4,8 @@ describe("C. Invite user by 2 ways", () => {
   let inbox;
 
 
-  before(() => {
+  beforeEach(function () {
+    cy.logTestName.call(this);
     cy.resetAppState();
     // Получаем inbox один раз (из кеша через таск)
     cy.task('getLastInbox').then(result => {
@@ -26,7 +27,7 @@ describe("C. Invite user by 2 ways", () => {
     // cy.xpath("//p[text()='Success!']").should('be.visible');
   });
 
-  it('getting last email',  function () {
+  it('getting last email', function () {
     expect(inbox).to.exist;
     // cy.changeLang('en');
     cy.task('getLastEmail', { inboxId: inbox.id, timeout: 60000 }).then(email => {
@@ -68,10 +69,10 @@ describe("C. Invite user by 2 ways", () => {
   it('accept invitation', function () {
     const link = this.confirmationLink; // читаем из `this`
 
-      if (!link) {
-    cy.log('❌ confirmation link before visit отсутствует, пропускаем шаг accept invitation');
-    return; // прерываем тест, чтобы не падал
-  }
+    if (!link) {
+      cy.log('❌ confirmation link before visit отсутствует, пропускаем шаг accept invitation');
+      return; // прерываем тест, чтобы не падал
+    }
 
     cy.visit(link);
     cy.wait(1000);

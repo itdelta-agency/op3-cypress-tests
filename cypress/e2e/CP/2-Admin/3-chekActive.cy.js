@@ -5,8 +5,9 @@ describe("CP3. Article List", () => {
   let articleName = Cypress.env('articleName');
   const userNames = Cypress.env('usersArticle');
 
-  before(() => {
-    cy.resetAppState();
+  beforeEach(function () {
+    cy.logTestName.call(this);
+
     cy.admin();
 
   });
@@ -24,7 +25,7 @@ describe("CP3. Article List", () => {
     cy.wait(2000);
 
     cy.searchRow('QA');
-    cy.xpath(`//div[text()="${articleName}"]`).click();
+    cy.xpath(`//div[text()="${articleName}"]`).first().click();
     cy.wait(500);
     cy.get("button[role='switch']")
       .invoke('attr', 'aria-checked')
@@ -51,7 +52,7 @@ describe("CP3. Article List", () => {
     cy.wait(2000);
     cy.get('.px-3.py-1').click();
 
-    cy.wait(1000);
+    cy.get('.grid.grid', { timeout: 55000 }).should('be.visible');
     cy.xpath(`//div[text()='${userNames}']`).next().scrollIntoView()
       .click().type(articleName);
 
@@ -67,7 +68,7 @@ describe("CP3. Article List", () => {
     cy.visit(ROUTES.articles);
     cy.wait(1000);
     cy.searchRow('QA');
-    cy.xpath(`//div[text()="${articleName}"]`).click();
+    cy.xpath(`//div[text()="${articleName}"]`).first().click();
     cy.wait(100);
     cy.get("button[role='switch']")
       .invoke('attr', 'aria-checked')
@@ -96,10 +97,9 @@ describe("CP3. Article List", () => {
     cy.wait(1000);
     cy.whoCanSee(['Users']);
 
-
     cy.get('.px-3.py-1').click();
 
-    cy.wait(1000);
+    cy.get('.grid.grid', { timeout: 30000 }).should('be.visible');
     cy.xpath(`//div[text()='${userNames}']`).next().scrollIntoView()
       .click().type(articleName);
     cy.wait(500);

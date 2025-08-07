@@ -1,7 +1,8 @@
 describe("A3. Profile editing", () => {
     const newPassword = 'qwerty123';
 
-    beforeEach(() => {
+    beforeEach(function () {
+        cy.logTestName.call(this);
         cy.login();
     });
 

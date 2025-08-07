@@ -1,7 +1,6 @@
 import { ROUTES } from "../../../support/routes";
 
 describe("LC.A1. Create lessons", () => {
-  const skipCookie = Cypress.env('shouldSkipEduTests');
   let lName = Cypress.env('lessonCheckboxRadio');
   let qNameR = Cypress.env('questionRadio');
   let qNameCB = Cypress.env('questionCheckbox');
@@ -9,8 +8,8 @@ describe("LC.A1. Create lessons", () => {
   let lessonTimer = Cypress.env('lessonTimer');
   let qName = Cypress.env('questionText');
 
-  before(() => {
-    cy.resetAppState();
+  beforeEach(function () {
+    cy.logTestName.call(this);
     cy.admin();
   });
 
@@ -128,12 +127,18 @@ describe("LC.A1. Create lessons", () => {
 
     cy.xpath("//button[text()='Save']").click();
     cy.checkTextInParagraph();
+  });
 
+
+
+  it('check bulk action', function() {
+
+    cy.visit(ROUTES.lessons)
     cy.wait(2000);
     //Проверка массовых действий
     cy.bulkAction(['Deactivate', 'Activate',], [lName, lessonText, lessonTimer]);
 
-  });
+  })
 
 
   it('save Lesson of Course', function () {
@@ -155,7 +160,7 @@ describe("LC.A1. Create lessons", () => {
       cy.contains(lessonText).should('be.visible');
       cy.contains(lessonTimer).should('be.visible');
     });
-    
+
     cy.contains(lName).should('be.visible');
 
     cy.get("button[role='switch']").eq(1)

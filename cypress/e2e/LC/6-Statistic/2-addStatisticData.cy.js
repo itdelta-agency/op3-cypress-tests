@@ -2,9 +2,8 @@ describe("Statistic.ST2. adding a value to statistics", () => {
     let lastName = Cypress.env('lastName');
     let statisticName = Cypress.env('statisticName');
 
-
-    before(() => {
-        cy.resetAppState();
+    beforeEach(function () {
+        cy.logTestName.call(this);
         cy.admin();
     });
 

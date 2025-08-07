@@ -3,11 +3,9 @@ import { ROUTES } from "../../../support/routes";
 describe('OrgBoard.A4.Settings', () => {
 
     let namePosition = Cypress.env('namePosition');
-    before(() => {
-        cy.resetAppState();
-    })
-    
-    beforeEach(() => {
+
+    beforeEach(function () {
+        cy.logTestName.call(this);
         cy.admin();
     });
 

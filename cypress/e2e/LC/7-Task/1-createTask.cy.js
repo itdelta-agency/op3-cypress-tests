@@ -4,12 +4,9 @@ describe('Task.T1. Create Task', () => {
 
     let taskName = 'Qa Task 1';
 
-    before(() => {
-        cy.resetAppState();
-    })
 
-
-    before(() => {
+    beforeEach(function () {
+        cy.logTestName.call(this);
         cy.admin()
     });
 
@@ -73,6 +70,7 @@ it('Edit task', function () {
     cy.login();
     cy.visit(ROUTES.tasks);
     cy.wait(1000);
+    cy.searchRow(taskName);
 
     cy.xpath(`//div[text()="${taskName}"]`).closest('tr').first().within(() => {
         cy.get('th').eq(0).find('div').click();
@@ -153,6 +151,7 @@ it('Edit task', function () {
         cy.login();
         cy.visit(ROUTES.tasks);
         cy.wait(1000);
+        cy.searchRow(taskName);
 
         cy.xpath(`//div[text()="${taskName}"]`).closest('tr').first().within(() => {
             cy.get('th').eq(0).find('div').click();

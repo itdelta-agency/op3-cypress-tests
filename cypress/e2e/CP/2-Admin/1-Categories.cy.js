@@ -3,8 +3,8 @@ const { ROUTES } = require("../../../support/routes");
 describe("CP1. Categories List", () => {
   let catName = Cypress.env('categoryName');
 
-  beforeEach(() => {
-    cy.resetAppState();
+  beforeEach(function () {
+    cy.logTestName.call(this);
     cy.admin();
   });
 
@@ -20,7 +20,7 @@ describe("CP1. Categories List", () => {
 
     cy.wait(500);
     cy.deleteAllByName(catName);
-    
+
     cy.wait(500);
     cy.contains('Add category').click();
 
@@ -37,7 +37,7 @@ describe("CP1. Categories List", () => {
     cy.whoCanSee(['Users', 'Teams', 'Others']);
     cy.get(".sm\\:col-start-3").should('be.visible').click();
     cy.wait(500);
-    
+
     cy.checkTextInParagraph();
 
     // check active
@@ -77,8 +77,8 @@ describe("CP1. Categories List", () => {
       .within(() => {
         cy.contains('span', 'Active').should('exist');
       });
-    
-      
+
+
   });
 
   after(() => {

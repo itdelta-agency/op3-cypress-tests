@@ -3,13 +3,12 @@ describe("CP2. Article List", () => {
   let articleName = Cypress.env('articleName');
   let categorisName = Cypress.env('categoryName')
   let answerNumber;
-  let editCat = 'IT-Delta';
-  let userName = 'Dashawn Durgan'
 
 
 
-  beforeEach(() => {
-    cy.resetAppState();
+
+  beforeEach(function () {
+    cy.logTestName.call(this);
     cy.admin();
   });
 
@@ -99,7 +98,7 @@ describe("CP2. Article List", () => {
       cy.xpath(`//ul/div/li/div[2]/div/ul/div[1]/li/div[2]/ul/div[${i}]/li/div[2]/div/div`).click();
     }
     cy.xpath("//button[text()='Save & Close']").click();
-  
+
     cy.checkTextInParagraph();
 
   });
@@ -123,16 +122,11 @@ describe("CP2. Article List", () => {
         }
       });
 
-    cy.get('body').then(($body) => {
-      if ($body.find('.css-hlgwow').length) {
-        cy.get('.css-hlgwow').click().type('123');
-      } else {
-        cy.get('.css-1dyz3mf').click().type('123');
-      }
-    });
-
-    // Ждём и выбираем нужный элемент из выпадающего списка
-    cy.contains('123', { timeout: 1000 }).click({ force: true });
+    cy.contains('div', categorisName).parent()
+      .find('svg').click();
+    cy.get('.css-hlgwow').type(categorisName);
+    cy.xpath("//*[text()='" + categorisName + "'][1]").click();
+    cy.wait(1500);
 
     // Продолжение сценария:
     cy.get('.tab.flex.cursor-pointer').parent().next().find('span').eq(1).click();

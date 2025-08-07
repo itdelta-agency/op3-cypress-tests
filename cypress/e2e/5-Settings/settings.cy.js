@@ -1,7 +1,8 @@
 describe('OrgBoard.A4.Settings', () => {
 
 
-    before(() => {
+    beforeEach(function () {
+        cy.logTestName.call(this);
         cy.admin();
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Settings")').click({multiple: true});
         cy.wait(3000);

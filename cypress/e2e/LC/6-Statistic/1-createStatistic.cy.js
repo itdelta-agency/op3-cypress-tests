@@ -4,12 +4,10 @@ describe('Statistic.ST1. Create Statistic', () => {
     let namePosition = Cypress.env('namePosition');
     let statisticName = Cypress.env('statisticName');
 
-    before(() => {
-        cy.resetAppState();
-    })
 
 
-    before(() => {
+    beforeEach(function () {
+        cy.logTestName.call(this);
         cy.admin()
     });
 

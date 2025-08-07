@@ -1,6 +1,7 @@
 describe('LC.B2. Search courses', () => {
 
-    beforeEach(() => {
+    beforeEach(function () {
+        cy.logTestName.call(this);
         cy.login();
         cy.visit('/lc/courses');
     });

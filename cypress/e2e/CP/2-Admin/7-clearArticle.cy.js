@@ -4,8 +4,9 @@ describe("CP7. Clear Data", () => {
   let articleName = Cypress.env('articleName');
   let catName = Cypress.env('categoryName');
 
-  beforeEach(() => {
-    cy.resetAppState();
+
+  beforeEach(function () {
+    cy.logTestName.call(this);
     cy.admin();
   });
 

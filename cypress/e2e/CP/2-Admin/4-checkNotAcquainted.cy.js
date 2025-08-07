@@ -3,8 +3,9 @@ describe("CP4. Check Not Acquainted", () => {
   const userNames = Cypress.env('usersArticle');
   let articleName = Cypress.env('articleName');
 
-  beforeEach(() => {
-    cy.resetAppState();
+  beforeEach(function () {
+    cy.logTestName.call(this);
+
     cy.admin();
   });
 
@@ -21,6 +22,7 @@ describe("CP4. Check Not Acquainted", () => {
     cy.whoCanSee(['Users']);
     cy.get('.px-3.py-1').click();
 
+    cy.get('.grid.grid', { timeout: 30000 }).should('be.visible');
     cy.xpath(`//div[text()='${userNames}']`).scrollIntoView();
     cy.xpath(`//div[text()='${userNames}']`).then($userEl => {
       cy.wrap($userEl).next().click();

@@ -1,24 +1,27 @@
 describe('2-Auth-RU-login-valid.cy.js', () => {
+
     const username = Cypress.env('email');
     const password = Cypress.env('password');
 
     const wrong_username = 'wrong_.ajshd@ajdhajszxmcbnqwdot.wrong';
     const wrong_password = 'wrong_wrong_wrong_wrong_wrong_';
-    beforeEach(() => {
+    beforeEach(function () {
+        cy.logTestName.call(this);
         cy.resetAppState();
         cy.visit(Cypress.config().baseUrl);
-        cy.changeLangAuth();
+        // cy.changeLangAuth('en');
     });
 
     it('should move to login page and log in', function () {
+    
         cy.xpath("//input[@id='email']", { timeout: 10000 }).should('be.visible');
         cy.xpath("//input[@id='email']", { timeout: 10000 }).type(username);
 
         cy.xpath("//input[@id='password']", { timeout: 10000 }).should('be.visible');
         cy.xpath("//input[@id='password']", { timeout: 10000 }).type(password, { log: false });
 
-        cy.xpath("//button[@type='submit']", { timeout: 10000}).should('be.visible');
-        cy.xpath("//button[@type='submit']", { timeout: 10000}).click();
+        cy.xpath("//button[@type='submit']", { timeout: 10000 }).should('be.visible');
+        cy.xpath("//button[@type='submit']", { timeout: 10000 }).click();
         cy.wait(3000);
         cy.visit('/')
     });
@@ -32,14 +35,17 @@ describe('2-Auth-RU-login-valid.cy.js', () => {
         cy.xpath("//button[@type='submit']", { timeout: 10000 }).should('be.visible').click();
 
         cy.wait(1500);
-        cy.contains("Неверное имя пользователя или пароль.").should('be.visible');
+        cy.contains('p', 'Error').should('be.visible');
+        // cy.contains("Неверное имя пользователя или пароль.").should('be.visible');
         cy.wait(1000);
         cy.xpath("//input[@id='email']", { timeout: 10000 }).clear().type(username);
 
         cy.xpath("//input[@id='password']", { timeout: 10000 }).clear().type(wrong_password, { log: false });
 
-        cy.xpath("//button[@type='submit']", { timeout: 10000}).click();
+        cy.xpath("//button[@type='submit']", { timeout: 10000 }).click();
         cy.wait(1000);
-        cy.contains("Неверное имя пользователя или пароль.").should('be.visible');
+        cy.contains('p', 'Error').should('be.visible');
+        // cy.contains("Неверное имя пользователя или пароль.").should('be.visible');
+        cy
     });
 })

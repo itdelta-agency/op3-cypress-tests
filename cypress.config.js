@@ -53,7 +53,7 @@ module.exports = defineConfig({
     passName: 'AT-Delta',
     passUrl:  process.env.URL,
     passLogin: process.env.EMAIL,
-    passPasword: process.env.PASSWORD,
+    passPassword: process.env.PASSWORD,
     passDescription: 'Pass description: Convenient application!'
 
 

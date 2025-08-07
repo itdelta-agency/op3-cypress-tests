@@ -3,12 +3,10 @@ const { ROUTES } = require("../../../support/routes");
 describe('LC.Z. Clear all created learning items', () => {
 
 
-    before(() => {
-        cy.resetAppState();
-    })
 
 
-    beforeEach(() => {
+    beforeEach(function () {
+        cy.logTestName.call(this);
         cy.admin();
     })
 
@@ -161,6 +159,18 @@ describe('LC.Z. Clear all created learning items', () => {
             cy.deleteResources(teamName);
         });
 
+    })
+
+    it('delete password', function () {
+        const passName = Cypress.env('passName');
+        cy.visit(ROUTES.passwords);
+        cy.wait(1500);
+        cy.searchRow(passName);
+        cy.wait(500);
+
+        cy.ifRowExists(passName, () => {
+            cy.deleteResources(passName);
+        });
     })
 
 });

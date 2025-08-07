@@ -4,8 +4,8 @@ describe("CP6. Check Acquainted", () => {
   const userNames = Cypress.env('usersArticle');
 
 
-  beforeEach(() => {
-    cy.resetAppState();
+  beforeEach(function () {
+    cy.logTestName.call(this);
     cy.admin();
   });
 
@@ -23,7 +23,7 @@ describe("CP6. Check Acquainted", () => {
     cy.wait(500);
     cy.get('.px-3.py-1').click();
 
-    cy.wait(500);
+    cy.get('.grid.grid', { timeout: 30000 }).should('be.visible');
     cy.xpath(`//div[text()='${userNames}']`).next().next().scrollIntoView()
       .click().type(articleName);
 

@@ -15,7 +15,8 @@ describe("US.1 Add User", () => {
 
 
 
-  beforeEach(() => {
+  beforeEach(function () {
+    cy.logTestName.call(this);
     return cy.resetAppState()
       .then(() => cy.login())
       .then(() => {

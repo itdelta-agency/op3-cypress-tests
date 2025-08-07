@@ -1,24 +1,8 @@
 describe('LC.A4. Create curriculum', () => {
-    //  const skipCookie = Cypress.env('shouldSkipEduTests');
+ 
 
-    // before(() => {
-    //     if ( Cypress.browser.isHeaded ) {
-    //         cy.clearCookie(skipCookie)
-    //     } else {
-    //         cy.getCookie(skipCookie).then(cookie => {
-    //             if (
-    //                 cookie &&
-    //                 typeof cookie === 'object' &&
-    //                 cookie.value === 'true'
-    //             ) {
-    //                 Cypress.runner.stop();
-    //             }
-    //         });
-    //     }
-    // });
-
-    beforeEach(() => {
-        cy.resetAppState();
+    beforeEach(function () {
+        cy.logTestName.call(this);
         cy.admin();
     });
 

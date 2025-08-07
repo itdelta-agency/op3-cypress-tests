@@ -2,9 +2,9 @@ describe("CP5. Familiarization with the article", () => {
 
   const article = Cypress.env('articleName');
 
-  before(() => {
-     cy.resetAppState();
-     cy.login();
+  beforeEach(function () {
+    cy.logTestName.call(this);
+    cy.login();
   });
 
   it('checking the ignorance of the article ADMIN', () => {

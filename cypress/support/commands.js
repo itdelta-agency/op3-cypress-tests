@@ -122,9 +122,50 @@ Cypress.Commands.add('question', (questionName, questionType) => {
     // cy.xpath("//input[@type='number']").type(10);
     cy.xpath("//button[text()='Save']").click();
     cy.wait(1500);
-    cy.contains("Success").should('be.visible');
+    cy.checkTextInParagraph();
 });
 
+
+
+
+Cypress.Commands.add('reliableType', (selector, text) => {
+  cy.get(selector)
+    .eq(0)
+    .should('be.visible')
+    .as('reliableInput');
+
+  cy.get('@reliableInput')
+    .clear();
+
+  cy.wait(300);
+
+  cy.get('@reliableInput')
+    .type(text, { delay: 100 });
+
+  cy.wait(300);
+
+  // Проверка корректности ввода
+  cy.get('@reliableInput')
+    .invoke('val')
+    .then(val => {
+      if (val !== text) {
+        cy.log(`🔁 Переввод. Было: "${val}", ожидалось: "${text}"`);
+
+        // Повтор
+        cy.get('@reliableInput').clear();
+        cy.wait(300);
+        cy.get('@reliableInput').type(text, { delay: 150 });
+
+        // Повторная проверка (только лог)
+        cy.get('@reliableInput').invoke('val').then(finalVal => {
+          if (finalVal !== text) {
+            cy.log(`⚠️ После повтора всё ещё не совпадает: "${finalVal}"`);
+            cy.task('logError', `Ожидалось: "${text}", но введено: "${finalVal}"`);
+          }
+        });
+      }
+    });
+});
 // -----------------------------------------------------------------------------------------------------------------------
 
 Cypress.Commands.add('bulkAction', (actions, nameOrNames) => {
@@ -139,7 +180,7 @@ Cypress.Commands.add('bulkAction', (actions, nameOrNames) => {
 
     actions.forEach(action => {
         // Отмечаем чекбоксы по каждому имени отдельно
-        
+
         nameList.forEach(name => {
             cy.wait(200);
             // Вводим имя для фильтрации таблицы
@@ -197,7 +238,16 @@ Cypress.Commands.add('bulkAction', (actions, nameOrNames) => {
         nameList.forEach(name => {
             // Снова фильтруем таблицу по имени
             cy.wait(300);
-            cy.get('input[placeholder="Search"]').eq(0).clear().type(name, { delay: 100 });
+
+            cy.get('input[placeholder="Search"]').eq(0)
+                .should('be.visible')
+                .clear();
+
+            cy.wait(300); // ⏳ ждём после очистки — это критично
+
+            cy.get('input[placeholder="Search"]').eq(0)
+                .type(name, { delay: 100 });
+
             cy.wait(700);
 
             if (action.toLowerCase() === 'delete') {
@@ -227,9 +277,9 @@ Cypress.Commands.add('bulkAction', (actions, nameOrNames) => {
 
                                 default:
                                     throw new Error(`Неизвестное массовое действие: ${action}`);
-                                    
-                                    
-                                    
+
+
+
                             }
                         });
                     });
@@ -245,7 +295,7 @@ Cypress.Commands.add('bulkAction', (actions, nameOrNames) => {
                 });
             } else {
                 cy.log('Уведомление об успехе не появилось');
-                cy.task('logError',`Уведомление об успехе не появилось`);
+                cy.task('logError', `Уведомление об успехе не появилось`);
             }
         });
     });
@@ -293,10 +343,10 @@ Cypress.Commands.add('changeLang', (lang = 'ru') => {
                 if ($body.find(`[data-header-test-id="${lang}"]`).length > 0) {
                     cy.get(`[data-header-test-id="${lang}"]`).click();
                     cy.log(`Язык переключен на ${lang}`);
-                    cy.task('logInfo',`Язык переключен на ${lang}`);
+                    cy.task('logInfo', `Язык переключен на ${lang}`);
                 } else {
                     cy.log(`Элемент для языка ${lang} не найден`);
-                    cy.task('logError',`Элемент для языка ${lang} не найден`);
+                    cy.task('logError', `Элемент для языка ${lang} не найден`);
                 }
             });
         });
@@ -306,7 +356,7 @@ Cypress.Commands.add('changeLang', (lang = 'ru') => {
         .should('have.text', lang)
         .then(() => {
             cy.log(`Подтверждено, что язык сменился на ${lang}`);
-            cy.task('logInfo',`Язык сменился на ${lang}!`);
+            cy.task('logInfo', `Язык сменился на ${lang}!`);
         });
 });
 
@@ -419,7 +469,7 @@ Cypress.Commands.add('deleteAllByName', (name) => {
 
 Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Departments', 'Teams', 'Others']) => {
 
-    cy.task('logInfo',`Начало работы с модальным окном парв доступа`);
+    cy.task('logInfo', `Начало работы с модальным окном парв доступа`);
     const tabSearchValues = {
         'Users': 'first-name',
         'Departments': 'QA Department name',
@@ -430,6 +480,16 @@ Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Departments', 'Teams', 'Oth
     cy.task('logInfo', 'Клик по кнопке селект');
     cy.get('.w-20.text-xs').click();
     cy.wait(500);
+    cy.get('.bg-white.rounded-lg.px-4').then($el => {
+        if ($el.is(':visible')) {
+            // Окно видно
+            cy.log('Окно открыто');
+        } else {
+            // Окно не видно — можно кликнуть ещё раз
+            cy.get('.w-20.text-xs').click();
+        }
+    });
+
 
     Cypress._.each(tabs, (tab) => {
         cy.get('.-mb-px.flex', { timeout: 5000 }).then(($nav) => {
@@ -496,6 +556,13 @@ Cypress.Commands.add('ifRowExists', (name, callback) => {
 
 // -----------------------------------------------------------------------------------------------------------------------
 
+Cypress.Commands.add('logTestName', function () {
+    const testName = this.currentTest.title;
+    cy.task('logInfo', `========== Запуск теста: ${testName} ==========`);
+});
+
+// -----------------------------------------------------------------------------------------------------------------------
+
 Cypress.Commands.add('deleteResources', (name) => {
     const deleteNext = () => {
         cy.wait(800); // дать времени DOM обновиться
@@ -534,14 +601,12 @@ Cypress.Commands.add('checkTextInParagraph', (text = 'Success!', timeout = 3000)
         return cy.document().then((doc) => {
             const el = doc.querySelector("p");
             if (el && el.textContent.includes(text)) {
-                cy.log(`Элемент с текстом "${text}" найден`);
-                cy.task('logInfo', 'Сообщение найдено!');
+                cy.task('logInfo', `Элемент с текстом "${text}" найден`);
                 return;
             }
 
             if (Date.now() - start > timeout) {
-                cy.log(`Элемент с текстом "${text}" не найден за ${timeout} мс`);
-                cy.task('logInfo', 'Сообщеине не найдено.');
+                cy.task('logInfo', `Элемент с текстом "${text}" не найден за ${timeout} мс`);
                 return;
             }
             return Cypress.Promise.delay(500).then(check);

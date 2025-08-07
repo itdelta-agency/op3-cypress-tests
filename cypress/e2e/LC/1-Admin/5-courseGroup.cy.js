@@ -1,5 +1,8 @@
 describe('LC.A3. Create course group', () => {
-    beforeEach(() => {
+
+
+    beforeEach(function () {
+        cy.logTestName.call(this);
         cy.admin();
     });
 

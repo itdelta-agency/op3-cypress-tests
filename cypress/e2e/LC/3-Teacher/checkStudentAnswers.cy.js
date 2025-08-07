@@ -9,10 +9,11 @@ describe('LC.C1. Check student answers', () => {
     let userEmail;
 
     before(() => {
-        cy.resetAppState();
+        // cy.resetAppState();
     });
 
-    beforeEach(() => {
+    beforeEach(function () {
+        cy.logTestName.call(this);
         cy.admin();
     });
 
@@ -20,8 +21,8 @@ describe('LC.C1. Check student answers', () => {
 
     it('Check first answer', () => {
         const lessonNames = [
-            Cypress.env('lessonText'), 
-            Cypress.env('lessonTimer') 
+            Cypress.env('lessonText'),
+            Cypress.env('lessonTimer')
         ];
 
         cy.wait(1500);
@@ -70,6 +71,7 @@ describe('LC.C1. Check student answers', () => {
 
             cy.xpath("//span[text()='Success']").click();
             cy.xpath("//button[text()='Restart']").next().click();
+            cy.get('h2').contains('Student answers').should('bi.visible');
             cy.checkTextInParagraph();
 
             // Возвращаемся назад к списку ответов

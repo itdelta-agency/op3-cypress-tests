@@ -6,8 +6,8 @@ describe("LC.A5. Create team", () => {
     const addName = 'sd'
     let userProfile = 'QA Edit USER';
 
-    beforeEach(() => {
-        cy.clearAllCookies();
+    beforeEach(function () {
+        cy.logTestName.call(this);
         cy.wait(500);
         cy.admin();
         // cy.changeLang('en');
