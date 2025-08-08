@@ -1,35 +1,41 @@
+const { ROUTES } = require("../../../support/routes");
+
 describe('OrgBoard.A1. Create position', () => {
-    const position = 'QA position';
-    const description = 'QA QA position'
-    let userEmail
-    before(() => {
-            cy.task("getEmailAccount").then((email) => {
-                cy.log(email);
-                userEmail = email;
-            })
-    });
+
+    let namePosition = Cypress.env('namePosition');
+    let descriptionPosition = Cypress.env('descriptionPosition');
+    let lastName = Cypress.env('lastName');
+    let editUser = Cypress.env('editUser');
+
 
     beforeEach(() => {
+        cy.resetAppState();
         cy.admin();
     });
 
     it('should create position', function () {
-        cy.visit('ob/admin/positions');
-        cy.wait(3000);
+        cy.visit(ROUTES.position);
+        cy.wait(1000);
         cy.contains('Add').click();
         cy.wait(1500);
 
-        cy.xpath("//span[text()='Name *']").next().type(position);
-        cy.xpath("//button[@role='switch']").click();
-        cy.xpath("//span[text()='Description']").next().type(description);
-        cy.xpath("//span[text()='user']").next().children().click().type('Qa');
-        cy.xpath("//div[text()='Qa User']").scrollIntoView().click();
+        cy.get('input.shadow-sm').eq(0).type(namePosition);
+        cy.get("button[role='switch']")
+            .invoke('attr', 'aria-checked')
+            .then(checked => {
+                if (checked === 'false') {
+                    cy.get("button[role='switch']").click();
+                }
+            });
+        cy.get('input.shadow-sm').eq(1).clear().type(666);
+        cy.get('textarea.shadow-sm').type(descriptionPosition);
+        cy.get('.css-19bb58m').eq(0).click().type(lastName);
+        cy.get('div').contains(editUser).click();
 
-        cy.xpath("//span[text()='Functions']").next().type(description);
-        cy.xpath("//span[text()='VFP']").next().type(description);
+        cy.xpath("//span[text()='Functions']").next().type(descriptionPosition);
+        cy.xpath("//span[text()='VFP']").next().type(descriptionPosition);
 
         cy.xpath("//button[text()='Save']").click();
-        cy.wait(500);
-        cy.contains("Success").should('be.visible');
+        cy.checkTextInParagraph();
     })
 })

@@ -1,6 +1,12 @@
+import { ROUTES } from "../../../support/routes";
+
 describe('Statistic.ST1. Create Statistic', () => {
-    const position = 'QA position';
-    const description = 'QA QA position'
+    let namePosition = Cypress.env('namePosition');
+    let statisticName = Cypress.env('statisticName');
+
+    before(() => {
+        cy.resetAppState();
+    })
 
 
     before(() => {
@@ -8,29 +14,61 @@ describe('Statistic.ST1. Create Statistic', () => {
     });
 
     it('should create statistics', function () {
-        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Statistics")').click({multiple: true});
+        cy.visit(ROUTES.statistics);
+        cy.wait(500);
 
-        cy.contains("a", 'Statistics list').click();
-        cy.wait(3000);
         cy.contains('Add statistics').click();
         cy.wait(1500);
 
-        cy.xpath("//span[text()='Name *']").next().type('Qa statistic');
-        cy.xpath('//span[text()="Status"]/../span[2]/button').click();
+        cy.get('input.shadow-sm').type(statisticName);
+        cy.get("button[role='switch']").eq(0)
+            .invoke('attr', 'aria-checked')
+            .then(checked => {
+                if (checked === 'false') {
+                    cy.get("button[role='switch']").eq(0).click();
+                }
+            });
+
+        cy.get('div.css-19bb58m input[role="combobox"]').eq(0)
+            .click({ force: true });
+        cy.get('div[role="option"]')
+            .first()
+            .click({ force: true });
+
         cy.xpath("//span[text()='Post *']").next().children().click();
-        cy.xpath("//span[text()='Post *']").next().children().type(position);
-        cy.contains('div', position).click();
-        cy.contains('button', 'Select').click();
-        cy.contains('div', 'Search').next().find('input').type('Qa');
-        cy.contains('div', 'QA Test').click();
-        cy.xpath('//div[@class="fixed z-40 inset-0 overflow-y-auto"]').find(':contains("Save")').click( { multiple: true });
+        cy.xpath("//span[text()='Post *']").next().children().type(namePosition);
+        cy.contains('div', namePosition).click();
+
+        cy.whoCanSee(['Users', 'Departments', 'Teams', 'Others']);
 
 
 
-        cy.xpath('//span[text()="Show in ICO"]/../span[2]/button').click();
-        cy.xpath('//span[text()="Main statistics"]/../span[2]/button').click();
+        cy.get('input.shadow-sm').type(statisticName);
+        cy.get("button[role='switch']").eq(1)
+            .invoke('attr', 'aria-checked')
+            .then(checked => {
+                if (checked === 'false') {
+                    cy.get("button[role='switch']").eq(1).click();
+                }
+            });
+
+        cy.get('input.shadow-sm').type(statisticName);
+        cy.get("button[role='switch']").eq(2)
+            .invoke('attr', 'aria-checked')
+            .then(checked => {
+                if (checked === 'false') {
+                    cy.get("button[role='switch']").eq(2).click();
+                }
+            });
+        cy.get('input.shadow-sm').type(statisticName);
+        cy.get("button[role='switch']").eq(3)
+            .invoke('attr', 'aria-checked')
+            .then(checked => {
+                if (checked === 'true') {
+                    cy.get("button[role='switch']").eq(3).click();
+                }
+            });
         cy.xpath("//button[text()='Save']").click();
-        cy.wait(500);
-        cy.contains("Success").should('be.visible');
+        cy.checkTextInParagraph();
     })
 })

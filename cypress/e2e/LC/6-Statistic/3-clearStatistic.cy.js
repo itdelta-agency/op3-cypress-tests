@@ -1,54 +1,89 @@
+import { ROUTES } from "../../../support/routes";
+
 describe('Statistic.ST3. clear data statistic', () => {
+    let statisticName = Cypress.env('statisticName');
 
     before(() => {
+        cy.resetAppState();
+    })
+
+
+    beforeEach(() => {
         cy.admin();
     });
 
 
 
     it('clearing a value to statistics', function () {
-        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Statistics")').click({multiple: true});
+        cy.visit(ROUTES.statistics);
+        cy.wait(500);
 
-        cy.contains("a", 'Statistics list').click();
 
-        cy.wait(3000);
-        cy.searchRow('Qa');
-        cy.wait(1500);
-        cy.xpath("//div[text()='Qa statistic']").closest('tr').within(() => {
-            cy.get('th').eq(1).find('div').click();
+        cy.get('body').then($body => {
+            if ($body.find('.mt-1.relative.flex').length === 0) {
+                cy.xpath("//div[@class='tooltip']").click();
+            }
         });
-        cy.contains('Statistic data').should('be.visible').click({ multiple: true });
-        cy.wait(1500);
 
-        cy.get('tbody tr:first').closest('tr').within(() => {
-            cy.get('th').eq(1).find('div').click();
+        cy.get('[placeholder="Search"], [placeholder="Поиск"]').eq(1)
+            .should('be.visible')
+            .clear()
+            .wait(100)
+            .type(statisticName, { delay: 100 });
+
+        cy.wait(500); // Подожди, пока таблица обновится
+
+        cy.get('tr').contains(statisticName).closest('tr').within(() => {
+            // Клик по кнопке "⋯"
+            cy.get('.p-2.rounded-full').click();
         });
-        cy.contains('Delete value').should('be.visible').click({ multiple: true });
 
-        cy.wait(1000);
-        cy.xpath('//div[@class="fixed z-40 inset-0 overflow-y-auto"]').find('button:contains("Delete")').click();
-        cy.wait(1000)
-        cy.contains("Success").should('be.visible');
+        // Клик по пункту меню "Statistic data"
+        cy.contains('div', /Statistic data\s*/i).click();
+
+        cy.wait(800); // Подождать, пока закроется/откроется что нужно
+
+        // Повторный клик по ⋯
+        cy.get('.p-2.rounded-full').click();
+
+
+        cy.contains('div', /Delete\s*/i).click();
+        cy.wait(200);
+        cy.contains('button', 'Delete').click();
+        cy.checkTextInParagraph();
     })
 
     it('delete statistic', function () {
-        cy.login();
-        cy.visit('/admin/user')
-        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Statistics")').click({multiple: true});
+        cy.visit(ROUTES.statistics);
+        cy.wait(500);
 
-        cy.contains("a", 'Statistics list').click();
 
-        cy.wait(1500);
-        cy.searchRow('Qa');
-        cy.wait(1500);
-        cy.xpath("//div[text()='Qa statistic']").closest('tr').within(() => {
-            cy.get('th').eq(1).find('div').click();
+        cy.get('body').then($body => {
+            if ($body.find('.mt-1.relative.flex').length === 0) {
+                cy.xpath("//div[@class='tooltip']").click();
+            }
         });
-        cy.contains('Delete statistic').scrollIntoView().should('be.visible').click({ multiple: true });
-        cy.wait(1000)
-        cy.get('button').contains('Delete').click();
-        cy.wait(500)
-        cy.contains("Success").should('be.visible');
+
+        cy.get('[placeholder="Search"], [placeholder="Поиск"]').eq(1)
+            .should('be.visible')
+            .clear()
+            .wait(100)
+            .type(statisticName, { delay: 100 });
+
+        cy.wait(500); // Подожди, пока таблица обновится
+
+        cy.get('tr').contains(statisticName).closest('tr').within(() => {
+            // Клик по кнопке "⋯"
+            cy.get('.p-2.rounded-full').click();
+
+
+            // Клик по пункту меню "Statistic data"
+            cy.contains('div', /Delete*/i).click();
+        });
+
+        cy.wait(200);
+        cy.contains('button', 'Delete').click();
+        cy.checkTextInParagraph();;
     })
 
 })

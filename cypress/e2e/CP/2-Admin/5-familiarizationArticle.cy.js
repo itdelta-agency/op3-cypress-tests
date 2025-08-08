@@ -3,6 +3,7 @@ describe("CP5. Familiarization with the article", () => {
   const article = Cypress.env('articleName');
 
   before(() => {
+     cy.resetAppState();
      cy.login();
   });
 
@@ -16,13 +17,18 @@ describe("CP5. Familiarization with the article", () => {
 
     cy.wait(500);
 
-    cy.xpath("//label[text()='Answer 2']").click();
+    cy.xpath("//label[text()='Answer 3']").click();
     cy.wait(300);
     cy.xpath("//button[text()='Next']").click();
     cy.wait(500);
+    cy.xpath("//label[text()='Answer 2']").click();
+    cy.wait(300);
+    cy.xpath("//button[text()='Next']").click();
+    cy.wait(300);
     cy.xpath("//label[text()='Answer 1']").click();
     cy.wait(300);
     cy.xpath("//button[text()='Check it']").click();
+    cy.wait(300);
 
     cy.xpath("//span[text()='Acquainted']", { timeout: 5000 }).should('be.visible');
     cy.wait(500);

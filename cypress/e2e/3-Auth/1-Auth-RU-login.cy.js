@@ -5,6 +5,7 @@ describe('2-Auth-RU-login-valid.cy.js', () => {
     const wrong_username = 'wrong_.ajshd@ajdhajszxmcbnqwdot.wrong';
     const wrong_password = 'wrong_wrong_wrong_wrong_wrong_';
     beforeEach(() => {
+        cy.resetAppState();
         cy.visit(Cypress.config().baseUrl);
         cy.changeLangAuth();
     });

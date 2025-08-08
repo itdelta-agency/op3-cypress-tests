@@ -1,0 +1,23 @@
+export const ROUTES = {
+  login: '/login',
+  users: '/admin/user',
+  createUser:'/admin/user/create',
+  categories: '/cp/admin/category',
+  createCategories: '/cp/admin/category/create',
+  courses: '/lc/admin/courses',
+  studCourse: '/lc/courses',
+  teams : '/admin/teams',
+  invite: 'invite-user',
+  report: 'cp/admin/report',
+  articles: 'cp/admin/post',
+  lessons: '/lc/admin/lessons',
+  position: '/ob/admin/positions',
+  orgScheme: '/ob/admin/departments/scheme',
+  settings: '/admin/settings/lc',
+  statistics: '/st/admin/index',
+  tasks: '/task',
+  curriculums: '/lc/admin/curriculums',
+  groupCourse: '/lc/admin/groups',
+  passwords: '/ps/admin/index',
+
+};

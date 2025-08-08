@@ -5,13 +5,30 @@ describe("CP6. Check Acquainted", () => {
 
 
   beforeEach(() => {
+    cy.resetAppState();
     cy.admin();
   });
 
+
   it('checking the ignorance of the article', () => {
-    cy.searchReport(userNames);
-    cy.wait(1000);
-    cy.contains('div', userNames).next().next().click();
-    cy.contains(articleName).scrollIntoView().click({force: true});
+
+    cy.get('.flex.justify-between', { timeout: 10000 }).eq(1).then($tab => {
+      const isExpanded = $tab.attr('aria-expanded') === 'true';  // true если открыта
+      if (!isExpanded) {
+        cy.wrap($tab).click();
+      }
+    });
+    cy.get('a.text-indigo-100',).eq(2).click();
+    cy.whoCanSee(['Users']);
+    cy.wait(500);
+    cy.get('.px-3.py-1').click();
+
+    cy.wait(500);
+    cy.xpath(`//div[text()='${userNames}']`).next().next().scrollIntoView()
+      .click().type(articleName);
+
+    // Проверка, что статья в колонке "Ознакомлен"
+    cy.contains(articleName).scrollIntoView().click({ force: true });
+
   });
 });
