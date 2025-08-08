@@ -129,42 +129,42 @@ Cypress.Commands.add('question', (questionName, questionType) => {
 
 
 Cypress.Commands.add('reliableType', (selector, text) => {
-  cy.get(selector)
-    .eq(0)
-    .should('be.visible')
-    .as('reliableInput');
+    cy.get(selector)
+        .eq(0)
+        .should('be.visible')
+        .as('reliableInput');
 
-  cy.get('@reliableInput')
-    .clear();
+    cy.get('@reliableInput')
+        .clear();
 
-  cy.wait(300);
+    cy.wait(300);
 
-  cy.get('@reliableInput')
-    .type(text, { delay: 100 });
+    cy.get('@reliableInput')
+        .type(text, { delay: 100 });
 
-  cy.wait(300);
+    cy.wait(300);
 
-  // Проверка корректности ввода
-  cy.get('@reliableInput')
-    .invoke('val')
-    .then(val => {
-      if (val !== text) {
-        cy.log(`🔁 Переввод. Было: "${val}", ожидалось: "${text}"`);
+    // Проверка корректности ввода
+    cy.get('@reliableInput')
+        .invoke('val')
+        .then(val => {
+            if (val !== text) {
+                cy.log(`🔁 Переввод. Было: "${val}", ожидалось: "${text}"`);
 
-        // Повтор
-        cy.get('@reliableInput').clear();
-        cy.wait(300);
-        cy.get('@reliableInput').type(text, { delay: 150 });
+                // Повтор
+                cy.get('@reliableInput').clear();
+                cy.wait(300);
+                cy.get('@reliableInput').type(text, { delay: 150 });
 
-        // Повторная проверка (только лог)
-        cy.get('@reliableInput').invoke('val').then(finalVal => {
-          if (finalVal !== text) {
-            cy.log(`⚠️ После повтора всё ещё не совпадает: "${finalVal}"`);
-            cy.task('logError', `Ожидалось: "${text}", но введено: "${finalVal}"`);
-          }
+                // Повторная проверка (только лог)
+                cy.get('@reliableInput').invoke('val').then(finalVal => {
+                    if (finalVal !== text) {
+                        cy.log(`⚠️ После повтора всё ещё не совпадает: "${finalVal}"`);
+                        cy.task('logError', `Ожидалось: "${text}", но введено: "${finalVal}"`);
+                    }
+                });
+            }
         });
-      }
-    });
 });
 // -----------------------------------------------------------------------------------------------------------------------
 
@@ -183,16 +183,8 @@ Cypress.Commands.add('bulkAction', (actions, nameOrNames) => {
 
         nameList.forEach(name => {
             cy.wait(200);
-            // Вводим имя для фильтрации таблицы
-            cy.get('input[placeholder="Search"]').eq(0)
-                .should('be.visible')
-                .clear();
 
-            cy.wait(200); // небольшой таймаут для стабилизации DOM
-
-            cy.get('input[placeholder="Search"]').eq(0)
-                .type(name, { delay: 100 });
-            cy.wait(700); // ждем, чтобы таблица обновилась
+            cy.searchRow(name);
 
             // Отмечаем все строки, которые содержат это имя
             cy.get('tbody tr[role="row"]', { timeout: 5000 })
@@ -239,14 +231,7 @@ Cypress.Commands.add('bulkAction', (actions, nameOrNames) => {
             // Снова фильтруем таблицу по имени
             cy.wait(300);
 
-            cy.get('input[placeholder="Search"]').eq(0)
-                .should('be.visible')
-                .clear();
-
-            cy.wait(300); // ⏳ ждём после очистки — это критично
-
-            cy.get('input[placeholder="Search"]').eq(0)
-                .type(name, { delay: 100 });
+            cy.searchRow(name);
 
             cy.wait(700);
 
@@ -383,20 +368,27 @@ Cypress.Commands.add('logout', () => {
 
 Cypress.Commands.add('searchRow', (name) => {
     cy.log(`🔍 Поиск строки с именем: "${name}"`);
-
-    cy.task('logInfo', 'Проверка, включены ли фильтры');
     cy.get('body').then($body => {
         if ($body.find('.mt-1.relative.flex').length === 0) {
-            cy.task('logInfo', 'Клик по кнопке фильтра.');
             cy.xpath("//div[@class='tooltip']").click();
         }
     });
 
     cy.get('[placeholder="Search"], [placeholder="Поиск"]').first()
-        .should('be.visible')
-        .clear()
-        .wait(100)
-        .type(name, { delay: 100 });
+        .should('exist')
+        .clear();
+
+    name.split('').forEach((char, index) => {
+        cy.get('[placeholder="Search"], [placeholder="Поиск"]').first()
+            .type(char, { delay: 0 });
+
+        // ждем, пока поле реально обновится перед следующим символом
+        cy.get('[placeholder="Search"], [placeholder="Поиск"]').first()
+            .should('have.value', name.slice(0, index + 1));
+
+        // микропаузa, чтобы debounce успел отработать
+        cy.wait(100);
+    });
 
     cy.wait(800); // подождать обновления таблицы
 
@@ -404,10 +396,8 @@ Cypress.Commands.add('searchRow', (name) => {
     cy.get('tbody').then($tbody => {
         const rows = $tbody.find(`tr:contains("${name}")`);
         if (rows.length > 0) {
-            cy.log(`Найдена строка с именем: "${name}"`);
-            cy.task('logInfo', `Строка с именем "${name}" найдена!`);
+
         } else {
-            cy.log(`Строка с именем "${name}" не найдена`);
             cy.task('logError', `Строка с именем "${name}" не найдена!`);
         }
     });
@@ -480,13 +470,14 @@ Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Departments', 'Teams', 'Oth
     cy.task('logInfo', 'Клик по кнопке селект');
     cy.get('.w-20.text-xs').click();
     cy.wait(500);
-    cy.get('.bg-white.rounded-lg.px-4').then($el => {
+    cy.get('.cursor-pointer.absolute.-right-5').then($el => {
         if ($el.is(':visible')) {
             // Окно видно
-            cy.log('Окно открыто');
+            cy.task('logInfo', 'Модальное окно открыто');
         } else {
             // Окно не видно — можно кликнуть ещё раз
             cy.get('.w-20.text-xs').click();
+            cy.task('logWarn', 'Модальное окно не открылось, кликаем на кнопку селект еще раз');
         }
     });
 
@@ -498,7 +489,7 @@ Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Departments', 'Teams', 'Oth
                 cy.wait(200);
 
                 // Вводим значение для поиска
-                cy.task('logInfo', 'Поиск.');
+
                 cy.contains('div', 'Search')
                     .parent()
                     .find('input')
@@ -515,26 +506,35 @@ Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Departments', 'Teams', 'Oth
                         cy.contains('div', tabSearchValues[tab]).click({ force: true });
                         cy.wait(300);
                     } else {
-                        cy.log(`Элемент "${tabSearchValues[tab]}" не найден — пропускаем`);
-                        cy.task('logInfo', 'Такого ресурса нет.');
+                        cy.task('logWarn', `Элемент "${tabSearchValues[tab]}" не найден — пропускаем`);
                     }
                 });
 
             } else {
-                cy.log(`Вкладка "${tab}" отсутствует — пропускаем`);
-                cy.task('logInfo', 'Вкладки нет.');
+                cy.task('logWarn', `Вкладка "${tab}" отсутствует — пропускаем`);
             }
         });
     });
 
-    // Клик по "Save" / подтверждение
-    cy.task('logInfo', 'Подтверждение.');
+    cy.task('logInfo', 'Сохраняем изменения');
     cy.get('.mt-3.w-full').click();
+    cy.wait(500);
+
+    cy.get('body').then($body => {
+        const el = $body.find('.cursor-pointer.absolute.-right-5');
+        if (el.length && el.is(':visible')) {
+            cy.task('logError','Модальное окно все еще открыто, кликаем на кнопку сохранить еще раз');
+            cy.get('.mt-3.w-full').click();
+        } else {
+            cy.task('logInfo','Модальное окно закрыто, продолжение теста');
+        }
+    });
 
     // Проверка: что хотя бы один элемент выбран
     cy.get('.w-full.max-h-24')
         .children('li')
         .should('be.visible');
+        cy.task('logInfo','Права доступа выданы!');
 });
 
 // -----------------------------------------------------------------------------------------------------------------------
@@ -558,7 +558,7 @@ Cypress.Commands.add('ifRowExists', (name, callback) => {
 
 Cypress.Commands.add('logTestName', function () {
     const testName = this.currentTest.title;
-    cy.task('logInfo', `========== Запуск теста: ${testName} ==========`);
+    cy.task('logInfo', `========== Запуск теста: ${testName} ==========\n`);
 });
 
 // -----------------------------------------------------------------------------------------------------------------------
@@ -581,11 +581,11 @@ Cypress.Commands.add('deleteResources', (name) => {
             cy.contains('div', /delete\s*/i).click();
             cy.wait(200);
             cy.get('.sm\\:col-start-3').click();
-            cy.task('logInfo', 'Удаление прошло успешно!');
             // Ждём обновления DOM и вызываем следующую итерацию
             cy.wait(1000).then(() => {
                 deleteNext();
             });
+            cy.task('logInfo', 'Удаление прошло успешно!');
         });
     };
 

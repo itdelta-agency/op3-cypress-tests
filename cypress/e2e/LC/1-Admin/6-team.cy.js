@@ -14,10 +14,12 @@ describe("LC.A5. Create team", () => {
     });
 
     it('should create new team', function () {
+        cy.task('logInfo', 'Переход на страницу "Команды"');
         // Go to add user page
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Teams")').click({ multiple: true });
         cy.wait(500);
         cy.xpath("//button[text()='Add team']").click();
+        cy.task('logInfo', 'Переход на страницу "Создание команды"');
 
         // Input credentials
         cy.xpath("//span[text()='Name *']").next().type(teamName + addName);
@@ -26,10 +28,12 @@ describe("LC.A5. Create team", () => {
         cy.xpath("//button[text()='Save']").click();
 
         cy.checkTextInParagraph();
+        cy.task('logInfo', 'Команда создана!');
     });
 
     it('should edit team', function () {
         cy.visit(ROUTES.teams);
+        cy.task('logInfo', 'Переход на страницу "Команды"');
 
 
         cy.wait(1000);
@@ -50,11 +54,13 @@ describe("LC.A5. Create team", () => {
 
         cy.xpath("//button[text()='Save']").should('be.visible').click();
         cy.checkTextInParagraph();
+        cy.task('logInfo', 'Команда отредактированна');
     })
 
 
     it('check add User Team', function () {
         cy.admin();
+        cy.task('logInfo', 'Переход на страницу "Пользователи" для выбора пользователя');
 
 
         cy.visit(ROUTES.users);
@@ -66,19 +72,21 @@ describe("LC.A5. Create team", () => {
                 // 2. Клик по бургер-иконке
                 cy.get('button').first().click();
             });
-
+        
+        cy.task('logInfo', 'Пользователь выбран!');    
         // 3. Дождаться и кликнуть по первому пункту выпадающего меню
         cy.get('div.flex.cursor-pointer') // это каждый пункт меню
             .first()
             .should('be.visible')
             .click();
-
+        cy.task('logInfo', 'Переход в профиль пользователя');
         cy.get('.ml-3.relative').eq(0).click();
         cy.wait(500);
         cy.get('a').contains('Profile').click();
 
         cy.wait(1500);
         cy.xpath("//label[text()='Teams']").parent().contains('Qa Test Team').should('be.visible');
+        cy.task('logInfo', 'Созданная команда отображается у пользователя в профиле!');
     })
 
 });

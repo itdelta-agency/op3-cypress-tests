@@ -37,6 +37,7 @@ describe('LC.C1. Check student answers', () => {
 
         cy.contains('Student answers').should('be.visible').click();
         cy.wait(1500);
+        cy.task('logInfo', 'Переход на страницу "Ответы студентов"');
 
         // Проходим по урокам последовательно
         lessonNames.forEach(lessonName => {

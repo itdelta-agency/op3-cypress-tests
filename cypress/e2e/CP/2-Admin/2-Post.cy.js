@@ -14,7 +14,7 @@ describe("CP2. Article List", () => {
 
 
   it('should create Article', function () {
-
+    cy.task('logInfo', 'Переход на страницу "Статьи"');
     cy.get('.flex.justify-between', { timeout: 10000 }).eq(1).then($tab => {
       const isExpanded = $tab.attr('aria-expanded') === 'true';  // true если открыта
       if (!isExpanded) {
@@ -25,6 +25,7 @@ describe("CP2. Article List", () => {
     // cy.changeLang('en');
     cy.wait(1500);
     cy.get('.text-white.bg-indigo-600').eq(0).click();
+    cy.task('logInfo', 'Переход на страницу создания статьи');
     cy.wait(1500);
 
     // create Article
@@ -45,7 +46,7 @@ describe("CP2. Article List", () => {
     cy.wait(1500);
 
     cy.get('.px-3.py-1.text-sm').click();
-
+    cy.task('logInfo', 'Создание ключевых слов');
     for (let i = 0; i <= 3; i++) {
       let word = 'QA Cours ' + i;
       cy.get('.flex-1.text-sm').click().type(word);
@@ -70,6 +71,7 @@ describe("CP2. Article List", () => {
     cy.wait(500);
 
     cy.wait(500);
+    cy.task('logInfo', 'Создание вопросов');
     for (let i = 1; i < 4; i++) {
       cy.xpath("//span[text()='Add question']").click();
       cy.wait(300);                                       // Обход бага
@@ -105,6 +107,7 @@ describe("CP2. Article List", () => {
 
   it('edit articles', function () {
     cy.visit('cp/admin/post');
+    
     cy.wait(500);
     cy.searchRow('Q');
     cy.wait(500);
@@ -113,7 +116,7 @@ describe("CP2. Article List", () => {
     cy.contains('Edit article');
 
     cy.get('.shadow-sm').eq(0).clear().type(articleName);
-
+    cy.task('logInfo', 'Переход на страницу "Редактирование статьи"');
     cy.get("button[role='switch']")
       .invoke('attr', 'aria-checked')
       .then(checked => {
@@ -137,9 +140,7 @@ describe("CP2. Article List", () => {
 
     cy.wait(1500);
     cy.bulkAction(['Activate', 'Deactivate'], [articleName]);
-    // after(() => {
-    //   cy.clearCookies();
-    // });
+
   })
 
 });

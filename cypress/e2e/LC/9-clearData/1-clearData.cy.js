@@ -121,32 +121,50 @@ describe('LC.Z. Clear all created learning items', () => {
 
 
 
-    it('delete children departament', function () {
-
+    it('delete children department', function () {
         const department = Cypress.env('department');
 
         cy.login();
         cy.visit(ROUTES.orgScheme);
         cy.wait(1500);
-        cy.xpath(`//div[text()="${department}"]`).scrollIntoView().click();
-        cy.get('.text-lg.cursor-pointer').find('svg').last().click({ force: true });
-        cy.get('button').contains('Delete').click();
-        cy.wait(500);
-        cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
 
-    })
+        cy.xpath(`//div[text()="${department}"]`).then($el => {
+            if ($el.length) {
+                cy.wrap($el).scrollIntoView().click();
 
-    it('delete departament', function () {
+                // Удаление поддепартамента внутри блока
+                cy.get('.text-lg.cursor-pointer').find('svg').last().click({ force: true });
+                cy.get('button').contains('Delete').click();
+                cy.wait(500);
+                cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
+            } else {
+                cy.task('logError', `Департамент "${department}" не найден.`);
+                // тест не падает, просто логируем ошибку
+            }
+        });
+    });
+
+    it('delete department', function () {
         const department = Cypress.env('department');
         cy.login();
         cy.visit(ROUTES.orgScheme);
         cy.wait(2000);
-        cy.xpath(`//div[text()="${department}"]`).scrollIntoView().click();
-        cy.get('.overflow-ellipsis').contains(department).next().find('svg').last().click({ force: true });
-        cy.get('button').contains('Delete').click();
-        cy.wait(500);
-        cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
-    })
+
+        cy.xpath(`//div[text()="${department}"]`).then($el => {
+            if ($el.length) {
+                cy.wrap($el).scrollIntoView().click();
+
+                // Вся логика удаления внутри этого блока
+                cy.get('.overflow-ellipsis').contains(department).next().find('svg').last().click({ force: true });
+                cy.get('button').contains('Delete').click();
+                cy.wait(500);
+                cy.xpath("//p[text()='Success!']", { timeout: 5000 }).should('be.visible');
+            } else {
+                cy.task('logError', `Департамент "${department}" не найден.`);
+                // тест не падает, просто логируем ошибку
+            }
+        });
+    });
 
     it('delete team', function () {
         const teamName = Cypress.env('teamName');

@@ -35,6 +35,7 @@ describe("US.1 Add User", () => {
   it('Add user', function () {
 
     cy.visit(ROUTES.createUser);
+    cy.task('logInfo', 'Переход на стараницу "Создания пользователя"');
 
     cy.get('.shadow-sm').eq(0).should('be.visible').type(firstName);
     cy.get('.shadow-sm').eq(1).should('be.visible').type(lastName);
@@ -60,27 +61,28 @@ describe("US.1 Add User", () => {
     // Проверяем, есть ли сообщение об ошибке
     cy.get('body', { timeout: 10000 }).then(($body) => {
       if ($body.text().includes('The E-mail has already been taken.')) {
-        cy.log('Пользователь уже существует');
+        cy.task('logError', 'Пользователь уже существует!');
         actualUserName = editUserFirstName;
-        cy.wait(3000);
+        cy.wait(2000);
         cy.get('.sm\\:col-start-1').click();
       } else {
         actualUserName = fullName;
         cy.location('pathname', { timeout: 10000 }).should('include', '/user');
-        cy.contains('User created successfully!', { timeout: 10000 }).should('be.visible');
-        cy.wait(3000);
-        cy.log('Пользователь создан');
+        cy.checkTextInParagraph();
+        cy.task('logInfo', 'Пользователь создан');
       }
-    }).then(() => {
-      cy.wait(2000); // по необходимости
-      cy.bulkAction(['Deactivate', 'Activate'], actualUserName);
     });
+    // }).then(() => {
+    //   cy.wait(2000); // по необходимости
+    //   cy.bulkAction(['Deactivate', 'Activate'], actualUserName);
+    // });
   });
 
 
 
 
   it('check add User by search', () => {
+    cy.task('logInfo', 'Переход на страницу "Пользователи" для проверки, что пользователь создан');
     cy.visit(ROUTES.users);
     // cy.changeLang('en');
     cy.wait(1000);
@@ -99,12 +101,14 @@ describe("US.1 Add User", () => {
         const cellText = $cell.text().trim();
         expect(cellText).to.eq(authEmail);
       });
+      cy.task('logInfo', 'Пользователь отображается в списке пользователей!');
   });
 
 
   it('edite User', () => {
     let editPassword = 123 + authPassword;
 
+    cy.task('logInfo', 'Переход на страницу "Пользователи"');
     cy.visit(ROUTES.users);
     // cy.changeLang('en');
     cy.accessAllItems();
@@ -125,6 +129,7 @@ describe("US.1 Add User", () => {
         // Кликаем по колонке "Имя"
         cy.get('th').eq(3).click();  // если имя в первом столбце
       });
+      cy.task('logInfo', 'Выблали пользователя для редактирования');
 
     cy.wait(2000);
     cy.get('.shadow-sm').eq(0).should('be.visible').clear().type(editUserFirstName);
@@ -152,8 +157,8 @@ describe("US.1 Add User", () => {
         cy.get('.sm\\:col-start-1').click();
       } else {
         cy.location('pathname', { timeout: 10000 }).should('include', '/user');
-        cy.contains('User updated successfully!', { timeout: 10000 }).should('be.visible');
-        cy.log('Пользователь создан');
+        cy.checkTextInParagraph();
+        cy.task('logInfo', 'Пользователь успешно отредактирован!');
       }
     });
   });

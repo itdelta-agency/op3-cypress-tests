@@ -14,6 +14,7 @@ describe("LC.A1. Create lessons", () => {
   });
 
   it('should create lesson(checkbox + radio)', function () {
+    cy.task('logInfo', 'Переход на страницу создания курса, для создания уроков');
     // Go to add courses page
     cy.get('.flex.justify-between', { timeout: 10000 }).eq(2).then($tab => {
       const isExpanded = $tab.attr('aria-expanded') === 'true';  // true если открыта
@@ -32,6 +33,7 @@ describe("LC.A1. Create lessons", () => {
 
     cy.wait(500);
     // CREATE LESSON
+    cy.task('logInfo', 'Создание первого урока ');
     cy.xpath("//h2[text()='Create lesson']").click();
     cy.xpath("//input[@type='text']").first().type(lName);
     cy.xpath("//button[@role='switch']").click();
@@ -56,6 +58,7 @@ describe("LC.A1. Create lessons", () => {
     // // SAVE LESSON
     cy.xpath("/html/body/div[2]/div/div/div[2]/div[2]/main/div/div/button[2]").click();
     cy.checkTextInParagraph();
+    cy.task('logInfo', 'Первый урок создан!');
 
 
   });
@@ -73,6 +76,7 @@ describe("LC.A1. Create lessons", () => {
     cy.xpath("/html/body/div[2]/div/div/div[2]/div[2]/main/div/ul/li[7]/span[2]/div[3]/div[2]/div/div[2]/button").click();
 
     //// Create lesson ////
+    cy.task('logInfo', 'Создание второго урока');
     cy.xpath("//h2[text()='Create lesson']").click();
     cy.xpath("//input[@type='text']").first().type(lessonText);
     cy.xpath("//button[@role='switch']").click();
@@ -81,6 +85,7 @@ describe("LC.A1. Create lessons", () => {
     cy.question(qName, 1);
     cy.xpath("//button[text()='Save']").click();
     cy.checkTextInParagraph();
+    cy.task('logInfo', 'Второй урок создан');
 
   });
 
@@ -101,12 +106,14 @@ describe("LC.A1. Create lessons", () => {
     cy.xpath("/html/body/div[2]/div/div/div[2]/div[2]/main/div/ul/li[7]/span[2]/div[3]/div[2]/div/div[2]/button").click();
 
     // Create lesson
+    cy.task('logInfo', 'Создание третьего урока ');
     cy.xpath("//h2[text()='Create lesson']").click();
     cy.xpath("//input[@type='text']").first().type(lessonTimer);
     cy.xpath("//button[@role='switch']").click();
     cy.get('input[type="text"]').eq(2).type(2);
 
     // Create text question
+    cy.task('logInfo', 'Создание вопросов к уроку');
     cy.xpath("//span[text()='Add question']").click();
     cy.wait(200);
     cy.get('.flex.flex-row-reverse').contains('Save').click();
@@ -124,24 +131,28 @@ describe("LC.A1. Create lessons", () => {
     // cy.question(qName, 1);
     cy.contains('button[type="button"]', 'Save').click();
     cy.wait(1500);
+    cy.task('logInfo', 'Вопросы созданы!');
 
     cy.xpath("//button[text()='Save']").click();
     cy.checkTextInParagraph();
+    cy.task('logInfo', 'Третий урок создан!');
   });
 
 
 
   it('check bulk action', function() {
+    cy.task('logInfo', 'Переход на страницу уроков, для проверки массовых действий');
 
     cy.visit(ROUTES.lessons)
     cy.wait(2000);
     //Проверка массовых действий
     cy.bulkAction(['Deactivate', 'Activate',], [lName, lessonText, lessonTimer]);
-
+    
   })
 
 
   it('save Lesson of Course', function () {
+    cy.task('logInfo', 'Переход на страницу "Курсы"');
     const courseName = Cypress.env('courseName');
 
     cy.login();
@@ -155,11 +166,14 @@ describe("LC.A1. Create lessons", () => {
     cy.scrollTo('bottom', { ensureScrollable: false });
     cy.wait(500);
 
+    
+
     cy.get('.list-reset.flex ').within(() => {
       cy.contains(lName).scrollIntoView().should('be.visible');
       cy.contains(lessonText).should('be.visible');
       cy.contains(lessonTimer).should('be.visible');
     });
+    cy.task('logInfo', 'Созданные уроки отображаются в курсе');
 
     cy.contains(lName).should('be.visible');
 
@@ -173,6 +187,7 @@ describe("LC.A1. Create lessons", () => {
 
 
     // Сохранить курс
+    
     cy.xpath("//button[text()='Save']").click();
     cy.checkTextInParagraph();
   });

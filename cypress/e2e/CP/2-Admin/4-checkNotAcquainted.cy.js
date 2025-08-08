@@ -10,6 +10,7 @@ describe("CP4. Check Not Acquainted", () => {
   });
 
   it('checking the ignorance of the article', () => {
+    cy.task('logInfo', 'Переход на страницу "Ответ" для проверки незнания строки');
     cy.get('.flex.justify-between', { timeout: 10000 }).eq(1).then($tab => {
       const isExpanded = $tab.attr('aria-expanded') === 'true';  // true если открыта
       if (!isExpanded) {
@@ -26,9 +27,7 @@ describe("CP4. Check Not Acquainted", () => {
     cy.xpath(`//div[text()='${userNames}']`).scrollIntoView();
     cy.xpath(`//div[text()='${userNames}']`).then($userEl => {
       cy.wrap($userEl).next().click();
-
-      // После клика нужно заново искать элемент с articleName,
-      // так как DOM мог обновиться
+      cy.task('logInfo', 'Пользователь не ознакомлен со статьей');
       cy.contains('div', articleName).scrollIntoView().should('be.visible');
     });
     cy.wait(500);

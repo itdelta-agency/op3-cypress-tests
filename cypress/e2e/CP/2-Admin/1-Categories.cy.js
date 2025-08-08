@@ -9,11 +9,14 @@ describe("CP1. Categories List", () => {
   });
 
   it('should create Category)', function () {
-    cy.task('logInfo', 'Начало теста!');
+    cy.task('logInfo', 'Создание новой категории');
+
     cy.get('.flex.justify-between', { timeout: 10000 }).eq(1).then($tab => {
       const isExpanded = $tab.attr('aria-expanded') === 'true';  // true если открыта
       if (!isExpanded) {
         cy.wrap($tab).click();
+        cy.task('logInfo', 'Вкладка категорий скрыта, клик на "Регламенты"');
+
       }
     });
     cy.get('a.text-indigo-100',).eq(0).click();
@@ -23,6 +26,7 @@ describe("CP1. Categories List", () => {
 
     cy.wait(500);
     cy.contains('Add category').click();
+    cy.task('logInfo', 'Переход на страницу создания категорий');
 
     // create post
     cy.get('ul li:first input').type(catName);
@@ -47,11 +51,12 @@ describe("CP1. Categories List", () => {
       .parents('tr')
       .within(() => {
         cy.contains('span', 'Inactive').should('exist');
+        cy.task('logInfo', 'Категория активна!');
       });
   });
 
   it('should edit Category)', function () {
-
+    cy.task('logInfo', 'Переход к редактированию категории');
     cy.visit(ROUTES.categories);
 
     // cy.accessAllItems();
@@ -81,8 +86,5 @@ describe("CP1. Categories List", () => {
 
   });
 
-  after(() => {
-    cy.clearCookies();
-  });
 
 });
