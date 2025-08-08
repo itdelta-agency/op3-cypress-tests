@@ -52,8 +52,8 @@ module.exports = [
   'cypress/e2e/LC/7-Task/1-createTask.cy.js',
 
   // LC // 8-Passwords
-  'cypress/e2e/LC/8-Passwords/passwords.cy.js',
+  'cypress/e2e/LC/8-Passwords/1-passwords.cy.js',
 
   // LC // 9-clearData----------------------------------
-  'cypress/e2e/LC/9-clearData/clearData.cy.js'
+  'cypress/e2e/LC/9-clearData/1-clearData.cy.js'
 ];

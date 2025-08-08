@@ -51,7 +51,7 @@ describe('Password page', () => {
         });
 
         cy.task('logInfo', `Проверка копирования пароля.`);
-        cy.get('.p-2.rounded-r-md').eq(2).click();
+        cy.get('.p-2.rounded-r-md').eq(3).click();
         // Проверка буфера обмена
         cy.window().then((win) => {
             win.focus();
