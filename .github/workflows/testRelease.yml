@@ -10,12 +10,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Install dependencies
+        run: yarn install
+
       - name: Cypress run
         uses: cypress-io/github-action@v5
         with:
           browser: chrome
-          spec: cypress/e2e/**/*.cy.js
-          install-command: yarn
         env:
           CYPRESS_allure: true
           URL: ${{vars.RELEASE_URL}}
@@ -27,8 +28,6 @@ jobs:
         if: always()
         with:
           allure_results: allure-results
-#          gh_pages: gh-pages
-          # github_run_num: "release"
 
       - name: FTP Deploy
         uses: SamKirkland/FTP-Deploy-Action@4.3.1
