@@ -2,7 +2,7 @@ require('dotenv').config();
 const { defineConfig } = require("cypress");
 const makeEmailAccount = require('./cypress/support/email-account');
 const getLastInboxByCreatedDate = require('./cypress/support/get-last-inbox');
-const {getLoggingTasks} = require('./setupLogging');
+const { getLoggingTasks } = require('./setupLogging');
 let cachedInbox = null;
 const allureWriter = require('@shelex/cypress-allure-plugin/writer');
 const emailApi = require('./cypress/support/emailApi');
@@ -56,13 +56,13 @@ module.exports = defineConfig({
     statisticName: 'Statistic name',
     // Pass data
     passName: 'AT-Delta',
-    passUrl:  process.env.URL,
+    passUrl: process.env.URL,
     passLogin: process.env.EMAIL,
     passPassword: process.env.PASSWORD,
     passDescription: 'Pass description: Convenient application!'
 
 
-    
+
   },
   defaultCommandTimeout: 3000,
   requestTimeout: 30000,
@@ -77,7 +77,7 @@ module.exports = defineConfig({
 
 
 
-     setupNodeEvents: async (on, config) => {
+    setupNodeEvents: async (on, config) => {
       // Кешируем inbox один раз
       if (!cachedInbox) {
         cachedInbox = await getLastInboxByCreatedDate();
@@ -92,7 +92,7 @@ module.exports = defineConfig({
       // const account = await emailApi();
 
       const emailAccount = {}; // заглушка
-const account = {};      // заглушка
+      const account = {};      // заглушка
       const loggingTasks = getLoggingTasks();
 
       on('task', {
@@ -146,7 +146,7 @@ const account = {};      // заглушка
           return account.getEmailData();
         },
 
-       
+
       });
 
       allureWriter(on, config);
