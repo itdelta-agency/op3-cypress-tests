@@ -14,7 +14,7 @@ describe('4-Auth-RU-forgot-password.cy.js', () => {
 
     cy.task('getCachedInbox').then(result => {
       if (!result) {
-        cy.task('logInfo', 'Кешированный почтовый ящик не найден');
+        cy.task('logError', 'Кешированный почтовый ящик не найден');
       } else {
         inbox = result;
         cy.task('logInfo', `Используем кешированный inbox: ${inbox.emailAddress}`);
@@ -25,8 +25,10 @@ describe('4-Auth-RU-forgot-password.cy.js', () => {
   });
 
   it('requesting reset-password-email', function () {
+     cy.task('logStep', `Клик на кнопку восстановления пароля`);
     cy.contains("Forgot your password?").should('be.visible').click();
     cy.wait(1500);
+     cy.task('logStep', `Ввод почты`);
     cy.xpath("//input[@id='email']", { timeout: 10000 }).type(userEmail);
     cy.wait(500);
     cy.contains("Email Password Reset Link").should('be.visible').click();
@@ -35,7 +37,7 @@ describe('4-Auth-RU-forgot-password.cy.js', () => {
       if ($body.find(':contains("Error")').length > 0) {
         cy.task('logInfo', 'Сообщение об ошибке найдено');
       } else {
-        cy.task('logInfo', 'Сообщение об ошибке не найдено');
+        cy.task('logError', 'Сообщение об ошибке не найдено');
         cy.checkTextInParagraph();
         Cypress.env('emailSent', true);
       }
@@ -43,12 +45,13 @@ describe('4-Auth-RU-forgot-password.cy.js', () => {
   });
 
   it('getting last email', function () {
+     cy.task('logError', `Сообщение для восстановления пароля не было отправленно, пропускаем остальную проверку`);
     if (!Cypress.env('emailSent')) {
       this.skip();  // Пропускаем тест
     }
 
     if (!inbox) {
-      cy.task('logInfo', 'Inbox не доступен, пропускаем получение письма');
+      cy.task('logError', 'Inbox не доступен, пропускаем получение письма');
       this.skip();
     }
 
@@ -84,22 +87,33 @@ describe('4-Auth-RU-forgot-password.cy.js', () => {
     cy.changeLangAuth();
 
     // Invalid Data
+     cy.task('logStep', `Ввод пароля ${authPassword}`);
     cy.xpath("//input[@id='password']", { timeout: 10000 }).should('be.visible').type(authPassword);
+    cy.task('logStep', `Повторный ввод пароля: ${wrong_password}`);
     cy.xpath("//input[@id='password_confirmation']", { timeout: 10000 }).should('be.visible').type(wrong_password);
+    cy.task('logStep', `Сохранение`);
     cy.xpath("//button[@type='submit']", { timeout: 10000 }).should('be.visible').click();
     cy.wait(500);
+    cy.task('logInfo', `Получено сообщение об ошибке ввода паролей`);
     cy.contains('Значение поля Пароль не совпадает с подтверждаемым').should('be.visible');
     cy.wait(500);
+    cy.task('logStep', `Ввод пароля ${wrong_password}`);
     cy.xpath("//input[@id='password']", { timeout: 10000 }).clear().type(wrong_password);
+    cy.task('logStep', `Повторный ввод пароля: ${authPassword}`);
     cy.xpath("//input[@id='password_confirmation']", { timeout: 10000 }).clear().type(authPassword);
+    cy.task('logStep', `Сохранение`);
     cy.xpath("//button[@type='submit']", { timeout: 10000 }).should('be.visible').click();
     cy.wait(500);
+    cy.task('logInfo', `Получено сообщение об ошибке ввода паролей`);
     cy.contains('Значение поля Пароль не совпадает с подтверждаемым').should('be.visible');
     cy.wait(500);
 
     // Valid Data
+    cy.task('logStep', `Ввод пароля ${authPassword}`);
     cy.xpath("//input[@id='password']", { timeout: 10000 }).should('be.visible').clear().type(authPassword);
+    cy.task('logStep', `Повторный ввод пароля: ${authPassword}`);
     cy.xpath("//input[@id='password_confirmation']", { timeout: 10000 }).should('be.visible').clear().type(authPassword);
+    cy.task('logStep', `Сохранение`);
     cy.xpath("//button[@type='submit']", { timeout: 10000 }).should('be.visible').click();
     cy.wait(3000);
     cy.login(userEmail, authPassword);
