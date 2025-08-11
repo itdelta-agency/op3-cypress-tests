@@ -1,5 +1,4 @@
 require('dotenv').config();
-const orderedSpecs = require('./ordered-specs');
 const { defineConfig } = require("cypress");
 const makeEmailAccount = require('./cypress/support/email-account');
 const getLastInboxByCreatedDate = require('./cypress/support/get-last-inbox');
