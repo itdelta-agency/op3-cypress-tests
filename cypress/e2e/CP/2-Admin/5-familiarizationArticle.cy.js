@@ -2,12 +2,13 @@ describe("CP5. Familiarization with the article", () => {
 
   const article = Cypress.env('articleName');
 
-  before(() => {
-     cy.resetAppState();
-     cy.login();
+  beforeEach(function () {
+    cy.logTestName.call(this);
+    cy.login();
   });
 
   it('checking the ignorance of the article ADMIN', () => {
+    cy.task('logInfo', 'Перехаод на страницу "Регламенты" с юзера, для ознакомления со статьей');
     cy.visit('/cp');
 
     cy.xpath('//div[text()="Not acquainted"]').click();
@@ -31,6 +32,7 @@ describe("CP5. Familiarization with the article", () => {
     cy.wait(300);
 
     cy.xpath("//span[text()='Acquainted']", { timeout: 5000 }).should('be.visible');
+    cy.task('logInfo', 'Пользователь ознакомлен со статьей ');
     cy.wait(500);
 
   });

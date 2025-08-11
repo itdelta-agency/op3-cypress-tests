@@ -1,4 +1,5 @@
 require('dotenv').config();
+const orderedSpecs = require('./ordered-specs');
 const { defineConfig } = require("cypress");
 const makeEmailAccount = require('./cypress/support/email-account');
 const getLastInboxByCreatedDate = require('./cypress/support/get-last-inbox');
@@ -53,7 +54,7 @@ module.exports = defineConfig({
     passName: 'AT-Delta',
     passUrl:  process.env.URL,
     passLogin: process.env.EMAIL,
-    passPasword: process.env.PASSWORD,
+    passPassword: process.env.PASSWORD,
     passDescription: 'Pass description: Convenient application!'
 
 
@@ -68,7 +69,7 @@ module.exports = defineConfig({
     baseUrl: process.env.URL,
     prodUrl: 'https://qa-testing.org-online.ru/',
     registerUrl: 'https://app.org-online.ru/register',
-    specPattern: 'cypress/e2e/**/*.{cy,spec}.{js,jsx,ts,tsx}',
+    specPattern: orderedSpecs,
 
 
 

@@ -3,12 +3,9 @@ import { ROUTES } from "../../../support/routes";
 describe('Statistic.ST3. clear data statistic', () => {
     let statisticName = Cypress.env('statisticName');
 
-    before(() => {
-        cy.resetAppState();
-    })
 
-
-    beforeEach(() => {
+    beforeEach(function () {
+        cy.logTestName.call(this);
         cy.admin();
     });
 

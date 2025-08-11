@@ -4,12 +4,14 @@ describe("CP7. Clear Data", () => {
   let articleName = Cypress.env('articleName');
   let catName = Cypress.env('categoryName');
 
-  beforeEach(() => {
-    cy.resetAppState();
+
+  beforeEach(function () {
+    cy.logTestName.call(this);
     cy.admin();
   });
 
   it('should delete Category)', function () {
+    cy.task('logInfo', 'Преход на страницу "Категории" для удаления');
     cy.get('.flex.justify-between', { timeout: 10000 }).eq(1).then($tab => {
       const isExpanded = $tab.attr('aria-expanded') === 'true';  // true если открыта
       if (!isExpanded) {
@@ -24,24 +26,29 @@ describe("CP7. Clear Data", () => {
       // Кликаем по кнопке меню (иконка с тремя полосками)
       cy.get('.p-2.rounded-full').click();
     });
+    cy.task('logInfo', 'Открытие меню категории');
     cy.wait(300);
 
     cy.contains('div', 'Delete category').click({ force: true });
     cy.contains('button', 'Delete').click();
     cy.checkTextInParagraph();
+    cy.task('logInfo', 'Категория удалена');
   });
 
   it('delete articles', function () {
+    cy.task('logInfo', 'Перход на страницу "Статьи" для удаления статьи');
     cy.visit(ROUTES.articles);
     cy.wait(500);
     cy.searchRow(articleName);
     cy.contains('tr', articleName).within(() => {
       // Кликаем по кнопке меню (иконка с тремя полосками)
       cy.get('.p-2.rounded-full').click();
+      cy.task('logInfo', 'Открытие меню статьи ');
     });
     cy.wait(300);
     cy.contains('div', 'Delete article').click();
     cy.get('button[type="button"]').contains('Delete').click();
     cy.checkTextInParagraph();
+    cy.task('logInfo', 'Статья удалена!');
   });
 });

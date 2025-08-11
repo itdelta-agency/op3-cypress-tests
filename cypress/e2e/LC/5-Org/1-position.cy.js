@@ -8,8 +8,8 @@ describe('OrgBoard.A1. Create position', () => {
     let editUser = Cypress.env('editUser');
 
 
-    beforeEach(() => {
-        cy.resetAppState();
+    beforeEach(function () {
+        cy.logTestName.call(this);
         cy.admin();
     });
 

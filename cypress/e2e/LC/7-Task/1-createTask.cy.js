@@ -4,12 +4,9 @@ describe('Task.T1. Create Task', () => {
 
     let taskName = 'Qa Task 1';
 
-    before(() => {
-        cy.resetAppState();
-    })
 
-
-    before(() => {
+    beforeEach(function () {
+        cy.logTestName.call(this);
         cy.admin()
     });
 
@@ -59,8 +56,8 @@ describe('Task.T1. Create Task', () => {
         cy.xpath("//span[text()='Created by *']").next().click().type('first-name');
         cy.contains("div", 'first-name last-name').click()
 
-        cy.xpath("//span[text()='Responsible *']").next().click().type('Test', { delay: 100 });
-        cy.contains("div", 'QA Test').click()
+        cy.xpath("//span[text()='Responsible *']").next().click().type('USER', { delay: 100 });
+        cy.contains("div", 'QA Edit USER').click()
 
 
         cy.xpath("//span[text()='Result *']").next().type('Result Result');
@@ -73,6 +70,7 @@ it('Edit task', function () {
     cy.login();
     cy.visit(ROUTES.tasks);
     cy.wait(1000);
+    cy.searchRow(taskName);
 
     cy.xpath(`//div[text()="${taskName}"]`).closest('tr').first().within(() => {
         cy.get('th').eq(0).find('div').click();
@@ -80,7 +78,7 @@ it('Edit task', function () {
     cy.contains('Edit').should('be.visible').click({ multiple: true });
     cy.wait(1500);
 
-    cy.xpath("//span[text()='Auditors']").next().click().type('USER', { delay: 100 });
+    cy.xpath("//span[text()='Auditors']").next().click().type('QA Edit', { delay: 100 });
     cy.contains("div", 'QA Edit USER').click();
 
     cy.xpath("//span[text()='Deadline']").next().find('button').click();
@@ -120,8 +118,8 @@ it('Edit task', function () {
         });
         cy.wait(500);
 
-        cy.contains('dt', 'Responsible').next().should('contain.text', 'QA Test')
-        cy.contains('dt', 'Auditors').next().should('contain.text', 'USER QA')
+        cy.contains('dt', 'Responsible').next().should('contain.text', 'QA Edit USER')
+        cy.contains('dt', 'Auditors').next().should('contain.text', 'USER QA Edit')
 
         let text = formattedDate(day);
         cy.contains('dt', 'Deadline').next().should('contain.text', text)
@@ -153,6 +151,7 @@ it('Edit task', function () {
         cy.login();
         cy.visit(ROUTES.tasks);
         cy.wait(1000);
+        cy.searchRow(taskName);
 
         cy.xpath(`//div[text()="${taskName}"]`).closest('tr').first().within(() => {
             cy.get('th').eq(0).find('div').click();

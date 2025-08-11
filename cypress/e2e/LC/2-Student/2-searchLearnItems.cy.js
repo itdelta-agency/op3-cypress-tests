@@ -1,11 +1,13 @@
 describe('LC.B2. Search courses', () => {
 
-    beforeEach(() => {
+    beforeEach(function () {
+        cy.logTestName.call(this);
         cy.login();
         cy.visit('/lc/courses');
     });
-
+    
     it('select Started Finished and All courses', function () {
+        cy.task('logInfo', 'Проверка фильтрации на страранице "Курсов"');
         cy.xpath("//button[text()='Started']").click()
         cy.xpath("//button[text()='Finished']").click()
         cy.xpath("//button[text()='All']").click()

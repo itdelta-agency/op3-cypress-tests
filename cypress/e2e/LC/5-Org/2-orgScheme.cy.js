@@ -4,13 +4,13 @@ describe('OrgBoard.A2. Create department', () => {
     let department = Cypress.env('department');
     let sortNumb = Cypress.env('sortNumb');
     let namePosition = Cypress.env('namePosition');
-  
+
     before(() => {
-        cy.resetAppState();
     })
 
 
-    beforeEach(() => {
+    beforeEach(function () {
+        cy.logTestName.call(this);
         cy.admin();
         cy.visit(ROUTES.orgScheme);
         cy.wait(1000);

@@ -13,6 +13,7 @@
     "allure:open": "npx allure open allure-report",
     "open": "npx cypress open --env allure=true",
     "test": "npx cypress run --env allure=true --browser chrome"
+    
   },
   "author": "",
   "license": "ISC",
