@@ -26,20 +26,22 @@ describe('LC.D1. Assert answers were checked by teacher', () => {
         cy.xpath(`//h1[text()='${courseName}']`).should('be.visible');
         cy.wait(400);
 
+        const lessonSuccess = 'lesson Success!'; // или любое другое фиксированное сообщение
+
         lessons.forEach(lessonTitle => {
             cy.get('ul[role="list"] li').contains(lessonTitle).click();
 
             cy.url().should('include', '/lesson/');
 
-            // Проверка, что есть надпись, что тест пройден (можно заменить селектор)
             cy.get('body').then($body => {
-                if ($body.text().includes(Cypress.env('lessonSuccess'))) {
+                if ($body.text().includes(lessonSuccess)) {
                     cy.log(`Урок "${lessonTitle}" пройден`);
                 } else {
-                    cy.log(`Урок "${lessonTitle}" не содержит "${Cypress.env('lessonSuccess')}"`);
+                    cy.log(`Урок "${lessonTitle}" не содержит "${lessonSuccess}"`);
                 }
             });
         });
+
 
         // Переход на "Result"
         cy.get('ul[role="list"] li').contains('Result').click();
