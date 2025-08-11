@@ -11,7 +11,8 @@ const mailslurp = new MailSlurp({ apiKey: process.env.MAILSLURP_API_KEY });
 const orderedSpecs = require('./ordered-specs');
 const specPatternGlob = `{${orderedSpecs.join(',')}}`;
 
-
+console.log('orderedSpecs:', orderedSpecs);
+console.log('specPatternGlob:', specPatternGlob);
 module.exports = defineConfig({
   chromeWebSecurity: false,
   env: {
