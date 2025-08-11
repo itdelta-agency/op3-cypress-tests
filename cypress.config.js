@@ -14,6 +14,7 @@ const mailslurp = new MailSlurp({ apiKey: process.env.MAILSLURP_API_KEY });
 // console.log('orderedSpecs:', orderedSpecs);
 // console.log('specPatternGlob:', specPatternGlob);
 
+console.log('Start loading config');
 console.log('process.env.URL:', process.env.URL);
 module.exports = defineConfig({
   chromeWebSecurity: false,
