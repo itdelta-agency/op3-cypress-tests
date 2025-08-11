@@ -13,6 +13,8 @@ const mailslurp = new MailSlurp({ apiKey: process.env.MAILSLURP_API_KEY });
 
 // console.log('orderedSpecs:', orderedSpecs);
 // console.log('specPatternGlob:', specPatternGlob);
+
+console.log('process.env.URL:', process.env.URL);
 module.exports = defineConfig({
   chromeWebSecurity: false,
   env: {
@@ -86,8 +88,11 @@ module.exports = defineConfig({
       }
 
       // Создаём объект emailAccount с уже кешированным inbox
-      const emailAccount = await makeEmailAccount(cachedInbox); // Если makeEmailAccount принимает inbox, передай его
-      const account = await emailApi();
+      // const emailAccount = await makeEmailAccount(cachedInbox); // Если makeEmailAccount принимает inbox, передай его
+      // const account = await emailApi();
+
+      const emailAccount = {}; // заглушка
+const account = {};      // заглушка
       const loggingTasks = getLoggingTasks();
 
       on('task', {
