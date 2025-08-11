@@ -69,7 +69,7 @@ module.exports = defineConfig({
     baseUrl: process.env.URL,
     prodUrl: 'https://qa-testing.org-online.ru/',
     registerUrl: 'https://app.org-online.ru/register',
-    specPattern: orderedSpecs,
+    specPattern: `{${orderedSpecs.join(',')}}`,
 
 
 
