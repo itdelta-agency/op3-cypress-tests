@@ -1,5 +1,4 @@
 require('dotenv').config();
-const orderedSpecs = require('./ordered-specs');
 const { defineConfig } = require("cypress");
 const makeEmailAccount = require('./cypress/support/email-account');
 const getLastInboxByCreatedDate = require('./cypress/support/get-last-inbox');
@@ -9,17 +8,10 @@ const allureWriter = require('@shelex/cypress-allure-plugin/writer');
 const emailApi = require('./cypress/support/emailApi');
 const { MailSlurp } = require('mailslurp-client');
 const mailslurp = new MailSlurp({ apiKey: process.env.MAILSLURP_API_KEY });
-// const orderedSpecs = require('./ordered-specs');
-// const specPatternGlob = `{${orderedSpecs.join(',')}}`;
 
-<<<<<<< HEAD
-=======
-// console.log('orderedSpecs:', orderedSpecs);
-// console.log('specPatternGlob:', specPatternGlob);
 
 console.log('Start loading config');
 console.log('process.env.URL:', process.env.URL);
->>>>>>> origin/main
 module.exports = defineConfig({
   chromeWebSecurity: false,
   env: {
@@ -59,8 +51,7 @@ module.exports = defineConfig({
     fullName: 'QA USER',
     sortNumb: 666,
     statisticName: 'Statistic name',
-<<<<<<< HEAD
-    // Pass data 
+    // Pass data
     passUrl: process.env.URL,
     passLogin: process.env.EMAIL,
     passPassword: process.env.PASSWORD,
@@ -68,17 +59,6 @@ module.exports = defineConfig({
 
 
 
-=======
-    // Pass data
-    passName: 'AT-Delta',
-    passUrl: 'https://tenant1.release.company-policy.com/',
-    passLogin: 'qa2@itdelta.dev',
-    passPassword: '123123',
-    passDescription: 'Pass description: Convenient application!'
-
-
-
->>>>>>> origin/main
   },
   defaultCommandTimeout: 3000,
   requestTimeout: 30000,
@@ -104,26 +84,21 @@ module.exports = defineConfig({
       }
 
       // Создаём объект emailAccount с уже кешированным inbox
-<<<<<<< HEAD
-      const emailAccount = await makeEmailAccount(cachedInbox); 
+      const emailAccount = await makeEmailAccount(cachedInbox);
       const account = await emailApi();
-=======
-      // const emailAccount = await makeEmailAccount(cachedInbox); // Если makeEmailAccount принимает inbox, передай его
-      // const account = await emailApi();
 
-      const emailAccount = {}; // заглушка
-      const account = {};      // заглушка
->>>>>>> origin/main
       const loggingTasks = getLoggingTasks();
 
       on('task', {
         ...loggingTasks,
 
+        // Возвращаем кешированный inbox, не создаём новый
         getCachedInbox() {
           return cachedInbox;
         },
 
         getLastInbox: async () => {
+          // Можно обновить кеш, если нужно
           cachedInbox = await getLastInboxByCreatedDate();
           return cachedInbox;
         },
