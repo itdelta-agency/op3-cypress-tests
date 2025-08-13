@@ -7,8 +7,9 @@ let cachedInbox = null;
 const allureWriter = require('@shelex/cypress-allure-plugin/writer');
 const emailApi = require('./cypress/support/emailApi');
 const { MailSlurp } = require('mailslurp-client');
-const mailslurp = new MailSlurp({ apiKey: process.env.MAILSLURP_API_KEY });
-
+const mailslurp = new MailSlurp({ apiKey: process.env.MAILSLURP_API_KEY});
+const orderedSpecs = require('./ordered-specs');
+const specPatternGlob = `{${orderedSpecs.join(',')}}`;
 
 console.log('Start loading config');
 console.log('process.env.URL:', process.env.URL);
@@ -21,9 +22,9 @@ module.exports = defineConfig({
     password: process.env.PASSWORD,
     authEmail: process.env.QA_TEST_LOGIN,
     authPassword: process.env.QA_TEST_PASSWORD,
-    leadSecretKey: process.env.BITRIX24_SECRET_KEY,
-    leadUrl: process.env.BITRIX24_URL,
-    leadUserId: process.env.BITRIX24_USER_ID,
+    // leadSecretKey: process.env.BITRIX24_SECRET_KEY,
+    // leadUrl: process.env.BITRIX24_URL,
+    // leadUserId: process.env.BITRIX24_USER_ID,
     courseGroupName: "QA Test Course Group",
     curriculumName: "QA Test Curriculum",
     teamName: "Qa Test Team",
@@ -69,7 +70,7 @@ module.exports = defineConfig({
     baseUrl: process.env.URL,
     prodUrl: 'https://qa-testing.org-online.ru/',
     registerUrl: 'https://app.org-online.ru/register',
-    specPattern: 'cypress/e2e/**/*.cy.js',
+    specPattern: specPatternGlob,
 
 
 
