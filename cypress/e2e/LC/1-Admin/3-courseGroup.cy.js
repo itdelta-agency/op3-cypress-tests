@@ -1,3 +1,6 @@
+import { ROUTES } from "../../../support/routes";
+
+
 describe('LC.A3. Create course group', () => {
 
 
@@ -10,8 +13,7 @@ describe('LC.A3. Create course group', () => {
         cy.task('logStep', 'Переход на страницу "Группы курсов"');
         // Go to add curriculums page
         // cy.wait(1500);
-        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Learning Center")').click({ multiple: true });
-        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Course groups")').click({ multiple: true });
+        cy.visit(ROUTES.groupCourse)
         cy.wait(1500);
         cy.contains('Add group').click();
         cy.task('logStep', 'Переход на страницу "Создание группы курсов"');

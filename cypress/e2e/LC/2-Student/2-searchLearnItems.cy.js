@@ -1,9 +1,12 @@
+import { ROUTES } from "../../../support/routes";
+
+
 describe('LC.B2. Search courses', () => {
 
     beforeEach(function () {
         cy.logTestName.call(this);
         cy.login();
-        cy.visit('/lc/courses');
+        cy.visit(ROUTES.courses);
     });
     
     it('select Started Finished and All courses', function () {

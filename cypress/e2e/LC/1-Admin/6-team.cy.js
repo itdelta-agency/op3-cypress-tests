@@ -15,8 +15,7 @@ describe("LC.A5. Create team", () => {
 
     it('should create new team', function () {
         cy.task('logStep', 'Переход на страницу "Команды"');
-        // Go to add user page
-        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Teams")').click({ multiple: true });
+        cy.visit(ROUTES.teams);
         cy.wait(500);
         cy.xpath("//button[text()='Add team']").click();
         cy.task('logStep', 'Переход на страницу "Создание команды"');

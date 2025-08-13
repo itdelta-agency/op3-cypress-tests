@@ -1,3 +1,6 @@
+import { ROUTES } from "../../../support/routes";
+
+
 describe('LC.A4. Create curriculum', () => {
  
 
@@ -9,10 +12,8 @@ describe('LC.A4. Create curriculum', () => {
     it('should create curriculum', function () {
         cy.task('logStep', 'Переход на страницу "Программы обучения"');
         // Go to add curriculums page
+        cy.visit(ROUTES.curriculums);
         cy.wait(1500);
-        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Learning Center")').click({ multiple: true });
-        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Curriculums")').click({ multiple: true });
-        cy.xpath("//button[text()='Add curriculum']").click();
         cy.task('logInfo', 'Переход на страницу создания программы обучения');
         
         cy.xpath("//span[text()='Name *']").next().type(Cypress.env('curriculumName'));

@@ -66,7 +66,7 @@ describe("LC.A1. Create lessons", () => {
 
   it('should create lesson(text)', function () {
 
-    cy.login()
+  
     cy.visit(ROUTES.courses);
     cy.wait(500);
     cy.accessAllItems();
@@ -94,7 +94,7 @@ describe("LC.A1. Create lessons", () => {
   it('should create lesson(timer)', function () {
     const q2Name = Cypress.env('questionText');
 
-    cy.login()
+  
     cy.visit(ROUTES.courses);
 
     // cy.xpath("//a[text()='Courses']").click();

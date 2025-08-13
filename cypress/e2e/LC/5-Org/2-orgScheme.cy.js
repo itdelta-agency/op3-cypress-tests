@@ -5,8 +5,6 @@ describe('OrgBoard.A2. Create department', () => {
     let sortNumb = Cypress.env('sortNumb');
     let namePosition = Cypress.env('namePosition');
 
-    before(() => {
-    })
 
 
     beforeEach(function () {

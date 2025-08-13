@@ -129,13 +129,5 @@ describe('Password page', () => {
                 .find('svg.w-5.h-5.cursor-pointer.absolute.-right-5.-top-5.text-white')
                 .click();
         });
-
-
-
     })
-
-
-
-
-
 })

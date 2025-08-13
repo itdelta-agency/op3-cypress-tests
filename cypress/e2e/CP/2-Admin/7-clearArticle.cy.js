@@ -7,12 +7,9 @@ describe("CP7. Clear Data", () => {
 
   beforeEach(function () {
     cy.logTestName.call(this);
-  });
-
-    before(function () {
     cy.admin();
-
   });
+
   
 
   it('should delete Category)', function () {
@@ -41,6 +38,7 @@ describe("CP7. Clear Data", () => {
   });
 
   it('delete articles', function () {
+    
     cy.task('logStep', 'Перход на страницу "Статьи" для удаления статьи');
     cy.visit(ROUTES.articles);
     cy.wait(500);

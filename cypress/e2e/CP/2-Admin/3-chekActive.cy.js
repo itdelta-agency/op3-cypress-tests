@@ -7,13 +7,9 @@ describe("CP3. Article List", () => {
 
   beforeEach(function () {
     cy.logTestName.call(this);
-
-  });
-
-  before(function () {
     cy.admin();
-
   });
+
 
 
 

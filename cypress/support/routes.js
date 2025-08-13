@@ -19,5 +19,6 @@ export const ROUTES = {
   curriculums: '/lc/admin/curriculums',
   groupCourse: '/lc/admin/groups',
   passwords: '/ps/admin/index',
+  statisticsUser: '/st/filled',
 
 };
