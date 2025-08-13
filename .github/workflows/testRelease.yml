@@ -29,9 +29,10 @@ jobs:
         uses: simple-elf/allure-report-action@master
         if: always()
         with:
-          allure_results: allure-results
-#          gh_pages: gh-pages
-          # github_run_num: "release"
+          allure_results: allure-results      # Папка с результатами тестов
+          allure_report: allure-report        # Папка для HTML-отчёта
+          allure_history: allure-history      # Папка для истории предыдущих прогонов
+          keep_reports: 5                     # Количество хранимых прогонов 
 
       - name: FTP Deploy
         uses: SamKirkland/FTP-Deploy-Action@4.3.1
