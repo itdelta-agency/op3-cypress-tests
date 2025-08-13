@@ -51,7 +51,7 @@ module.exports = defineConfig({
     fullName: 'QA USER',
     sortNumb: 666,
     statisticName: 'Statistic name',
-    // Pass data
+    // Pass data 
     passUrl: process.env.URL,
     passLogin: process.env.EMAIL,
     passPassword: process.env.PASSWORD,
@@ -84,20 +84,18 @@ module.exports = defineConfig({
       }
 
       // Создаём объект emailAccount с уже кешированным inbox
-      const emailAccount = await makeEmailAccount(cachedInbox); // Если makeEmailAccount принимает inbox, передай его
+      const emailAccount = await makeEmailAccount(cachedInbox); 
       const account = await emailApi();
       const loggingTasks = getLoggingTasks();
 
       on('task', {
         ...loggingTasks,
 
-        // Возвращаем кешированный inbox, не создаём новый
         getCachedInbox() {
           return cachedInbox;
         },
 
         getLastInbox: async () => {
-          // Можно обновить кеш, если нужно
           cachedInbox = await getLastInboxByCreatedDate();
           return cachedInbox;
         },
