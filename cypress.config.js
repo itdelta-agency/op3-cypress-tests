@@ -3,13 +3,14 @@ const orderedSpecs = require('./ordered-specs');
 const { defineConfig } = require("cypress");
 const makeEmailAccount = require('./cypress/support/email-account');
 const getLastInboxByCreatedDate = require('./cypress/support/get-last-inbox');
-const {getLoggingTasks} = require('./setupLogging');
+const { getLoggingTasks } = require('./setupLogging');
 let cachedInbox = null;
 const allureWriter = require('@shelex/cypress-allure-plugin/writer');
 const emailApi = require('./cypress/support/emailApi');
 const { MailSlurp } = require('mailslurp-client');
 const mailslurp = new MailSlurp({ apiKey: process.env.MAILSLURP_API_KEY });
-
+const orderedSpecs = require('./ordered-specs');
+const specPatternGlob = `{${orderedSpecs.join(',')}}`;
 
 module.exports = defineConfig({
   chromeWebSecurity: false,
@@ -52,13 +53,13 @@ module.exports = defineConfig({
     statisticName: 'Statistic name',
     // Pass data
     passName: 'AT-Delta',
-    passUrl:  process.env.URL,
+    passUrl: process.env.URL,
     passLogin: process.env.EMAIL,
     passPassword: process.env.PASSWORD,
-    passDescription: 'Pass description: Convenient application!'
+    passDescription: 'Pass description: Convenient application!',
 
 
-    
+
   },
   defaultCommandTimeout: 3000,
   requestTimeout: 30000,
@@ -69,11 +70,11 @@ module.exports = defineConfig({
     baseUrl: process.env.URL,
     prodUrl: 'https://qa-testing.org-online.ru/',
     registerUrl: 'https://app.org-online.ru/register',
-    specPattern: orderedSpecs,
+    specPattern: specPatternGlob,
 
 
 
-     setupNodeEvents: async (on, config) => {
+    setupNodeEvents: async (on, config) => {
       // Кешируем inbox один раз
       if (!cachedInbox) {
         cachedInbox = await getLastInboxByCreatedDate();
@@ -139,7 +140,7 @@ module.exports = defineConfig({
           return account.getEmailData();
         },
 
-       
+
       });
 
       allureWriter(on, config);
