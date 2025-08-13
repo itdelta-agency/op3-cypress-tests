@@ -5,7 +5,6 @@ describe("US.1 Add User", () => {
 
   let authEmail;
   let authPassword;
-  let teemName;
   let firstName = 'QA';
   let lastName = 'USER';
   let fullName = firstName + ' ' + lastName;
@@ -22,7 +21,7 @@ describe("US.1 Add User", () => {
       .then(() => {
         authEmail = Cypress.env('authEmail');
         authPassword = Cypress.env('authPassword');
-        teemName = Cypress.env('teemName');
+      
       });
   });
 
@@ -35,7 +34,7 @@ describe("US.1 Add User", () => {
   it('Add user', function () {
 
     cy.visit(ROUTES.createUser);
-    cy.task('logInfo', 'Переход на стараницу "Создания пользователя"');
+    cy.task('logStep', 'Переход на стараницу "Создания пользователя"');
 
     cy.get('.shadow-sm').eq(0).should('be.visible').type(firstName);
     cy.get('.shadow-sm').eq(1).should('be.visible').type(lastName);
@@ -71,18 +70,16 @@ describe("US.1 Add User", () => {
         cy.checkTextInParagraph();
         cy.task('logInfo', 'Пользователь создан');
       }
+
+      cy.wait(2000); // по необходимости
+      cy.bulkAction(['Deactivate', 'Activate'], actualUserName);
     });
-    // }).then(() => {
-    //   cy.wait(2000); // по необходимости
-    //   cy.bulkAction(['Deactivate', 'Activate'], actualUserName);
-    // });
   });
 
 
 
-
   it('check add User by search', () => {
-    cy.task('logInfo', 'Переход на страницу "Пользователи" для проверки, что пользователь создан');
+    cy.task('logStep', 'Переход на страницу "Пользователи" для проверки, что пользователь создан');
     cy.visit(ROUTES.users);
     // cy.changeLang('en');
     cy.wait(1000);
@@ -101,14 +98,14 @@ describe("US.1 Add User", () => {
         const cellText = $cell.text().trim();
         expect(cellText).to.eq(authEmail);
       });
-      cy.task('logInfo', 'Пользователь отображается в списке пользователей!');
+    cy.task('logInfo', 'Пользователь отображается в списке пользователей!');
   });
 
 
   it('edite User', () => {
     let editPassword = 123 + authPassword;
 
-    cy.task('logInfo', 'Переход на страницу "Пользователи"');
+    cy.task('logStep', 'Переход на страницу "Пользователи"');
     cy.visit(ROUTES.users);
     // cy.changeLang('en');
     cy.accessAllItems();
@@ -129,7 +126,7 @@ describe("US.1 Add User", () => {
         // Кликаем по колонке "Имя"
         cy.get('th').eq(3).click();  // если имя в первом столбце
       });
-      cy.task('logInfo', 'Выблали пользователя для редактирования');
+    cy.task('logInfo', 'Выбрали пользователя для редактирования');
 
     cy.wait(2000);
     cy.get('.shadow-sm').eq(0).should('be.visible').clear().type(editUserFirstName);

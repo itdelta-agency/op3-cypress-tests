@@ -8,14 +8,18 @@ describe("CP3. Article List", () => {
   beforeEach(function () {
     cy.logTestName.call(this);
 
+  });
+
+  before(function () {
     cy.admin();
 
   });
 
 
 
+
   it('Deactivate Article', function () {
-    cy.task('logInfo', 'Переход на страницу "Статьи" для деактивации');
+    cy.task('logStep', 'Переход на страницу "Статьи" для деактивации');
     cy.get('.flex.justify-between', { timeout: 10000 }).eq(1).then($tab => {
       const isExpanded = $tab.attr('aria-expanded') === 'true';  // true если открыта
       if (!isExpanded) {
@@ -43,7 +47,7 @@ describe("CP3. Article List", () => {
   });
 
   it('Check deactive article', function () {
-    cy.task('logInfo', 'Переход на страницу "Отчет" для проверки');
+    cy.task('logStep', 'Переход на страницу "Отчет" для проверки');
     cy.login();
     cy.wait(2000);
     cy.visit(ROUTES.report);
@@ -59,15 +63,15 @@ describe("CP3. Article List", () => {
     cy.xpath(`//div[text()='${userNames}']`).next().scrollIntoView()
       .click().type(articleName);
 
-    cy.task('logInfo', 'Деактивированная статья не отображается в отчете');
     cy.contains('div', 'No options').should('be.visible');
+    cy.task('logInfo', 'Деактивированная статья не отображается в отчете');
   });
 
 
 
 
   it('Activate Article', function () {
-    cy.task('logInfo', 'Переход на страницу статьи, для активации');
+    cy.task('logStep', 'Переход на страницу статьи, для активации');
     cy.login()
     cy.visit(ROUTES.articles);
     cy.wait(1000);
@@ -91,7 +95,7 @@ describe("CP3. Article List", () => {
   it('check Active Article', function () {
     cy.task('logInfo', 'Переход на страницу "Отчет", для проверки активации статьи');
     cy.login()
-    cy.visit('/cp/admin/report');
+    cy.visit(ROUTES.report);
     cy.wait(1000);
     cy.get('.flex.justify-between', { timeout: 10000 }).eq(1).then($tab => {
       const isExpanded = $tab.attr('aria-expanded') === 'true';  // true если открыта

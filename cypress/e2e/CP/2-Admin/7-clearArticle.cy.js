@@ -7,11 +7,16 @@ describe("CP7. Clear Data", () => {
 
   beforeEach(function () {
     cy.logTestName.call(this);
-    cy.admin();
   });
 
+    before(function () {
+    cy.admin();
+
+  });
+  
+
   it('should delete Category)', function () {
-    cy.task('logInfo', 'Преход на страницу "Категории" для удаления');
+    cy.task('logStep', 'Преход на страницу "Категории" для удаления');
     cy.get('.flex.justify-between', { timeout: 10000 }).eq(1).then($tab => {
       const isExpanded = $tab.attr('aria-expanded') === 'true';  // true если открыта
       if (!isExpanded) {
@@ -26,7 +31,7 @@ describe("CP7. Clear Data", () => {
       // Кликаем по кнопке меню (иконка с тремя полосками)
       cy.get('.p-2.rounded-full').click();
     });
-    cy.task('logInfo', 'Открытие меню категории');
+    cy.task('logStep', 'Открытие меню категории');
     cy.wait(300);
 
     cy.contains('div', 'Delete category').click({ force: true });
@@ -36,14 +41,14 @@ describe("CP7. Clear Data", () => {
   });
 
   it('delete articles', function () {
-    cy.task('logInfo', 'Перход на страницу "Статьи" для удаления статьи');
+    cy.task('logStep', 'Перход на страницу "Статьи" для удаления статьи');
     cy.visit(ROUTES.articles);
     cy.wait(500);
     cy.searchRow(articleName);
     cy.contains('tr', articleName).within(() => {
       // Кликаем по кнопке меню (иконка с тремя полосками)
       cy.get('.p-2.rounded-full').click();
-      cy.task('logInfo', 'Открытие меню статьи ');
+      cy.task('logStep', 'Открытие меню статьи ');
     });
     cy.wait(300);
     cy.contains('div', 'Delete article').click();

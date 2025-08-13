@@ -37,11 +37,11 @@ describe('LC.C1. Check student answers', () => {
 
         cy.contains('Student answers').should('be.visible').click();
         cy.wait(1500);
-        cy.task('logInfo', 'Переход на страницу "Ответы студентов"');
+        cy.task('logStep', 'Переход на страницу "Ответы студентов"');
 
         // Проходим по урокам последовательно
         lessonNames.forEach(lessonName => {
-            cy.log(`Проверяем урок: ${lessonName}`);
+            cy.task('logStep', `Проверяем урок: ${lessonName}`);
 
             // Ищем строку с нужным уроком
             cy.get('tbody tr[role="row"]', { timeout: 10000 }).contains('th', lessonName).parents('tr').within(() => {
@@ -51,7 +51,7 @@ describe('LC.C1. Check student answers', () => {
 
             // Дожидаемся загрузки страницы с ответом ученика
             cy.location('pathname', { timeout: 10000 }).should('include', '/lc/admin/teacher/');
-            cy.wait(1000); // немного подождать, чтобы убедиться, что не происходит переход на другого ученика
+            cy.wait(1000);
 
             // Работаем с полем комментария
             cy.get('textarea.shadow-sm', { timeout: 10000 }).first()
@@ -61,6 +61,7 @@ describe('LC.C1. Check student answers', () => {
 
             // Сохраняем
             cy.get('button.mt-3').click();
+            cy.task('logStep', 'Комментарий для ученика');
 
             cy.checkTextInParagraph();
 
@@ -72,11 +73,13 @@ describe('LC.C1. Check student answers', () => {
 
             cy.xpath("//span[text()='Success']").click();
             cy.xpath("//button[text()='Restart']").next().click();
-            cy.get('h2').contains('Student answers').should('bi.visible');
+            cy.get('h2').contains('Student answers', { timeout: 10000 }).should('be.visible');
+
             cy.checkTextInParagraph();
 
             // Возвращаемся назад к списку ответов
-            cy.go('back');
+            // cy.go('back');
+            cy.task('logInfo', 'Урок проверен!');
             cy.wait(1500);
         });
     });

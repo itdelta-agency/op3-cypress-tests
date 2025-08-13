@@ -16,17 +16,21 @@ describe("CP1. Categories List", () => {
       if (!isExpanded) {
         cy.wrap($tab).click();
         cy.task('logInfo', 'Вкладка категорий скрыта, клик на "Регламенты"');
-
       }
     });
+    cy.wait(1000);
     cy.get('a.text-indigo-100',).eq(0).click();
 
-    cy.wait(500);
-    cy.deleteAllByName(catName);
+    cy.searchRow(catName);
+        cy.wait(500);
+
+        cy.ifRowExists(catName, () => {
+            cy.deleteResources(catName);
+        });
 
     cy.wait(500);
     cy.contains('Add category').click();
-    cy.task('logInfo', 'Переход на страницу создания категорий');
+    cy.task('logStep', 'Переход на страницу создания категорий');
 
     // create post
     cy.get('ul li:first input').type(catName);
@@ -43,10 +47,12 @@ describe("CP1. Categories List", () => {
     cy.wait(500);
 
     cy.checkTextInParagraph();
+    cy.wait(1000);
 
     // check active
     cy.task('logInfo', 'Проверка ативности');
     cy.searchRow(catName);
+    cy.wait(500);
     cy.contains('div', 'QA Test Category')
       .parents('tr')
       .within(() => {
@@ -56,8 +62,16 @@ describe("CP1. Categories List", () => {
   });
 
   it('should edit Category)', function () {
-    cy.task('logInfo', 'Переход к редактированию категории');
-    cy.visit(ROUTES.categories);
+    cy.task('logStep', 'Переход к редактированию категории');
+    cy.get('.flex.justify-between', { timeout: 10000 }).eq(1).then($tab => {
+      const isExpanded = $tab.attr('aria-expanded') === 'true';  // true если открыта
+      if (!isExpanded) {
+        cy.wrap($tab).click();
+        cy.task('logInfo', 'Вкладка категорий скрыта, клик на "Регламенты"');
+      }
+    });
+    cy.wait(1000);
+    cy.get('a.text-indigo-100',).eq(0).click();cy.visit(ROUTES.categories);
 
     // cy.accessAllItems();
     cy.xpath(`(//div[text()='${catName}'])`).click();
@@ -82,6 +96,7 @@ describe("CP1. Categories List", () => {
       .within(() => {
         cy.contains('span', 'Active').should('exist');
       });
+      cy.task('logInfo', 'Категория отредактирована и активна!');
 
 
   });

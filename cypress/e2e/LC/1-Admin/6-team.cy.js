@@ -14,12 +14,12 @@ describe("LC.A5. Create team", () => {
     });
 
     it('should create new team', function () {
-        cy.task('logInfo', 'Переход на страницу "Команды"');
+        cy.task('logStep', 'Переход на страницу "Команды"');
         // Go to add user page
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Teams")').click({ multiple: true });
         cy.wait(500);
         cy.xpath("//button[text()='Add team']").click();
-        cy.task('logInfo', 'Переход на страницу "Создание команды"');
+        cy.task('logStep', 'Переход на страницу "Создание команды"');
 
         // Input credentials
         cy.xpath("//span[text()='Name *']").next().type(teamName + addName);
@@ -33,7 +33,7 @@ describe("LC.A5. Create team", () => {
 
     it('should edit team', function () {
         cy.visit(ROUTES.teams);
-        cy.task('logInfo', 'Переход на страницу "Команды"');
+        cy.task('logStep', 'Переход на страницу "Команды"');
 
 
         cy.wait(1000);
@@ -60,7 +60,7 @@ describe("LC.A5. Create team", () => {
 
     it('check add User Team', function () {
         cy.admin();
-        cy.task('logInfo', 'Переход на страницу "Пользователи" для выбора пользователя');
+        cy.task('logStep', 'Переход на страницу "Пользователи" для выбора пользователя');
 
 
         cy.visit(ROUTES.users);
@@ -69,7 +69,6 @@ describe("LC.A5. Create team", () => {
 
         cy.contains('tr[role="row"]', 'QA Edit USER')
             .within(() => {
-                // 2. Клик по бургер-иконке
                 cy.get('button').first().click();
             });
         
@@ -79,7 +78,7 @@ describe("LC.A5. Create team", () => {
             .first()
             .should('be.visible')
             .click();
-        cy.task('logInfo', 'Переход в профиль пользователя');
+        cy.task('logStep', 'Переход в профиль пользователя');
         cy.get('.ml-3.relative').eq(0).click();
         cy.wait(500);
         cy.get('a').contains('Profile').click();

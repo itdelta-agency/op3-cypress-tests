@@ -7,14 +7,14 @@ describe('LC.A3. Create course group', () => {
     });
 
     it('should create course program', function () {
-        cy.task('logInfo', 'Переход на страницу "Группы курсов"');
+        cy.task('logStep', 'Переход на страницу "Группы курсов"');
         // Go to add curriculums page
         // cy.wait(1500);
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Learning Center")').click({ multiple: true });
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Course groups")').click({ multiple: true });
         cy.wait(1500);
         cy.contains('Add group').click();
-        cy.task('logInfo', 'Переход на страницу "Создание группы курсов"');
+        cy.task('logStep', 'Переход на страницу "Создание группы курсов"');
         cy.xpath("//span[text()='Name *']").next().type(Cypress.env('courseGroupName'));
         cy.xpath("//span[@class='ml-6 ml-6 mt-2 text-sm text-gray-900 sm:mt-0 sm:col-span-2']").click();
         cy.xpath("//textarea").type("Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci " +

@@ -18,11 +18,11 @@ describe('LC.B1. Complete the course which we have created in previous tests', (
   it('Student should answer the lesson', function () {
     cy.login();
     cy.visit(ROUTES.studCourse);
-    cy.task('logInfo', 'Переход на страницу "Курсы" в юзерской части');
+    cy.task('logStep', 'Переход на страницу "Курсы" в юзерской части');
     // Find the course by name
     cy.xpath("//input[@id='search']").type(courseName);
     cy.wait(200);
-    cy.task('logInfo', 'Поиск нужного курса');
+    cy.task('logStep', 'Поиск нужного курса');
 
     cy.get('.flex.justify-between').eq(4)
       .invoke('attr', 'aria-expanded')

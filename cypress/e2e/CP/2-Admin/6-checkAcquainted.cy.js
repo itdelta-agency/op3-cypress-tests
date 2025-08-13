@@ -11,7 +11,7 @@ describe("CP6. Check Acquainted", () => {
 
 
   it('checking the ignorance of the article', () => {
-    cy.task('logInfo', 'Переход на страницу отчета, для проверки, что пользователь ознакомлен со статьей');
+    cy.task('logStep', 'Переход на страницу отчета, для проверки, что пользователь ознакомлен со статьей');
 
     cy.get('.flex.justify-between', { timeout: 10000 }).eq(1).then($tab => {
       const isExpanded = $tab.attr('aria-expanded') === 'true';  // true если открыта

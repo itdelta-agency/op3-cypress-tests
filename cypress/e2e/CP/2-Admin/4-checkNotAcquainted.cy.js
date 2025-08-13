@@ -10,7 +10,7 @@ describe("CP4. Check Not Acquainted", () => {
   });
 
   it('checking the ignorance of the article', () => {
-    cy.task('logInfo', 'Переход на страницу "Ответ" для проверки незнания строки');
+    cy.task('logStep', 'Переход на страницу "Ответ" для проверки незнания стaтьи');
     cy.get('.flex.justify-between', { timeout: 10000 }).eq(1).then($tab => {
       const isExpanded = $tab.attr('aria-expanded') === 'true';  // true если открыта
       if (!isExpanded) {

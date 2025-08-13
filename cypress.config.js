@@ -1,4 +1,5 @@
 require('dotenv').config();
+const orderedSpecs = require('./ordered-specs');
 const { defineConfig } = require("cypress");
 const makeEmailAccount = require('./cypress/support/email-account');
 const getLastInboxByCreatedDate = require('./cypress/support/get-last-inbox');
@@ -8,8 +9,6 @@ const allureWriter = require('@shelex/cypress-allure-plugin/writer');
 const emailApi = require('./cypress/support/emailApi');
 const { MailSlurp } = require('mailslurp-client');
 const mailslurp = new MailSlurp({ apiKey: process.env.MAILSLURP_API_KEY });
-const orderedSpecs = require('./ordered-specs');
-const specPatternGlob = `{${orderedSpecs.join(',')}}`;
 
 
 module.exports = defineConfig({
@@ -70,7 +69,7 @@ module.exports = defineConfig({
     baseUrl: process.env.URL,
     prodUrl: 'https://qa-testing.org-online.ru/',
     registerUrl: 'https://app.org-online.ru/register',
-    specPattern: specPatternGlob,
+    specPattern: orderedSpecs,
 
 
 

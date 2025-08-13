@@ -25,10 +25,10 @@ describe('4-Auth-RU-forgot-password.cy.js', () => {
   });
 
   it('requesting reset-password-email', function () {
-     cy.task('logStep', `Клик на кнопку восстановления пароля`);
+    cy.task('logStep', `Клик на кнопку восстановления пароля`);
     cy.contains("Forgot your password?").should('be.visible').click();
     cy.wait(1500);
-     cy.task('logStep', `Ввод почты`);
+    cy.task('logStep', `Ввод почты`);
     cy.xpath("//input[@id='email']", { timeout: 10000 }).type(userEmail);
     cy.wait(500);
     cy.contains("Email Password Reset Link").should('be.visible').click();
@@ -45,15 +45,19 @@ describe('4-Auth-RU-forgot-password.cy.js', () => {
   });
 
   it('getting last email', function () {
-     cy.task('logError', `Сообщение для восстановления пароля не было отправленно, пропускаем остальную проверку`);
     if (!Cypress.env('emailSent')) {
-      this.skip();  // Пропускаем тест
+      // Логируем через console.log, а потом пропускаем тест
+      console.log('Сообщение для восстановления пароля не было отправлено, пропускаем остальную проверку');
+      this.skip();
     }
 
     if (!inbox) {
-      cy.task('logError', 'Inbox не доступен, пропускаем получение письма');
+      console.log('Inbox не доступен, пропускаем получение письма');
       this.skip();
     }
+
+    // Если дошли сюда — значит тест не пропускаем и делаем дальше логирование через cy.task (или другие действия)
+    cy.task('logInfo', 'Тест выполняется, все условия выполнены');
 
     if (Cypress.config().baseUrl === Cypress.config().prodUrl) {
       expect(true).to.be.true;
@@ -87,7 +91,7 @@ describe('4-Auth-RU-forgot-password.cy.js', () => {
     cy.changeLangAuth();
 
     // Invalid Data
-     cy.task('logStep', `Ввод пароля ${authPassword}`);
+    cy.task('logStep', `Ввод пароля ${authPassword}`);
     cy.xpath("//input[@id='password']", { timeout: 10000 }).should('be.visible').type(authPassword);
     cy.task('logStep', `Повторный ввод пароля: ${wrong_password}`);
     cy.xpath("//input[@id='password_confirmation']", { timeout: 10000 }).should('be.visible').type(wrong_password);

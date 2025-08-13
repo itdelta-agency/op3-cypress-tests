@@ -7,7 +7,7 @@ describe('LC.A4. Create curriculum', () => {
     });
 
     it('should create curriculum', function () {
-        cy.task('logInfo', 'Переход на страницу "Программы обучения"');
+        cy.task('logStep', 'Переход на страницу "Программы обучения"');
         // Go to add curriculums page
         cy.wait(1500);
         cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Learning Center")').click({ multiple: true });
@@ -30,19 +30,9 @@ describe('LC.A4. Create curriculum', () => {
                 }
             });
 
-        // cy.xpath("/html/body/div[3]/div/div/div/div/div[2]/button").click();
-        // cy.wait(500);
-
-        //Save curriculum
         cy.xpath("//button[text()='Save']").should('be.visible').click();
         cy.checkTextInParagraph();
         cy.task('logInfo', 'Программа обучения создана');
     });
 
-
-    // afterEach(function onAfterEach() {
-    //     if (this.currentTest.state === 'failed') {
-    //         cy.setCookie(skipCookie, 'true');
-    //     }
-    // });
 });

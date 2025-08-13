@@ -35,13 +35,13 @@ describe('LC.A2. Create course', () => {
       }
     });
     cy.contains('Courses').click();
-    cy.task('logInfo', 'Переход на страницу "Курсы"');
+    cy.task('logStep', 'Переход на страницу "Курсы"');
 
     cy.wait(200);
     cy.get('h2').contains('Courses').should('be.visible');
     cy.contains('Add Course').click();
     cy.wait(200);
-    cy.task('logInfo', 'Переход на страницу "Создание курса"');
+    cy.task('logStep', 'Переход на страницу "Создание курса"');
     
     cy.get('h2').contains('Create course').should('be.visible');
     // Заполняем форму
@@ -78,7 +78,8 @@ describe('LC.A2. Create course', () => {
     cy.contains('button[type="button"]', "Save").click();
     cy.checkTextInParagraph();
     cy.task('logInfo', 'Курс создан');
-
+    
+    cy.task('logInfo', 'Проверка массовых действий');
     cy.bulkAction(['Deactivate', 'Activate',], [courseName]);
 
   });

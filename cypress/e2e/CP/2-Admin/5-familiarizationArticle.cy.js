@@ -8,7 +8,7 @@ describe("CP5. Familiarization with the article", () => {
   });
 
   it('checking the ignorance of the article ADMIN', () => {
-    cy.task('logInfo', 'Перехаод на страницу "Регламенты" с юзера, для ознакомления со статьей');
+    cy.task('logStep', 'Перехаод на страницу "Регламенты" с юзера, для ознакомления со статьей');
     cy.visit('/cp');
 
     cy.xpath('//div[text()="Not acquainted"]').click();
@@ -17,6 +17,7 @@ describe("CP5. Familiarization with the article", () => {
     cy.xpath(`//a[text()="${article}"]`).click();
 
     cy.wait(500);
+    cy.task('logStep', 'Ответы на вопросы статьи');
 
     cy.xpath("//label[text()='Answer 3']").click();
     cy.wait(300);
