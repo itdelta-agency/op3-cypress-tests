@@ -52,7 +52,6 @@ module.exports = defineConfig({
     sortNumb: 666,
     statisticName: 'Statistic name',
     // Pass data
-    passName: 'AT-Delta',
     passUrl: process.env.URL,
     passLogin: process.env.EMAIL,
     passPassword: process.env.PASSWORD,
