@@ -8,11 +8,9 @@ const allureWriter = require('@shelex/cypress-allure-plugin/writer');
 const emailApi = require('./cypress/support/emailApi');
 const { MailSlurp } = require('mailslurp-client');
 const mailslurp = new MailSlurp({ apiKey: process.env.MAILSLURP_API_KEY});
-const orderedSpecs = require('./ordered-specs');
-const specPatternGlob = `{${orderedSpecs.join(',')}}`;
+// const orderedSpecs = require('./ordered-specs');
+// const specPatternGlob = `{${orderedSpecs.join(',')}}`;
 
-console.log('Start loading config');
-console.log('process.env.URL:', process.env.URL);
 module.exports = defineConfig({
   chromeWebSecurity: false,
   env: {
@@ -70,7 +68,7 @@ module.exports = defineConfig({
     baseUrl: process.env.URL,
     prodUrl: 'https://qa-testing.org-online.ru/',
     registerUrl: 'https://app.org-online.ru/register',
-    specPattern: specPatternGlob,
+    specPattern: "cypress/e2e/**/*.cy.js",
 
 
 
