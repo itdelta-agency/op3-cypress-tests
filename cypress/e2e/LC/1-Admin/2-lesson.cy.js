@@ -155,7 +155,7 @@ describe("LC.A1. Create lessons", () => {
     cy.task('logStep', 'Переход на страницу "Курсы"');
     const courseName = Cypress.env('courseName');
 
-    cy.login();
+    // cy.login();
     cy.visit(ROUTES.courses);
     cy.wait(1100);
     cy.accessAllItems();

@@ -20,6 +20,7 @@ describe("CP1. Categories List", () => {
     });
     cy.wait(1000);
     cy.get('a.text-indigo-100',).eq(0).click();
+    cy.wait(500);
 
     cy.searchRow(catName);
         cy.wait(500);

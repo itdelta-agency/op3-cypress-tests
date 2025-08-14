@@ -32,9 +32,9 @@ describe('LC.A2. Create course', () => {
       }
     });
     cy.contains('Courses').click();
+    cy.wait(500);
     cy.task('logStep', 'Переход на страницу "Курсы"');
 
-    cy.wait(200);
     cy.get('h2').contains('Courses').should('be.visible');
     cy.contains('Add Course').click();
     cy.wait(200);

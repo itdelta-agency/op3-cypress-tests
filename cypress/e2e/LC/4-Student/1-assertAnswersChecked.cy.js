@@ -18,6 +18,7 @@ describe('LC.D1. Assert answers were checked by teacher', () => {
 
         cy.login();
         cy.visit(ROUTES.studCourse);
+        cy.wait(500);
 
         cy.xpath("//input[@id='search']").type(courseName);
         cy.xpath(`//h3[text()='${courseName}']`).click();

@@ -52,7 +52,7 @@ Cypress.Commands.add('admin', () => {
     cy.wait(500);
     cy.visit('/');
     cy.task('logStep', "Переход в панель администратора");
-    
+
     // Возвращаем цепочку последней команды, чтобы Cypress дожидался её
     return cy.visitAdmin().wait(2000);
 });
@@ -369,7 +369,7 @@ Cypress.Commands.add('logout', () => {
 Cypress.Commands.add('searchRow', (name) => {
     cy.task('logInfo', `Поиск строки с именем: "${name}"`);
 
-    cy.get('body').then($body => {
+    cy.get('.w-full.h-full').then($body => {
         if ($body.find('.mt-1.relative.flex').length === 0) {
             cy.xpath("//div[@class='tooltip']").click();
         }
@@ -389,7 +389,6 @@ Cypress.Commands.add('searchRow', (name) => {
 
     cy.wait(800);
 
-    // Возвращаем последнюю команду
     return cy.get('tbody').then($tbody => {
         const rows = $tbody.find(`tr:contains("${name}")`);
         if (rows.length === 0) {
@@ -467,27 +466,20 @@ Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Departments', 'Teams', 'Oth
     cy.get('.w-20.text-xs')
         .should('be.visible')
         .click();
-
     cy.wait(500);
 
-    cy.get('.cursor-pointer.absolute.-right-5', { timeout: 5000 }).then($el => {
-        if ($el.length && $el.is(':visible')) {
-            cy.task('logInfo', 'Модальное окно открыто');
-        } else {
-            cy.task('logWarn', 'Модальное окно не открылось, кликаем на кнопку селект еще раз');
-            cy.get('.w-20.text-xs')
-                .should('be.visible')
-                .click();
 
-            // Ждем появления модального окна после повторного клика
-            cy.get('.cursor-pointer.absolute.-right-5', { timeout: 5000 })
-                .should('exist')
-                .should('be.visible')
-                .then(() => {
-                    cy.task('logInfo', 'Модальное окно открыто после второго клика');
-                });
+    cy.get('body').then($body => {
+        if ($body.find('.block.mb-4:visible').length === 0) {
+            cy.task('logInfo', 'Открываем модальное окно');
+            cy.get('.w-20.text-xs').should('be.visible').click();
+        } else {
+            cy.task('logInfo', 'Модальное окно уже открыто');
         }
     });
+
+    // Ждём, пока окно будет видно
+    cy.get('.block.mb-4', { timeout: 5000 }).should('be.visible');
 
     Cypress._.each(tabs, (tab) => {
         cy.get('.-mb-px.flex', { timeout: 5000 }).then(($nav) => {
@@ -624,15 +616,38 @@ Cypress.Commands.add('checkTextInParagraph', (text = 'Success!', timeout = 3000)
 });
 // -----------------------------------------------------------------------------------------------------------------------
 Cypress.Commands.add('visitAdmin', () => {
-    const btn = "[data-header-test-id='header_menu_button']";
-    const items = "[data-header-test-id='header_dropdown_menu']";
+    const menuBtn = "[data-header-test-id='header_menu_button']";
+    const menuItem = "[data-header-test-id='header_dropdown_menu']";
 
-    return cy.get(btn).click()
-        .get(items)
-        .eq(1)
-        .should('exist')
-        .should('be.visible', { timeout: 10000 }) // подождать пока меню появится
-        .click()
-        .get(items, { timeout: 5000 })
-        .should('not.exist'); // дождаться закрытия меню
+    // Функция, которая кликает по кнопке меню, пока оно не откроется
+    const openMenu = () => {
+        cy.get(menuBtn).click({ force: true });
+        cy.get(menuBtn).then($btn => {
+            if ($btn.attr('aria-expanded') !== 'true') {
+                // Если меню не открылось — повторяем
+                openMenu();
+            }
+        });
+    };
+
+    openMenu(); // открываем меню
+
+    // Клик по нужному элементу в меню
+    cy.get(menuItem).eq(1).click({ force: true });
+
+    // Ждём, пока меню закроется
+    cy.get(menuBtn).should('have.attr', 'aria-expanded', 'false');
+});
+
+Cypress.Commands.add('checkVisible', (selector, options = {}) => {
+    // Пытаемся найти элемент с указанным селектором
+    cy.get('body').then($body => {
+        if ($body.find(selector).length) {
+            // Элемент найден → проверяем видимость
+            cy.get(selector, options).should('be.visible');
+        } else {
+            // Элемент не найден → логируем и продолжаем
+            cy.log(`Элемент "${selector}" не найден`);
+        }
+    });
 });

@@ -34,6 +34,7 @@ describe("US.1 Add User", () => {
   it('Add user', function () {
 
     cy.visit(ROUTES.createUser);
+    cy.wait(500);
     cy.task('logStep', 'Переход на стараницу "Создания пользователя"');
 
     cy.get('.shadow-sm').eq(0).should('be.visible').type(firstName);

@@ -10,6 +10,7 @@ describe("CP5. Familiarization with the article", () => {
   it('checking the ignorance of the article ADMIN', () => {
     cy.task('logStep', 'Перехаод на страницу "Регламенты" с юзера, для ознакомления со статьей');
     cy.visit('/cp');
+    cy.wait(500);
 
     cy.xpath('//div[text()="Not acquainted"]').click();
     cy.wait(500);

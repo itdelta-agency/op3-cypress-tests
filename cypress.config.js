@@ -51,10 +51,11 @@ module.exports = defineConfig({
     sortNumb: 666,
     statisticName: 'Statistic name',
     // Pass data
-    passUrl: "https://tenant1.release.company-policy.com/",
-    passLogin: "IT-DELTA",
-    passPassword: 123,
-    passDescription: 'Pass description: Convenient application!',
+    passName : "IT-DELTA",
+    passUrl : "https://tenant1.release.company-policy.com/",
+    passLogin : "Login",
+    passPassword : "123123",
+    passDescription : "Pass description: Convenient application!",
 
 
 
