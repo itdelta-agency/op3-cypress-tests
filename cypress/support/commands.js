@@ -375,17 +375,17 @@ Cypress.Commands.add('searchRow', (name) => {
         }
     });
 
-    cy.get('[placeholder="Search"], [placeholder="Поиск"]', { timeout: 10000 })
-        .first()
-        .should('exist')
-        .clear();
+cy.get('[placeholder="Search"], [placeholder="Поиск"]', { timeout: 10000 })
+    .first()
+    .should('exist')
+    .clear();
 
-    name.split('').forEach((char, index) => {
-        cy.get('[placeholder="Search"], [placeholder="Поиск"]').first()
-            .type(char, { delay: 0 })
-            .should('have.value', name.slice(0, index + 1));
-        cy.wait(100);
-    });
+name.split('').forEach((char, index) => {
+    cy.get('[placeholder="Search"], [placeholder="Поиск"]').first()
+        .type(char, { delay: 0 })
+        .should('have.value', name.slice(0, index + 1));
+    cy.wait(100);
+});
 
     cy.wait(800);
 
@@ -530,7 +530,8 @@ Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Departments', 'Teams', 'Oth
         const el = $body.find('.cursor-pointer.absolute.-right-5');
         if (el.length && el.is(':visible')) {
             cy.task('logError', 'Модальное окно все еще открыто, кликаем на кнопку сохранить еще раз');
-            cy.get('.w-5.h-5.cursor-pointer').click();
+            cy.get('.cursor-pointer.absolute.-right-5').click({ multiple: true });
+            cy.wait(500);
         } else {
             cy.task('logInfo', 'Модальное окно закрыто, продолжение теста');
         }
@@ -635,7 +636,7 @@ Cypress.Commands.add('visitAdmin', () => {
             }
         });
     };
-
+    cy.task('logStep', 'Открытие меню пользователя');
     openMenu(); // открываем меню
 
     cy.get(menuItem).eq(1).click({ force: true });

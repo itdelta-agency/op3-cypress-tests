@@ -113,15 +113,8 @@ describe("US.1 Add User", () => {
     cy.wait(1000);
 
     cy.searchRow(actualUserName);
-    // Вводим в инпут, который должен быть видим
-    cy.get('input[placeholder="Search"]').eq(1)
-      .should('be.visible')
-      .click()
-
-      .type(authEmail, { delay: 100 });
-    cy.wait(1000);
-
-    cy.contains('table tbody tr', authEmail)
+    cy.wait(500);
+    cy.contains('table tbody tr', actualUserName)
       .should('be.visible')
       .within(() => {
         // Кликаем по колонке "Имя"
