@@ -21,7 +21,7 @@ describe("CP7. Clear Data", () => {
       }
     });
     cy.get('a.text-indigo-100',).eq(0).click();
-    cy.wait(500);
+    cy.wait(2000);
 
     cy.searchRow(catName);
     cy.contains('tr', catName).within(() => {

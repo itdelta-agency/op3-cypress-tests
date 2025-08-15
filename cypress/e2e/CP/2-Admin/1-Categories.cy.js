@@ -43,6 +43,7 @@ describe("CP1. Categories List", () => {
         }
       });
     cy.get('input[type="number"]').clear().type(222);
+    cy.wait(500);
     cy.whoCanSee(['Users', 'Teams', 'Others']);
     cy.get(".sm\\:col-start-3").should('be.visible').click();
     cy.wait(500);

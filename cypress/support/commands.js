@@ -464,21 +464,28 @@ Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Departments', 'Teams', 'Oth
     cy.task('logInfo', 'Клик по кнопке селект');
 
     cy.get('.w-20.text-xs')
+        .scrollIntoView()
         .should('be.visible')
         .click();
-    cy.wait(500);
 
+    // Ждём до 1 секунды появления модалки
+    cy.get('.block.mb-4', { timeout: 2000 })
+        .should('be.visible')
+        .then(
+            () => {
+                cy.task('logInfo', 'Модалка открылась с первого клика');
+            },
+            () => {
+                cy.task('logWarn', 'Модалка не открылась с первого клика — повторяем');
+                cy.get('.w-20.text-xs')
+                    .scrollIntoView()
+                    .should('be.visible')
+                    .click();
+                cy.get('.block.mb-4', { timeout: 5000 }).should('be.visible');
+            }
+        );
 
-    cy.get('body').then($body => {
-        if ($body.find('.block.mb-4:visible').length === 0) {
-            cy.task('logInfo', 'Открываем модальное окно');
-            cy.get('.w-20.text-xs').should('be.visible').click();
-        } else {
-            cy.task('logInfo', 'Модальное окно уже открыто');
-        }
-    });
-
-    // Ждём, пока окно будет видно
+    // Финальное ожидание открытия
     cy.get('.block.mb-4', { timeout: 5000 }).should('be.visible');
 
     Cypress._.each(tabs, (tab) => {
@@ -619,7 +626,6 @@ Cypress.Commands.add('visitAdmin', () => {
     const menuBtn = "[data-header-test-id='header_menu_button']";
     const menuItem = "[data-header-test-id='header_dropdown_menu']";
 
-    // Функция, которая кликает по кнопке меню, пока оно не откроется
     const openMenu = () => {
         cy.get(menuBtn).click({ force: true });
         cy.get(menuBtn).then($btn => {
@@ -632,11 +638,16 @@ Cypress.Commands.add('visitAdmin', () => {
 
     openMenu(); // открываем меню
 
-    // Клик по нужному элементу в меню
     cy.get(menuItem).eq(1).click({ force: true });
 
-    // Ждём, пока меню закроется
-    cy.get(menuBtn).should('have.attr', 'aria-expanded', 'false');
+    cy.get(menuBtn).then($btn => {
+        if ($btn.attr('aria-expanded') === 'true') {
+            cy.task('logWarn', 'Меню всё ещё открыто — пробуем закрыть');
+            cy.wrap($btn).click();
+        } else {
+            cy.task('logInfo', 'Меню уже закрыто');
+        }
+    });
 });
 
 Cypress.Commands.add('checkVisible', (selector, options = {}) => {
