@@ -470,14 +470,16 @@ Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Departments', 'Teams', 'Oth
     };
     cy.task('logInfo', 'Клик по кнопке селект');
 
+    cy.get('[aria-modal="true"]').should('not.exist');
+
     cy.get('.w-20.text-xs')
         .should('be.visible')
         .click();
+    cy.get('[aria-modal="true"]', { timeout: 10000 })
+        .should('be.visible');
 
     cy.task('logInfo', 'Клик по кнопке открытия модалки выполнен');
 
-    // Ждём, пока корень модалки появится
-    cy.get('.inline-block.align-bottom', { timeout: 10000 }).should('be.visible');
 
     // Ждём видимость содержимого модалки. В случае провала — логируем и продолжаем (тест не упадёт).
     cy.get('.block.mb-4', { timeout: 10000 })
@@ -498,10 +500,8 @@ Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Departments', 'Teams', 'Oth
         cy.get('.-mb-px.flex', { timeout: 5000 }).then(($nav) => {
             if ($nav.find(`div:contains("${tab}")`).length > 0) {
                 cy.wrap($nav).contains('div', tab).click();
-                cy.wait(200);
-
+    
                 // Вводим значение для поиска
-
                 cy.contains('div', 'Search')
                     .parent()
                     .find('input')
@@ -516,7 +516,6 @@ Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Departments', 'Teams', 'Oth
 
                     if ($body.find(selector).length > 0) {
                         cy.contains('div', tabSearchValues[tab]).click({ force: true });
-                        cy.wait(300);
                     } else {
                         cy.task('logWarn', `Элемент "${tabSearchValues[tab]}" не найден — пропускаем`);
                     }
@@ -530,25 +529,23 @@ Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Departments', 'Teams', 'Oth
 
     cy.task('logInfo', 'Сохраняем изменения');
     cy.get('.mt-3.w-full').click();
-    cy.wait(1000);
-
-    cy.get('.inline-block.align-bottom', { timeout: 1000 }).should('not.exist');
+    cy.get('[aria-modal="true"]', {timeout:5000}).should('not.exist');
     cy.task('logInfo', 'Модальное окно закрылось после нажатия на "Сохранить"');
 
 
 
     // Проверка: что хотя бы один элемент выбран
-return cy.get('.w-full.max-h-24')
-  .children('li')
-  .then($items => {
-    if ($items.length > 0) {
-      // Если есть элементы — логируем успешное событие
-      cy.task('logInfo', 'Права доступа выданы!');
-    } else {
-      // Если элементов нет — логируем предупреждение
-      cy.task('logInfo', 'Ничего не выбрано');
-    }
-  });
+    return cy.get('.w-full.max-h-24')
+        .children('li')
+        .then($items => {
+            if ($items.length > 0) {
+                // Если есть элементы — логируем успешное событие
+                cy.task('logInfo', 'Права доступа выданы!');
+            } else {
+                // Если элементов нет — логируем предупреждение
+                cy.task('logInfo', 'Ничего не выбрано');
+            }
+        });
 });
 
 // -----------------------------------------------------------------------------------------------------------------------
@@ -631,34 +628,34 @@ Cypress.Commands.add('checkTextInParagraph', (text = 'Success!', timeout = 3000)
 // -----------------------------------------------------------------------------------------------------------------------
 
 Cypress.Commands.add('visitAdmin', () => {
-  // 1. Ждём видимость основного контейнера
-  cy.get('.mt-5.flex-1.flex.flex-col', { timeout: 15000 })
-    .should('be.visible');
+    // 1. Ждём видимость основного контейнера
+    cy.get('.mt-5.flex-1.flex.flex-col', { timeout: 15000 })
+        .should('be.visible');
 
-  // 2. Ждём, что кнопка меню видна и закрыта
-  cy.get('[data-header-test-id="header_menu_button"]', { timeout: 10000 })
-    .should('be.visible')
-    .should('have.attr', 'aria-expanded', 'false');
+    // 2. Ждём, что кнопка меню видна и закрыта
+    cy.get('[data-header-test-id="header_menu_button"]', { timeout: 10000 })
+        .should('be.visible')
+        .should('have.attr', 'aria-expanded', 'false');
 
-  // 3. Кликаем по кнопке меню, когда точно можно
-  cy.get('[data-header-test-id="header_menu_button"]')
-    .click({ force: true });
+    // 3. Кликаем по кнопке меню, когда точно можно
+    cy.get('[data-header-test-id="header_menu_button"]')
+        .click({ force: true });
 
-  // 4. Ждём, что меню реально раскрылось
-  cy.get('[data-header-test-id="header_menu_button"]', { timeout: 5000 })
-    .should('have.attr', 'aria-expanded', 'true');
+    // 4. Ждём, что меню реально раскрылось
+    cy.get('[data-header-test-id="header_menu_button"]', { timeout: 5000 })
+        .should('have.attr', 'aria-expanded', 'true');
 
-  // 5. Ждём, что элемент меню виден и кликабелен
-  cy.get("[data-header-test-id='header_dropdown_menu']", { timeout: 10000 })
-    .eq(1)
-    .should('be.visible')
-    .click({ force: true });
+    // 5. Ждём, что элемент меню виден и кликабелен
+    cy.get("[data-header-test-id='header_dropdown_menu']", { timeout: 10000 })
+        .eq(1)
+        .should('be.visible')
+        .click({ force: true });
 
-  // 6. Проверка, что меню закрылось после клика
-  cy.get('[data-header-test-id="header_menu_button"]', { timeout: 5000 })
-    .should('have.attr', 'aria-expanded', 'false');
+    // 6. Проверка, что меню закрылось после клика
+    cy.get('[data-header-test-id="header_menu_button"]', { timeout: 5000 })
+        .should('have.attr', 'aria-expanded', 'false');
 
-  cy.task('logInfo', 'Перешли в админку');
+    cy.task('logInfo', 'Перешли в админку');
 });
 // -----------------------------------------------------------------------------------------------------------------------
 
@@ -678,14 +675,14 @@ Cypress.Commands.add('checkVisible', (selector, options = {}) => {
 // -----------------------------------------------------------------------------------------------------------------------
 
 Cypress.Commands.add('disableAnimations', () => {
-  cy.document().then(doc => {
-    const style = doc.createElement('style');
-    style.innerHTML = `
+    cy.document().then(doc => {
+        const style = doc.createElement('style');
+        style.innerHTML = `
       * {
         transition: none !important;
         animation: none !important;
       }
     `;
-    doc.head.appendChild(style);
-  });
+        doc.head.appendChild(style);
+    });
 });
