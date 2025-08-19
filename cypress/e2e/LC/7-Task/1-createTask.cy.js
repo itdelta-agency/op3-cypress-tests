@@ -6,6 +6,7 @@ describe('Task.T1. Create Task', () => {
 
 
     beforeEach(function () {
+        cy.resetAppState();
         cy.logTestName.call(this);
         cy.admin()
     });

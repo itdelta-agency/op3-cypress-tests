@@ -4,6 +4,7 @@ import { ROUTES } from "../../../support/routes";
 describe('LC.B2. Search courses', () => {
     let courseName = Cypress.env('courseName')
     beforeEach(function () {
+        cy.resetAppState();
         cy.logTestName.call(this);
         cy.login();
         cy.wait(500);

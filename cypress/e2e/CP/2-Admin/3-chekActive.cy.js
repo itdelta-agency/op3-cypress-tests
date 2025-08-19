@@ -6,6 +6,7 @@ describe("CP3. Article List", () => {
   const userNames = Cypress.env('usersArticle');
 
   beforeEach(function () {
+    cy.resetAppState();
     cy.logTestName.call(this);
     cy.admin();
   });

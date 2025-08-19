@@ -5,6 +5,7 @@ describe('Statistic.ST3. clear data statistic', () => {
 
 
     beforeEach(function () {
+        cy.resetAppState();
         cy.logTestName.call(this);
         cy.admin();
     });

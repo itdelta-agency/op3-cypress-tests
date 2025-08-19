@@ -12,6 +12,11 @@ describe('2-Auth-RU-login-valid.cy.js', () => {
         // cy.changeLangAuth('en');
     });
 
+
+    before(function() {
+        cy.resetAppState();
+    });
+
     it('should move to login page and log in', function () {
         
         cy.task('logInfo', 'Переход на страницу Авторизации');

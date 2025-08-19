@@ -9,6 +9,7 @@ describe('OrgBoard.A1. Create position', () => {
 
 
     beforeEach(function () {
+        cy.resetAppState();
         cy.logTestName.call(this);
         cy.admin();
     });

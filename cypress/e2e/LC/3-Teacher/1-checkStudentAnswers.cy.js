@@ -10,6 +10,7 @@ describe('LC.C1. Check student answers', () => {
     });
 
     beforeEach(function () {
+        cy.resetAppState();
         cy.logTestName.call(this);
         cy.admin();
     });

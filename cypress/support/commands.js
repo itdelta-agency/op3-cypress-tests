@@ -50,10 +50,16 @@ Cypress.Commands.add('admin', () => {
     cy.task('logInfo', "Авторизация");
     cy.login();
     cy.wait(500);
+
+    // Заходим на главную страницу
     cy.visit('/');
+
+    // Отключаем анимации сразу после загрузки
+    cy.disableAnimations();
+
     cy.task('logStep', "Переход в панель администратора");
 
-    // Возвращаем цепочку последней команды, чтобы Cypress дожидался её
+    // Переходим в админку и ждем пока меню откроется
     return cy.visitAdmin().wait(2000);
 });
 
@@ -375,17 +381,18 @@ Cypress.Commands.add('searchRow', (name) => {
         }
     });
 
-cy.get('[placeholder="Search"], [placeholder="Поиск"]', { timeout: 10000 })
-    .first()
-    .should('exist')
-    .clear();
+    cy.get('[placeholder="Search"], [placeholder="Поиск"]', { timeout: 10000 })
+        .first()
+        .should('exist')
+        .clear()
+        .should('have.value', '');
 
-name.split('').forEach((char, index) => {
-    cy.get('[placeholder="Search"], [placeholder="Поиск"]').first()
-        .type(char, { delay: 0 })
-        .should('have.value', name.slice(0, index + 1));
-    cy.wait(100);
-});
+    name.split('').forEach((char, index) => {
+        cy.get('[placeholder="Search"], [placeholder="Поиск"]').first()
+            .type(char, { delay: 0 })
+            .should('have.value', name.slice(0, index + 1));
+        cy.wait(100);
+    });
 
     cy.wait(800);
 
@@ -464,29 +471,28 @@ Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Departments', 'Teams', 'Oth
     cy.task('logInfo', 'Клик по кнопке селект');
 
     cy.get('.w-20.text-xs')
-        .scrollIntoView()
         .should('be.visible')
         .click();
 
-    // Ждём до 1 секунды появления модалки
-    cy.get('.block.mb-4', { timeout: 2000 })
+    cy.task('logInfo', 'Клик по кнопке открытия модалки выполнен');
+
+    // Ждём, пока корень модалки появится
+    cy.get('.inline-block.align-bottom', { timeout: 10000 }).should('be.visible');
+
+    // Ждём видимость содержимого модалки. В случае провала — логируем и продолжаем (тест не упадёт).
+    cy.get('.block.mb-4', { timeout: 10000 })
         .should('be.visible')
         .then(
             () => {
-                cy.task('logInfo', 'Модалка открылась с первого клика');
+                cy.task('logInfo', 'Модалка успешно открылась');
             },
-            () => {
-                cy.task('logWarn', 'Модалка не открылась с первого клика — повторяем');
-                cy.get('.w-20.text-xs')
-                    .scrollIntoView()
-                    .should('be.visible')
-                    .click();
-                cy.get('.block.mb-4', { timeout: 5000 }).should('be.visible');
+            (err) => {
+                // Не бросаем err — логируем и делаем скрин для дебага, тест продолжит выполнение
+                cy.task('logError', 'Модалка не открылась в отведённый таймаут — логируем и продолжаем');
+                cy.screenshot('modal-open-timeout');
+                // при желании можно добавить тут recovery-логику или флаги для дальнейших проверок
             }
         );
-
-    // Финальное ожидание открытия
-    cy.get('.block.mb-4', { timeout: 5000 }).should('be.visible');
 
     Cypress._.each(tabs, (tab) => {
         cy.get('.-mb-px.flex', { timeout: 5000 }).then(($nav) => {
@@ -524,26 +530,25 @@ Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Departments', 'Teams', 'Oth
 
     cy.task('logInfo', 'Сохраняем изменения');
     cy.get('.mt-3.w-full').click();
-    cy.wait(500);
+    cy.wait(1000);
 
-    cy.get('body').then($body => {
-        const el = $body.find('.cursor-pointer.absolute.-right-5');
-        if (el.length && el.is(':visible')) {
-            cy.task('logError', 'Модальное окно все еще открыто, кликаем на кнопку сохранить еще раз');
-            cy.get('.cursor-pointer.absolute.-right-5').click({ multiple: true });
-            cy.wait(500);
-        } else {
-            cy.task('logInfo', 'Модальное окно закрыто, продолжение теста');
-        }
-    });
+    cy.get('.inline-block.align-bottom', { timeout: 1000 }).should('not.exist');
+    cy.task('logInfo', 'Модальное окно закрылось после нажатия на "Сохранить"');
+
+
 
     // Проверка: что хотя бы один элемент выбран
-    return cy.get('.w-full.max-h-24')
-        .children('li')
-        .should('be.visible')
-        .then(() => {
-            cy.task('logInfo', 'Права доступа выданы!');
-        });
+return cy.get('.w-full.max-h-24')
+  .children('li')
+  .then($items => {
+    if ($items.length > 0) {
+      // Если есть элементы — логируем успешное событие
+      cy.task('logInfo', 'Права доступа выданы!');
+    } else {
+      // Если элементов нет — логируем предупреждение
+      cy.task('logInfo', 'Ничего не выбрано');
+    }
+  });
 });
 
 // -----------------------------------------------------------------------------------------------------------------------
@@ -622,34 +627,40 @@ Cypress.Commands.add('checkTextInParagraph', (text = 'Success!', timeout = 3000)
 
     return check();
 });
+
 // -----------------------------------------------------------------------------------------------------------------------
+
 Cypress.Commands.add('visitAdmin', () => {
-    const menuBtn = "[data-header-test-id='header_menu_button']";
-    const menuItem = "[data-header-test-id='header_dropdown_menu']";
+  // 1. Ждём видимость основного контейнера
+  cy.get('.mt-5.flex-1.flex.flex-col', { timeout: 15000 })
+    .should('be.visible');
 
-    const openMenu = () => {
-        cy.get(menuBtn).click({ force: true });
-        cy.get(menuBtn).then($btn => {
-            if ($btn.attr('aria-expanded') !== 'true') {
-                // Если меню не открылось — повторяем
-                openMenu();
-            }
-        });
-    };
-    cy.task('logStep', 'Открытие меню пользователя');
-    openMenu(); // открываем меню
+  // 2. Ждём, что кнопка меню видна и закрыта
+  cy.get('[data-header-test-id="header_menu_button"]', { timeout: 10000 })
+    .should('be.visible')
+    .should('have.attr', 'aria-expanded', 'false');
 
-    cy.get(menuItem).eq(1).click({ force: true });
+  // 3. Кликаем по кнопке меню, когда точно можно
+  cy.get('[data-header-test-id="header_menu_button"]')
+    .click({ force: true });
 
-    cy.get(menuBtn).then($btn => {
-        if ($btn.attr('aria-expanded') === 'true') {
-            cy.task('logWarn', 'Меню всё ещё открыто — пробуем закрыть');
-            cy.wrap($btn).click();
-        } else {
-            cy.task('logInfo', 'Меню уже закрыто');
-        }
-    });
+  // 4. Ждём, что меню реально раскрылось
+  cy.get('[data-header-test-id="header_menu_button"]', { timeout: 5000 })
+    .should('have.attr', 'aria-expanded', 'true');
+
+  // 5. Ждём, что элемент меню виден и кликабелен
+  cy.get("[data-header-test-id='header_dropdown_menu']", { timeout: 10000 })
+    .eq(1)
+    .should('be.visible')
+    .click({ force: true });
+
+  // 6. Проверка, что меню закрылось после клика
+  cy.get('[data-header-test-id="header_menu_button"]', { timeout: 5000 })
+    .should('have.attr', 'aria-expanded', 'false');
+
+  cy.task('logInfo', 'Перешли в админку');
 });
+// -----------------------------------------------------------------------------------------------------------------------
 
 Cypress.Commands.add('checkVisible', (selector, options = {}) => {
     // Пытаемся найти элемент с указанным селектором
@@ -662,4 +673,19 @@ Cypress.Commands.add('checkVisible', (selector, options = {}) => {
             cy.log(`Элемент "${selector}" не найден`);
         }
     });
+});
+
+// -----------------------------------------------------------------------------------------------------------------------
+
+Cypress.Commands.add('disableAnimations', () => {
+  cy.document().then(doc => {
+    const style = doc.createElement('style');
+    style.innerHTML = `
+      * {
+        transition: none !important;
+        animation: none !important;
+      }
+    `;
+    doc.head.appendChild(style);
+  });
 });

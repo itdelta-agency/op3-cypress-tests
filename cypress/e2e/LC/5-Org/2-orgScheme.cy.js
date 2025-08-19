@@ -8,6 +8,7 @@ describe('OrgBoard.A2. Create department', () => {
 
 
     beforeEach(function () {
+        cy.resetAppState();
         cy.logTestName.call(this);
         cy.admin();
         cy.visit(ROUTES.orgScheme);

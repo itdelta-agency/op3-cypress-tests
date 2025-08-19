@@ -6,6 +6,7 @@ describe('LC.B1. Complete the course which we have created in previous tests', (
 
   const courseName = Cypress.env('courseName');
   beforeEach(() => {
+    cy.resetAppState();
     cy.logTestName.call(this);
     cy.login();
     cy.task("getUserEmail").then((data) => {

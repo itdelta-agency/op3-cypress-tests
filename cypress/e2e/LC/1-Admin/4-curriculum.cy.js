@@ -8,6 +8,7 @@ describe('LC.A4. Create curriculum', () => {
 
 
     beforeEach(function () {
+        cy.resetAppState();
         cy.logTestName.call(this);
         cy.admin();
     });

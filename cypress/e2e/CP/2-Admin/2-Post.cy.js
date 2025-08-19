@@ -8,6 +8,7 @@ describe("CP2. Article List", () => {
 
 
   beforeEach(function () {
+    cy.resetAppState();
     cy.logTestName.call(this);
     cy.admin();
   });
@@ -29,7 +30,7 @@ describe("CP2. Article List", () => {
     cy.get('a.text-indigo-100',).eq(1).click();
     // cy.changeLang('en');
     cy.wait(1500);
-    cy.get('.text-white.bg-indigo-600').eq(0).click();
+    cy.get('button').contains('Add article').click();
     cy.task('logStep', 'Переход на страницу создания статьи');
     cy.wait(1500);
 

@@ -21,13 +21,11 @@ describe("US.1 Add User", () => {
       .then(() => {
         authEmail = Cypress.env('authEmail');
         authPassword = Cypress.env('authPassword');
+        cy.admin();
       
       });
   });
 
-  before(() => {
-    cy.admin();
-  })
 
 
 

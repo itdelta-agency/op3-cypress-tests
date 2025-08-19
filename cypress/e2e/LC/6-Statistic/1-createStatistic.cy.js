@@ -7,6 +7,7 @@ describe('Statistic.ST1. Create Statistic', () => {
 
 
     beforeEach(function () {
+        cy.resetAppState();
         cy.logTestName.call(this);
         cy.admin()
     });

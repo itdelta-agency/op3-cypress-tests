@@ -5,6 +5,7 @@ describe('OrgBoard.A4.Settings', () => {
     let namePosition = Cypress.env('namePosition');
 
     beforeEach(function () {
+        cy.resetAppState();
         cy.logTestName.call(this);
         cy.admin();
     });

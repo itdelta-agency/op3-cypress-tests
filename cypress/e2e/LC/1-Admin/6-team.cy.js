@@ -7,6 +7,7 @@ describe("LC.A5. Create team", () => {
     let userProfile = 'QA Edit USER';
 
     beforeEach(function () {
+        cy.resetAppState();
         cy.logTestName.call(this);
         cy.wait(500);
         cy.admin();

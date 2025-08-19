@@ -4,6 +4,7 @@ describe('LC.D1. Assert answers were checked by teacher', () => {
 
 
     beforeEach(function () {
+        cy.resetAppState();
         cy.logTestName.call(this);
     });
 

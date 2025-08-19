@@ -9,6 +9,7 @@ describe('LC.A2. Create course', () => {
   const courseName = Cypress.env('courseName');
 
   beforeEach(function () {
+    cy.resetAppState();
     cy.logTestName.call(this);
     cy.task('getCachedInbox').then(result => {
       expect(result).to.exist;
@@ -17,6 +18,7 @@ describe('LC.A2. Create course', () => {
       cy.admin(); // Авторизация
     });
   });
+
 
 
   it('should create course and assign user', () => {
@@ -39,7 +41,7 @@ describe('LC.A2. Create course', () => {
     cy.contains('Add Course').click();
     cy.wait(200);
     cy.task('logStep', 'Переход на страницу "Создание курса"');
-    
+
     cy.get('h2').contains('Create course').should('be.visible');
     // Заполняем форму
     cy.xpath("//span[text()='Name *']").next().type(courseName);
@@ -48,8 +50,8 @@ describe('LC.A2. Create course', () => {
     // cy.contains('li', 'Available for').within(() => {
     //   cy.contains('button', 'Select').click();
     // });
-~
-    cy.whoCanSee(['Users', 'Others']);
+    ~
+      cy.whoCanSee(['Users', 'Others']);
 
     // 1 чек бокс
     cy.get("button[role='switch']").eq(0)
@@ -75,7 +77,7 @@ describe('LC.A2. Create course', () => {
     cy.contains('button[type="button"]', "Save").click();
     cy.checkTextInParagraph();
     cy.task('logInfo', 'Курс создан');
-    
+
     cy.task('logInfo', 'Проверка массовых действий');
     cy.bulkAction(['Deactivate', 'Activate',], [courseName]);
 

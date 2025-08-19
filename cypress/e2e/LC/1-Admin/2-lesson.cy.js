@@ -9,6 +9,7 @@ describe("LC.A1. Create lessons", () => {
   let qName = Cypress.env('questionText');
 
   beforeEach(function () {
+    cy.resetAppState();
     cy.logTestName.call(this);
     cy.admin();
   });

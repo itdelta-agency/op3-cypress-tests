@@ -4,9 +4,11 @@ describe("CP1. Categories List", () => {
   let catName = Cypress.env('categoryName');
 
   beforeEach(function () {
+    cy.resetAppState();
     cy.logTestName.call(this);
     cy.admin();
   });
+
 
   it('should create Category)', function () {
     cy.task('logInfo', 'Создание новой категории');
@@ -23,11 +25,11 @@ describe("CP1. Categories List", () => {
     cy.wait(500);
 
     cy.searchRow(catName);
-        cy.wait(500);
+    cy.wait(500);
 
-        cy.ifRowExists(catName, () => {
-            cy.deleteResources(catName);
-        });
+    cy.ifRowExists(catName, () => {
+      cy.deleteResources(catName);
+    });
 
     cy.wait(500);
     cy.contains('Add category').click();
@@ -73,7 +75,7 @@ describe("CP1. Categories List", () => {
       }
     });
     cy.wait(1000);
-    cy.get('a.text-indigo-100',).eq(0).click();cy.visit(ROUTES.categories);
+    cy.get('a.text-indigo-100',).eq(0).click(); cy.visit(ROUTES.categories);
 
     // cy.accessAllItems();
     cy.xpath(`(//div[text()='${catName}'])`).click();
@@ -98,7 +100,7 @@ describe("CP1. Categories List", () => {
       .within(() => {
         cy.contains('span', 'Active').should('exist');
       });
-      cy.task('logInfo', 'Категория отредактирована и активна!');
+    cy.task('logInfo', 'Категория отредактирована и активна!');
 
 
   });

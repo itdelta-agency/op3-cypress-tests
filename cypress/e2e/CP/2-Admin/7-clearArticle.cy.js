@@ -6,6 +6,7 @@ describe("CP7. Clear Data", () => {
 
 
   beforeEach(function () {
+    cy.resetAppState();
     cy.logTestName.call(this);
     cy.admin();
   });

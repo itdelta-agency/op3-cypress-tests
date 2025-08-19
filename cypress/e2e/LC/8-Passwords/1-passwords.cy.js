@@ -10,6 +10,7 @@ describe('Password page', () => {
 
 
     beforeEach(function () {
+        cy.resetAppState();
         cy.logTestName.call(this);
         cy.admin()
     });

@@ -6,6 +6,7 @@ describe('LC.Z. Clear all created learning items', () => {
 
 
     beforeEach(function () {
+        cy.resetAppState();
         cy.logTestName.call(this);
         cy.admin();
         cy.wait(500);
