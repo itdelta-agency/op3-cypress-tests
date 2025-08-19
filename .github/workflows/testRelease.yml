@@ -4,25 +4,34 @@ on: [workflow_dispatch]
 
 jobs:
   test-Release:
-    timeout-minutes: 120
     runs-on: ubuntu-latest
+    timeout-minutes: 120
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Print versions
-        run: |
-              node -v
-              yarn -v
-              yarn list cypress
-              yarn list @shelex/cypress-allure-plugin
+      # Используем ту же версию Node.js, что и локально
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.19.1
+          cache: 'yarn'
 
+      # Установка Yarn нужной версии
+      - name: Setup Yarn
+        run: npm install -g yarn@1.22.19
+
+      - name: Install dependencies
+        run: yarn install
+
+      # Запуск Cypress с видео и Allure
       - name: Cypress run
         uses: cypress-io/github-action@v5
         with:
           browser: chrome
           spec: cypress/e2e/**/*.cy.js
-          install-command: yarn
+          record: false
+          config: video=true
         env:
           CYPRESS_allure: true
           URL: ${{vars.RELEASE_URL}}
