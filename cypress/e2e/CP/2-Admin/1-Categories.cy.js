@@ -27,16 +27,16 @@ describe("CP1. Categories List", () => {
     // Кликаем на первый линк
     cy.get('a.text-indigo-100').eq(0)
       .should('be.visible')
-      .click();
+      .click();  
 
-    cy.searchRow(catName);
-    cy.wait(500);
+    // cy.searchRow(catName);
+    // cy.wait(500);
 
-    cy.ifRowExists(catName, () => {
-      cy.deleteResources(catName);
-    });
+    // cy.ifRowExists(catName, () => {
+    //   cy.deleteResources(catName);
+    // });
 
-    cy.contains('Add category').should('exist').click();
+    cy.contains('Add category').should('be.visible').click();
     cy.task('logStep', 'Переход на страницу создания категорий');
 
     // create post
@@ -79,7 +79,8 @@ describe("CP1. Categories List", () => {
       }
     });
     cy.wait(1000);
-    cy.get('a.text-indigo-100',).eq(0).click(); cy.visit(ROUTES.categories);
+    cy.get('a.text-indigo-100',).eq(0).click();
+    cy.visit(ROUTES.categories);
 
     // cy.accessAllItems();
     cy.xpath(`(//div[text()='${catName}'])`).click();
