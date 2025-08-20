@@ -13,7 +13,7 @@ jobs:
 
       # Установка Node.js
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
           node-version: 20.5.1
 
@@ -48,6 +48,13 @@ jobs:
         with:
           allure_results: allure-results
           allure_report: allure-report
+
+      - name: Debug local report size
+        run: |
+          echo "Count of files:"
+          find allure-report/ | wc -l
+          echo "Disk usage:"
+          du -sh allure-report/    
       
       # Деплой на FTP
       - name: FTP Deploy
@@ -60,3 +67,4 @@ jobs:
           local-dir: allure-report/
           server-dir: public_html/release/
           state-name: ../.release_ftp-deploy-sync-state.json
+          log-level: verbose 
