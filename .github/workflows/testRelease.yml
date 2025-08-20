@@ -44,9 +44,15 @@ jobs:
         uses: simple-elf/allure-report-action@master
         if: always()
         with:
-          allure_results: allure-results
-#          gh_pages: gh-pages
-          # github_run_num: "release"
+          allure_results: allure-results      # Папка с результатами тестов
+          allure_report: allure-report        # Папка для HTML-отчёта
+ 
+      - name: Create remote folder
+        run: |
+          lftp -u company-policy_1,${{ secrets.ftp_password }} ftp.allure.company-policy.com <<EOF
+          mkdir -p /public_html/release/
+          quit
+          EOF
 
       - name: FTP Deploy
         uses: SamKirkland/FTP-Deploy-Action@4.3.1
@@ -56,8 +62,8 @@ jobs:
           username: company-policy_1
           password: ${{ secrets.ftp_password }}
           local-dir: allure-report/
-          server-dir: public_html/prod/
-          state-name: ../.prod_ftp-deploy-sync-state.json
+          server-dir: public_html/release/
+          state-name: ../.release_ftp-deploy-sync-state.json
 
 
           
