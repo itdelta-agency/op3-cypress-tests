@@ -23,17 +23,6 @@ jobs:
           npm install -g yarn@1.22.19
           yarn -v
 
-      # Установка зависимостей
-      - name: Install dependencies
-        run: yarn install
-
-            # Установка lftp
-      - name: Install lftp
-        run: |
-          echo "Installing lftp..."
-          sudo apt-get update
-          sudo apt-get install -y lftp
-          lftp --version
 
       # Создание папки на FTP
       - name: Create remote folder
