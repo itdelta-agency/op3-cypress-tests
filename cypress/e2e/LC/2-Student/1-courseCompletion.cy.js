@@ -103,33 +103,40 @@ describe('LC.B1. Complete the course which we have created in previous tests', (
 
 
       //// THIRD LESSON ////
-      cy.task('logInfo', 'Прохождение третьего урока');
-      cy.get('body').then($body => {
-        if ($body.find('div:contains("The lesson is awaiting teacher review")').length > 0) {
-          // Урок уже завершён
-          cy.task('logInfo', 'Урок завершён — переходим дальше');
-        } else if ($body.find('button:contains("Start lesson")').length > 0) {
-          // Урок не начат — запускаем
-          cy.task('logInfo', 'Урок не начат — запускаем');
-          cy.contains('Start lesson').click();
-          cy.wait(1000);
+cy.task('logInfo', 'Прохождение третьего урока');
 
-          // После старта — отвечаем
-          cy.get('.ql-editor').eq(1).click().type("Lorem ipsum dolor sit amet, consectetur " +
-            "adipisicing elit. Accusamus aspernatur dolorem dolorum eligendi esse facilis impedit ipsa maxime minus " +
-            "molestiae nostrum odit provident quam ratione, sequi similique, tempore. Nemo, sunt?");
-          cy.get('button').contains('Check').click();
-          cy.wait(500);
-        } else {
-          // Урок уже начат, но не завершён — просто отвечаем
-          cy.task('logInfo', 'Урок начат, но не завершён — отвечаем на вопрос');
-          cy.get('.ql-editor').eq(1).click().type("Lorem ipsum dolor sit amet, consectetur " +
-            "adipisicing elit. Accusamus aspernatur dolorem dolorum eligendi esse facilis impedit ipsa maxime minus " +
-            "molestiae nostrum odit provident quam ratione, sequi similique, tempore. Nemo, sunt?");
+cy.get('div.lesson-wrapper').then($cont => {
+  // Проверяем есть ли сообщение о завершении урока
+  if ($cont.find('div:contains("The lesson is awaiting teacher review")').length > 0) {
+    cy.task('logInfo', 'Урок завершён — переходим дальше');
+  } else {
+    cy.wrap($cont).contains('button', 'Start lesson', { timeout: 1000 })
+      .then($btn => {
+        // Кнопка найдена — запускаем урок
+        cy.task('logInfo', 'Урок не начат — запускаем');
+        cy.wrap($btn).click();
+        cy.wait(1000);
 
-          cy.get('button').contains('Check').click();
-          cy.wait(500);
-        }
+        // Отвечаем
+        cy.get('.ql-editor').eq(1).click().type("Lorem ipsum dolor sit amet, consectetur " +
+          "adipisicing elit. Accusamus aspernatur dolorem dolorum eligendi esse facilis impedit ipsa maxime minus " +
+          "molestiae nostrum odit provident quam ratione, sequi similique, tempore. Nemo, sunt?");
+        cy.get('button').contains('Check').click();
+        cy.wait(500);
+      })
+      .catch(() => {
+        // Кнопка не найдена — урок уже начат
+        cy.task('logInfo', 'Урок начат, но не завершён — отвечаем на вопрос');
+        cy.get('.ql-editor').eq(1).click().type("Lorem ipsum dolor sit amet, consectetur " +
+          "adipisicing elit. Accusamus aspernatur dolorem dolorum eligendi esse facilis impedit ipsa maxime minus " +
+          "molestiae nostrum odit provident quam ratione, sequi similique, tempore. Nemo, sunt?");
+
+        cy.get('button').contains('Check').click();
+        cy.wait(500);
+      });
+  }
+
+
 
 
         //
