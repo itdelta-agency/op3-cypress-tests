@@ -6,20 +6,24 @@ jobs:
   test-Release:
     runs-on: ubuntu-latest
     timeout-minutes: 120
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      # Используем ту же версию Node.js, что и локально
+      # Установка Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18.18.0
+          node-version: 20.5.1
 
       # Установка Yarn нужной версии
       - name: Setup Yarn
-        run: npm install -g yarn@1.22.22
+        run: |
+          npm install -g yarn@1.22.19
+          yarn -v
 
+      # Установка зависимостей
       - name: Install dependencies
         run: yarn install
 
@@ -33,30 +37,39 @@ jobs:
           config: video=true
         env:
           CYPRESS_allure: true
-          URL: ${{vars.RELEASE_URL}}
-          EMAIL: ${{vars.RELEASE_USERNAME}}
-          PASSWORD: ${{secrets.RELEASE_PASSWORD}}
-          MAILSLURP_API_KEY: ${{secrets.MAILSLURP_API_KEY}}
-          QA_TEST_LOGIN: ${{vars.QA_TEST_LOGIN}}
-          QA_TEST_PASSWORD: ${{secrets.QA_TEST_PASSWORD}}
+          URL: ${{ vars.RELEASE_URL }}
+          EMAIL: ${{ vars.RELEASE_USERNAME }}
+          PASSWORD: ${{ secrets.RELEASE_PASSWORD }}
+          MAILSLURP_API_KEY: ${{ secrets.MAILSLURP_API_KEY }}
+          QA_TEST_LOGIN: ${{ vars.QA_TEST_LOGIN }}
+          QA_TEST_PASSWORD: ${{ secrets.QA_TEST_PASSWORD }}
 
+      # Генерация Allure отчета
       - name: Generate Allure Report
         uses: simple-elf/allure-report-action@master
         if: always()
         with:
-          allure_results: allure-results      # Папка с результатами тестов
-          allure_report: allure-report        # Папка для HTML-отчёта
- 
-      - name: Install lftp
-        run: sudo apt-get update && sudo apt-get install -y lftp
+          allure_results: allure-results
+          allure_report: allure-report
 
+      # Установка lftp
+      - name: Install lftp
+        run: |
+          echo "Installing lftp..."
+          sudo apt-get update
+          sudo apt-get install -y lftp
+          lftp --version
+
+      # Создание папки на FTP
       - name: Create remote folder
         run: |
-          lftp -u company-policy_1,${{ secrets.ftp_password }} ftp.allure.company-policy.com <<EOF
+          echo "Creating remote folder on FTP..."
+          lftp -u company-policy_1,${{ secrets.ftp_password }} ftp.allure.company-policy.com -e "
           mkdir -p /public_html/release/
           quit
-          EOF
-
+          "
+      
+      # Деплой на FTP
       - name: FTP Deploy
         uses: SamKirkland/FTP-Deploy-Action@4.3.1
         if: always()
@@ -67,6 +80,3 @@ jobs:
           local-dir: allure-report/
           server-dir: public_html/release/
           state-name: ../.release_ftp-deploy-sync-state.json
-
-
-          
