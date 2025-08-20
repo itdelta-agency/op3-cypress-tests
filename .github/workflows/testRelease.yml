@@ -9,11 +9,11 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Установка Node.js
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20.5.1
 
@@ -26,6 +26,23 @@ jobs:
       # Установка зависимостей
       - name: Install dependencies
         run: yarn install
+
+            # Установка lftp
+      - name: Install lftp
+        run: |
+          echo "Installing lftp..."
+          sudo apt-get update
+          sudo apt-get install -y lftp
+          lftp --version
+
+      # Создание папки на FTP
+      - name: Create remote folder
+        run: |
+          echo "Creating remote folder on FTP..."
+          lftp -u company-policy_1,${{ secrets.ftp_password }} allure.company-policy.com -e "
+          mkdir -p public_html/release/
+          quit
+          "  
 
       # Запуск Cypress с видео и Allure
       - name: Cypress run
@@ -51,23 +68,6 @@ jobs:
         with:
           allure_results: allure-results
           allure_report: allure-report
-
-      # Установка lftp
-      - name: Install lftp
-        run: |
-          echo "Installing lftp..."
-          sudo apt-get update
-          sudo apt-get install -y lftp
-          lftp --version
-
-      # Создание папки на FTP
-      - name: Create remote folder
-        run: |
-          echo "Creating remote folder on FTP..."
-          lftp -u company-policy_1,${{ secrets.ftp_password }} ftp.allure.company-policy.com -e "
-          mkdir -p /public_html/release/
-          quit
-          "
       
       # Деплой на FTP
       - name: FTP Deploy
