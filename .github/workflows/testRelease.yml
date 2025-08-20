@@ -19,7 +19,7 @@ jobs:
 
       # Установка Yarn нужной версии
       - name: Setup Yarn
-        run: npm install -g yarn@1.22.19
+        run: npm install -g yarn@1.22.22
 
       - name: Install dependencies
         run: yarn install
@@ -48,7 +48,13 @@ jobs:
           allure_results: allure-results      # Папка с результатами тестов
           allure_report: allure-report        # Папка для HTML-отчёта
           allure_history: allure-history      # Папка для истории предыдущих прогонов
-          keep_reports: 5                     # Количество хранимых прогонов 
+          keep_reports: 5   
+          
+      - name: Create release folder if not exists
+        run: |
+          echo "Checking if release folder exists..."
+          mkdir -p allure-report
+          echo "Folder ensured." 
 
       - name: FTP Deploy
         uses: SamKirkland/FTP-Deploy-Action@4.3.1
