@@ -60,3 +60,6 @@ jobs:
           local-dir: allure-report/
           server-dir: public_html/release/
           state-name: ../.release_ftp-deploy-sync-state.json
+
+
+          

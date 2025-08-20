@@ -25,11 +25,11 @@ describe('LC.B1. Complete the course which we have created in previous tests', (
     cy.wait(200);
     cy.task('logStep', 'Поиск нужного курса');
 
-    cy.get('.flex.justify-between').eq(4)
+    cy.get('.focus-visible\\:ring-indigo')
       .invoke('attr', 'aria-expanded')
       .then(checked => {
         if (checked === 'false') {
-          cy.get('.flex.justify-between').eq(4).click();
+          cy.get('.focus-visible\\:ring-indigo').click();
           cy.task('logInfo', 'Открытие группы курсов');
         }
         // Если 'true' — ничего не делаем
