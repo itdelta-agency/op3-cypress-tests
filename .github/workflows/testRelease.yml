@@ -24,15 +24,6 @@ jobs:
           yarn -v
 
 
-      # Создание папки на FTP
-      - name: Create remote folder
-        run: |
-          echo "Creating remote folder on FTP..."
-          lftp -u company-policy_1,${{ secrets.ftp_password }} allure.company-policy.com -e "
-          mkdir -p public_html/release/
-          quit
-          "  
-
       # Запуск Cypress с видео и Allure
       - name: Cypress run
         uses: cypress-io/github-action@v5
