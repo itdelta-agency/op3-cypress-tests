@@ -13,16 +13,20 @@ describe("CP1. Categories List", () => {
   it('should create Category)', function () {
     cy.task('logInfo', 'Создание новой категории');
 
-    cy.get('.flex.justify-between', { timeout: 10000 }).eq(1).then($tab => {
-      const isExpanded = $tab.attr('aria-expanded') === 'true';  // true если открыта
-      if (!isExpanded) {
-        cy.wrap($tab).click();
-        cy.task('logInfo', 'Вкладка категорий скрыта, клик на "Регламенты"');
-      }
-    });
-    cy.wait(1000);
-    cy.get('a.text-indigo-100',).eq(0).click();
-    cy.wait(500);
+    cy.get('.flex.justify-between', { timeout: 15000 }).eq(1)
+      .should('be.visible') // ждём пока элемент видим
+      .then($tab => {
+        const isExpanded = $tab.attr('aria-expanded') === 'true';
+        if (!isExpanded) {
+          cy.wrap($tab).click();
+          cy.task('logInfo', 'Вкладка категорий скрыта, клик на "Регламенты"');
+        }
+      });
+
+    // Кликаем на первый линк
+    cy.get('a.text-indigo-100').eq(0)
+      .should('be.visible')
+      .click();
 
     cy.searchRow(catName);
     cy.wait(500);

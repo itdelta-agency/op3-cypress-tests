@@ -19,7 +19,7 @@ jobs:
 
       # Установка Yarn нужной версии
       - name: Setup Yarn
-        run: npm install -g yarn@1.22.22
+        run: npm install -g yarn@1.22.19
 
       - name: Install dependencies
         run: yarn install
