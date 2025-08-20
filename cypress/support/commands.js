@@ -371,38 +371,48 @@ Cypress.Commands.add('logout', () => {
 });
 
 // -----------------------------------------------------------------------------------------------------------------------
-
 Cypress.Commands.add('searchRow', (name) => {
     cy.task('logInfo', `Поиск строки с именем: "${name}"`);
 
+    // Проверяем, есть ли элементы, иначе кликаем на тултип
     cy.get('.w-full.h-full').then($body => {
         if ($body.find('.mt-1.relative.flex').length === 0) {
             cy.xpath("//div[@class='tooltip']").click();
         }
     });
 
+    // Чистим поле поиска безопасно
     cy.get('[placeholder="Search"], [placeholder="Поиск"]', { timeout: 10000 })
-        .first()
-        .should('exist')
-        .clear()
-        .should('have.value', '');
+      .first()
+      .then(($input) => {
+        // повторная проверка value через retry
+        cy.wrap($input)
+          .clear()
+          .should(() => {
+            expect($input.val()).to.eq('');
+          });
+      });
 
+    // Вводим текст посимвольно с проверкой через новый get
     name.split('').forEach((char, index) => {
         cy.get('[placeholder="Search"], [placeholder="Поиск"]').first()
-            .type(char, { delay: 0 })
-            .should('have.value', name.slice(0, index + 1));
-        cy.wait(100);
+          .type(char, { delay: 0 })
+          .should('have.value', name.slice(0, index + 1));
+        cy.wait(100); // небольшая пауза между символами
     });
 
+    // Ждем, чтобы таблица успела обновиться
     cy.wait(800);
 
-    return cy.get('tbody').then($tbody => {
+    // Проверка строки в таблице через повторный get
+    cy.get('tbody').then($tbody => {
         const rows = $tbody.find(`tr:contains("${name}")`);
         if (rows.length === 0) {
             cy.task('logError', `Строка с именем "${name}" не найдена!`);
         }
     });
 });
+
 
 // -----------------------------------------------------------------------------------------------------------------------
 

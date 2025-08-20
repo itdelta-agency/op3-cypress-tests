@@ -14,12 +14,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 20.19.1
-          cache: 'yarn'
+          node-version: 18.18.0
 
       # Установка Yarn нужной версии
       - name: Setup Yarn
-        run: npm install -g yarn@1.22.19
+        run: npm install -g yarn@1.22.22
 
       - name: Install dependencies
         run: yarn install
@@ -45,16 +44,9 @@ jobs:
         uses: simple-elf/allure-report-action@master
         if: always()
         with:
-          allure_results: allure-results      # Папка с результатами тестов
-          allure_report: allure-report        # Папка для HTML-отчёта
-          allure_history: allure-history      # Папка для истории предыдущих прогонов
-          keep_reports: 5   
-          
-      - name: Create release folder if not exists
-        run: |
-          echo "Checking if release folder exists..."
-          mkdir -p allure-report
-          echo "Folder ensured." 
+          allure_results: allure-results
+#          gh_pages: gh-pages
+          # github_run_num: "release"
 
       - name: FTP Deploy
         uses: SamKirkland/FTP-Deploy-Action@4.3.1
@@ -64,8 +56,8 @@ jobs:
           username: company-policy_1
           password: ${{ secrets.ftp_password }}
           local-dir: allure-report/
-          server-dir: public_html/release/
-          state-name: ../.release_ftp-deploy-sync-state.json
+          server-dir: public_html/prod/
+          state-name: ../.prod_ftp-deploy-sync-state.json
 
 
           

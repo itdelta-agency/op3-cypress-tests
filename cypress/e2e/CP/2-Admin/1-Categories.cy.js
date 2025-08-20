@@ -1,3 +1,4 @@
+const { should } = require("chai");
 const { ROUTES } = require("../../../support/routes");
 
 describe("CP1. Categories List", () => {
@@ -35,8 +36,7 @@ describe("CP1. Categories List", () => {
       cy.deleteResources(catName);
     });
 
-    cy.wait(500);
-    cy.contains('Add category').click();
+    cy.contains('Add category').should('exist').click();
     cy.task('logStep', 'Переход на страницу создания категорий');
 
     // create post
