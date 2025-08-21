@@ -103,51 +103,34 @@ describe('LC.B1. Complete the course which we have created in previous tests', (
 
 
       //// THIRD LESSON ////
-cy.task('logInfo', 'Прохождение третьего урока');
+      cy.task('logInfo', 'Прохождение третьего урока');
 
-cy.get('div.lesson-wrapper').then($cont => {
-  // Проверяем есть ли сообщение о завершении урока
-  if ($cont.find('div:contains("The lesson is awaiting teacher review")').length > 0) {
-    cy.task('logInfo', 'Урок завершён — переходим дальше');
-  } else {
-    cy.wrap($cont).contains('button', 'Start lesson', { timeout: 1000 })
-      .then($btn => {
-        // Кнопка найдена — запускаем урок
-        cy.task('logInfo', 'Урок не начат — запускаем');
-        cy.wrap($btn).click();
-        cy.wait(1000);
-
-        // Отвечаем
-        cy.get('.ql-editor').eq(1).click().type("Lorem ipsum dolor sit amet, consectetur " +
-          "adipisicing elit. Accusamus aspernatur dolorem dolorum eligendi esse facilis impedit ipsa maxime minus " +
-          "molestiae nostrum odit provident quam ratione, sequi similique, tempore. Nemo, sunt?");
-        cy.get('button').contains('Check').click();
-        cy.wait(500);
-      })
-      .catch(() => {
-        // Кнопка не найдена — урок уже начат
-        cy.task('logInfo', 'Урок начат, но не завершён — отвечаем на вопрос');
-        cy.get('.ql-editor').eq(1).click().type("Lorem ipsum dolor sit amet, consectetur " +
-          "adipisicing elit. Accusamus aspernatur dolorem dolorum eligendi esse facilis impedit ipsa maxime minus " +
-          "molestiae nostrum odit provident quam ratione, sequi similique, tempore. Nemo, sunt?");
-
-        cy.get('button').contains('Check').click();
-        cy.wait(500);
-      });
-  }
+      cy.get('.inline-block.align-bottom', {timeout:10000}).should('be.visible');
+      cy.contains('button', 'Start lesson', { timeout: 5000 })
+        .click();
+      cy.wait(1000);
+      cy.get('.ql-editor').eq(1).click().type(
+        "Lorem ipsum dolor sit amet, consectetur " +
+        "adipisicing elit. Accusamus aspernatur dolorem dolorum eligendi esse facilis impedit ipsa maxime minus " +
+        "molestiae nostrum odit provident quam ratione, sequi similique, tempore. Nemo, sunt?"
+      );
+      cy.get('button').contains('Check').click();
+      cy.wait(500);
+      cy.task('logInfo', 'Третий урок пройден');
+         
 
 
 
 
-        //
-        //// BACK TO THE FIRST LESSON
-        cy.task('logInfo', 'Все уроки пройдены! Переход к первому уроку и ожидание проверки уроков.');
-        cy.get('p').contains('QA Test lesson (checkbox + radio)').click();
-        cy.wait(200);
-        cy.get('div').contains('Lesson successfully completed!').should('be.visible')
+      //
+      //// BACK TO THE FIRST LESSON
+      cy.task('logInfo', 'Все уроки пройдены! Переход к первому уроку и ожидание проверки уроков.');
+      cy.get('p').contains('QA Test lesson (checkbox + radio)').click();
+      cy.wait(200);
+      cy.get('div').contains('Lesson successfully completed!').should('be.visible')
 
-      });
-    })
+    });
   })
-
 });
+
+

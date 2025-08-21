@@ -47,14 +47,7 @@ jobs:
         if: always()
         with:
           allure_results: allure-results
-          allure_report: allure-report
-
-      - name: Debug local report size
-        run: |
-          echo "Count of files:"
-          find allure-report/ | wc -l
-          echo "Disk usage:"
-          du -sh allure-report/    
+   
       
       # Деплой на FTP
       - name: FTP Deploy
