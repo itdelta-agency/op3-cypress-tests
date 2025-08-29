@@ -4,31 +4,49 @@ on: [workflow_dispatch]
 
 jobs:
   test-Prod:
-    timeout-minutes: 120
     runs-on: ubuntu-latest
+    timeout-minutes: 120
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Установка Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.5.1
+
+      # Установка Yarn нужной версии
+      - name: Setup Yarn
+        run: |
+          npm install -g yarn@1.22.19
+          yarn -v
+
+      # Запуск Cypress с видео и Allure
       - name: Cypress run
-        uses: cypress-io/github-action@v6
+        uses: cypress-io/github-action@v5
         with:
           browser: chrome
-          install-command: yarn
+          spec: cypress/e2e/**/*.cy.js
+          record: false
+          config: video=true
         env:
           CYPRESS_allure: true
-          URL: ${{vars.PRODUCTION_URL}}
-          EMAIL: ${{vars.PRODUCTION_USERNAME}}
-          PASSWORD: ${{secrets.PRODUCTION_PASSWORD}}
+          URL: ${{ vars.PRODUCTION_URL }}
+          EMAIL: ${{ vars.PRODUCTION_USERNAME }}
+          PASSWORD: ${{ secrets.PRODUCTION_PASSWORD }}
+          MAILSLURP_API_KEY: ${{ secrets.MAILSLURP_API_KEY }}
 
+
+      # Генерация Allure отчета
       - name: Generate Allure Report
         uses: simple-elf/allure-report-action@master
         if: always()
         with:
           allure_results: allure-results
-#          gh_pages: gh-pages
-          # github_run_num: "release"
 
+      # Деплой на FTP
       - name: FTP Deploy
         uses: SamKirkland/FTP-Deploy-Action@4.3.1
         if: always()
@@ -39,3 +57,4 @@ jobs:
           local-dir: allure-report/
           server-dir: public_html/prod/
           state-name: ../.prod_ftp-deploy-sync-state.json
+          log-level: verbose
