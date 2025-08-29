@@ -10,6 +10,7 @@ describe('Statistic.ST1. Create Statistic', () => {
         cy.resetAppState();
         cy.logTestName.call(this);
         cy.admin();
+        cy.changeLang();
     });
 
     it('should create statistics', function () {

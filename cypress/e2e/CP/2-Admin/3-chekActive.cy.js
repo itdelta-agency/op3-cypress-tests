@@ -9,6 +9,7 @@ describe("CP3. Article List", () => {
     cy.resetAppState();
     cy.logTestName.call(this);
     cy.admin();
+    cy.changeLang();
   });
 
 

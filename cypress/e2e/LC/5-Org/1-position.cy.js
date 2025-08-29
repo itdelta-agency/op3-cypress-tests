@@ -12,6 +12,7 @@ describe('OrgBoard.A1. Create position', () => {
         cy.resetAppState();
         cy.logTestName.call(this);
         cy.admin();
+        cy.changeLang();
     });
 
     it('should create position', function () {

@@ -8,6 +8,7 @@ describe("CP1. Categories List", () => {
     cy.resetAppState();
     cy.logTestName.call(this);
     cy.admin();
+    cy.changeLang();
   });
 
 
@@ -66,15 +67,6 @@ describe("CP1. Categories List", () => {
 
   it('should edit Category)', function () {
     cy.task('logStep', 'Переход к редактированию категории');
-    cy.get('.flex.justify-between', { timeout: 10000 }).eq(1).then($tab => {
-      const isExpanded = $tab.attr('aria-expanded') === 'true';  // true если открыта
-      if (!isExpanded) {
-        cy.wrap($tab).click();
-        cy.task('logInfo', 'Вкладка категорий скрыта, клик на "Регламенты"');
-      }
-    });
-    cy.wait(1000);
-    cy.get('a.text-indigo-100',).eq(0).click();
     cy.visit(ROUTES.categories);
 
     // cy.accessAllItems();

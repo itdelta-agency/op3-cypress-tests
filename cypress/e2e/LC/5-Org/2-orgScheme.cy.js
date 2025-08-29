@@ -11,6 +11,7 @@ describe('OrgBoard.A2. Create department', () => {
         cy.resetAppState();
         cy.logTestName.call(this);
         cy.admin();
+        cy.changeLang();
         cy.visit(ROUTES.orgScheme);
         cy.wait(1000);
         cy.get('h2').contains('OrgBoard').should('be.visible');

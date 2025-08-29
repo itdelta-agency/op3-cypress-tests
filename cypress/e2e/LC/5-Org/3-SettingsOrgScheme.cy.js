@@ -8,6 +8,7 @@ describe('OrgBoard.A4.Settings', () => {
         cy.resetAppState();
         cy.logTestName.call(this);
         cy.admin();
+        cy.changeLang();
     });
 
     it('edit settings', function () {

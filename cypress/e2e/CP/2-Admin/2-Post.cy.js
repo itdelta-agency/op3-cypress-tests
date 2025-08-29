@@ -11,6 +11,7 @@ describe("CP2. Article List", () => {
     cy.resetAppState();
     cy.logTestName.call(this);
     cy.admin();
+    cy.changeLang();
   });
 
 

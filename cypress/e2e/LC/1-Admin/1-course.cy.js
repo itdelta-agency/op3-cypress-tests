@@ -16,6 +16,7 @@ describe('LC.A2. Create course', () => {
       inbox = result;
       cy.log('Используем кешированный inbox:', inbox.emailAddress);
       cy.admin();
+      cy.changeLang();
     });
   });
 

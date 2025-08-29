@@ -21,9 +21,8 @@ Cypress.Commands.add('login', (username = Cypress.env('email'), password = Cypre
         cy.xpath("//button[@type='submit']", { timeout: 10000 }).click();
         cy.wait(2000);
 
-        cy.window().its('localStorage').invoke(`setItem`, 'tableFilterExpanded_/cp/admin/post', 'false');
-        cy.window().its('localStorage').invoke(`setItem`, 'tableFilterExpanded_/st/admin/index', 'false');
-        cy.changeLang('en');
+        cy.window().its('localStorage').invoke(`setItem`, 'tableFilterExpanded_/cp/admin/post', 'false')
+        cy.window().its('localStorage').invoke(`setItem`, 'tableFilterExpanded_/st/admin/index', 'false')
     });
 
 });
@@ -50,8 +49,9 @@ Cypress.Commands.add('checkTextPresence', (text) => {
 
 Cypress.Commands.add('admin', () => {
     cy.task('logInfo', "Авторизация");
+    
     cy.login();
-    cy.wait(2000);
+    cy.wait(500);
 
     // Заходим на главную страницу
     cy.visit('/');
@@ -346,13 +346,6 @@ Cypress.Commands.add('changeLang', (lang = 'en') => {
             });
         });
     cy.wait(1000);
-    // Проверяем, что язык действительно сменился
-    // cy.get('[data-header-test-id="lang_button"] > span', { timeout: 7000 })
-    //     .should('have.text', lang)
-    //     .then(() => {
-    //         cy.task('logInfo', `Язык сменился на ${lang}!`);
-    //         cy.wait(1000);
-    //     });
 });
 
 // -----------------------------------------------------------------------------------------------------------------------

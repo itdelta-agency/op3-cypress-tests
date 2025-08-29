@@ -13,6 +13,7 @@ describe('LC.C1. Check student answers', () => {
         cy.resetAppState();
         cy.logTestName.call(this);
         cy.admin();
+        cy.changeLang();
     });
 
 

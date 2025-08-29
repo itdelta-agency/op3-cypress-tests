@@ -13,6 +13,7 @@ describe('Password page', () => {
         cy.resetAppState();
         cy.logTestName.call(this);
         cy.admin();
+        cy.changeLang();
     });
 
     it('should create password ', () => {

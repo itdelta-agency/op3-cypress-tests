@@ -22,7 +22,7 @@ describe("US.1 Add User", () => {
         authEmail = Cypress.env('authEmail');
         authPassword = Cypress.env('authPassword');
         cy.admin();
-      
+        cy.changeLang();
       });
   });
 

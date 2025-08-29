@@ -6,6 +6,7 @@ describe("CP5. Familiarization with the article", () => {
     cy.resetAppState();
     cy.logTestName.call(this);
     cy.login();
+    cy.changeLang();
   });
 
   it('checking the ignorance of the article ADMIN', () => {

@@ -9,6 +9,7 @@ describe('Task.T1. Create Task', () => {
         cy.resetAppState();
         cy.logTestName.call(this);
         cy.admin();
+        cy.changeLang();
     });
 
 

@@ -6,6 +6,7 @@ describe("Statistic.ST2. adding a value to statistics", () => {
         cy.resetAppState();
         cy.logTestName.call(this);
         cy.admin();
+        cy.changeLang();
     });
 
     it("adding a value to statistics", function () {

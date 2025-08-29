@@ -11,6 +11,7 @@ describe('LC.A4. Create curriculum', () => {
         cy.resetAppState();
         cy.logTestName.call(this);
         cy.admin();
+        cy.changeLang();
     });
 
     it('should create curriculum', function () {

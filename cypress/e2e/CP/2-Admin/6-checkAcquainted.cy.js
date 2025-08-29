@@ -8,6 +8,7 @@ describe("CP6. Check Acquainted", () => {
     cy.resetAppState();
     cy.logTestName.call(this);
     cy.admin();
+    cy.changeLang();
   });
 
 

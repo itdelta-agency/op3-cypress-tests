@@ -18,6 +18,7 @@ describe("C. Invite user by 2 ways", () => {
 
   it('should invite by user menu', () => {
     cy.admin();
+    cy.changeLang();
     cy.visit(ROUTES.invite);
 
     cy.xpath("//input[@id='email']").type(inbox.emailAddress);

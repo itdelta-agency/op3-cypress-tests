@@ -7,7 +7,8 @@ describe('LC.A3. Create course group', () => {
     beforeEach(function () {
         cy.resetAppState();
         cy.logTestName.call(this);
-        cy.admin();;
+        cy.admin();
+        cy.changeLang();
     });
 
     it('should create course program', function () {
