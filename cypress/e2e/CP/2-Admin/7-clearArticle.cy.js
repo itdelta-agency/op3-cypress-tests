@@ -22,7 +22,7 @@ describe("CP7. Clear Data", () => {
       }
     });
     cy.get('a.text-indigo-100',).eq(0).click();
-    cy.wait(2000);
+    cy.get('h2').contains('Categories').should('be.visible');
 
     cy.searchRow(catName);
     cy.contains('tr', catName).within(() => {
@@ -42,7 +42,7 @@ describe("CP7. Clear Data", () => {
     
     cy.task('logStep', 'Перход на страницу "Статьи" для удаления статьи');
     cy.visit(ROUTES.articles);
-    cy.wait(500);
+    cy.get('h2').contains('Articles').should('be.visible');
     cy.searchRow(articleName);
     cy.contains('tr', articleName).within(() => {
       // Кликаем по кнопке меню (иконка с тремя полосками)

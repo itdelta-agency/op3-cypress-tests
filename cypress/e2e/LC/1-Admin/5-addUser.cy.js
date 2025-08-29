@@ -32,7 +32,7 @@ describe("US.1 Add User", () => {
   it('Add user', function () {
 
     cy.visit(ROUTES.createUser);
-    cy.wait(500);
+    cy.get('h2').contains('Users').should('be.visible');
     cy.task('logStep', 'Переход на стараницу "Создания пользователя"');
 
     cy.get('.shadow-sm').eq(0).should('be.visible').type(firstName);
@@ -80,7 +80,7 @@ describe("US.1 Add User", () => {
   it('check add User by search', () => {
     cy.task('logStep', 'Переход на страницу "Пользователи" для проверки, что пользователь создан');
     cy.visit(ROUTES.users);
-    // cy.changeLang('en');
+    cy.get('h2').contains('Users').should('be.visible');
     cy.wait(1000);
     cy.searchRow(actualUserName);
 
@@ -106,6 +106,7 @@ describe("US.1 Add User", () => {
 
     cy.task('logStep', 'Переход на страницу "Пользователи"');
     cy.visit(ROUTES.users);
+    cy.get('h2').contains('Users').should('be.visible');
     // cy.changeLang('en');
     cy.accessAllItems();
     cy.wait(1000);

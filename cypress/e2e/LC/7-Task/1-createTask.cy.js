@@ -48,6 +48,7 @@ describe('Task.T1. Create Task', () => {
     it('should create task', function () {
         cy.visit(ROUTES.tasks);
         cy.wait(1500);
+        cy.get('h2').contains('Tasks').should('be.visible');
         cy.contains('button', 'Add').click();
         cy.wait(500);
 
@@ -70,6 +71,7 @@ describe('Task.T1. Create Task', () => {
     it('Edit task', function () {
         cy.visit(ROUTES.tasks);
         cy.wait(1000);
+        cy.get('h2').contains('Tasks').should('be.visible');
         cy.searchRow(taskName);
 
         cy.xpath(`//div[text()="${taskName}"]`).closest('tr').first().within(() => {
@@ -105,8 +107,8 @@ describe('Task.T1. Create Task', () => {
         const commentText = 'Текст комментария!';
         cy.visit(ROUTES.tasks);
         cy.wait(1000);
+        cy.get('h2').contains('Tasks').should('be.visible');
 
-        cy.wait(1000);
         cy.searchRow(taskName);
         cy.wait(500);
         cy.contains('tr', taskName).within(() => {
@@ -148,6 +150,7 @@ describe('Task.T1. Create Task', () => {
     it('delete task', function () {
         cy.visit(ROUTES.tasks);
         cy.wait(1000);
+        cy.get('h2').contains('Tasks').should('be.visible');
         cy.searchRow(taskName);
 
         cy.xpath(`//div[text()="${taskName}"]`).closest('tr').first().within(() => {

@@ -12,9 +12,9 @@ describe('OrgBoard.A4.Settings', () => {
 
     it('edit settings', function () {
         cy.get('a.text-indigo-100').contains('Settings').click();
-        cy.wait(1000);
+        cy.wait(1500);
         cy.xpath("//a[@name='OrgScheme']").click();
-        cy.wait(1000);
+        cy.wait(1500);
 
         cy.get('.shadow-sm').eq(0).clear().type('QA COMPANY');
         cy.get('.shadow-sm').eq(1).clear().type('QA COMPANY DESCRIPTION');
@@ -36,6 +36,7 @@ describe('OrgBoard.A4.Settings', () => {
     it('check save data', function () {
         cy.visit(ROUTES.settings);
         cy.wait(500);
+        cy.get('h2').contains('Settings').should('be.visible');
         cy.xpath("//a[@name='OrgScheme']").click();
         cy.wait(1000);
         cy.contains('QA COMPANY').should('be.visible');
@@ -46,6 +47,7 @@ describe('OrgBoard.A4.Settings', () => {
     it('defalut settings', function () {
         cy.visit(ROUTES.settings);
         cy.wait(500);
+        cy.get('h2').contains('Settings').should('be.visible');
         cy.xpath("//a[@name='OrgScheme']").click();
         cy.wait(1000);
         cy.xpath("//span[text()='Company name']").next().clear().type('Производственная Компания №1');

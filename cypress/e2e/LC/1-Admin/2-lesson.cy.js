@@ -25,7 +25,7 @@ describe("LC.A1. Create lessons", () => {
     });
     cy.contains('Courses').click();
 
-    cy.wait(500);
+    cy.get('h2').contains('Courses').should('be.visible');
     cy.accessAllItems();
     cy.xpath("(//div[text()='" + Cypress.env('courseName') + "'])[1]").click();
 

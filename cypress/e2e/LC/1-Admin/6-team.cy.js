@@ -16,7 +16,7 @@ describe("LC.A5. Create team", () => {
     it('should create new team', function () {
         cy.task('logStep', 'Переход на страницу "Команды"');
         cy.visit(ROUTES.teams);
-        cy.wait(500);
+        cy.get('h2').contains('Teams').should('be.visible');
         cy.xpath("//button[text()='Add team']").click();
         cy.task('logStep', 'Переход на страницу "Создание команды"');
 
@@ -32,6 +32,7 @@ describe("LC.A5. Create team", () => {
 
     it('should edit team', function () {
         cy.visit(ROUTES.teams);
+        cy.get('h2').contains('Teams').should('be.visible');
         cy.task('logStep', 'Переход на страницу "Команды"');
 
 
@@ -63,7 +64,7 @@ describe("LC.A5. Create team", () => {
 
 
         cy.visit(ROUTES.users);
-
+        cy.get('h2').contains('Users').should('be.visible');
         cy.searchRow('QA Edit');
 
         cy.contains('tr[role="row"]', 'QA Edit USER')

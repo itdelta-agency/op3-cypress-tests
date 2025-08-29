@@ -16,6 +16,7 @@ describe('OrgBoard.A1. Create position', () => {
 
     it('should create position', function () {
         cy.visit(ROUTES.position);
+        cy.get('h2').contains('Positions').should('be.visible');
         cy.wait(1000);
         cy.contains('Add').click();
         cy.wait(1500);

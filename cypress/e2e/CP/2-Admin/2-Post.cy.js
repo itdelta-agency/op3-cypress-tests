@@ -24,7 +24,8 @@ describe("CP2. Article List", () => {
       }
     });
     cy.get('a.text-indigo-100',).eq(1).click();
-    cy.wait(1500);
+    cy.get('h2').contains('Articles').should('be.visible');
+
     cy.get('button').contains('Add article').click();
     cy.task('logStep', 'Переход на страницу создания статьи');
     cy.wait(1500);

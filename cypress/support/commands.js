@@ -51,7 +51,7 @@ Cypress.Commands.add('checkTextPresence', (text) => {
 Cypress.Commands.add('admin', () => {
     cy.task('logInfo', "Авторизация");
     cy.login();
-    cy.wait(500);
+    cy.wait(2000);
 
     // Заходим на главную страницу
     cy.visit('/');

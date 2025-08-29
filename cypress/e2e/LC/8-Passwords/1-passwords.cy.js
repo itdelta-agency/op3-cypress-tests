@@ -17,7 +17,7 @@ describe('Password page', () => {
 
     it('should create password ', () => {
         cy.visit(ROUTES.passwords);
-        cy.wait(1000);
+        cy.get('h2').contains('Passwords').should('be.visible');
         cy.contains('Add').click();
         cy.wait(1500);
 
@@ -75,6 +75,7 @@ describe('Password page', () => {
     it('should create password', () => {
         cy.visit(ROUTES.passwords);
         cy.wait(1000);
+        cy.get('h2').contains('Passwords').should('be.visible');
         cy.searchRow(passName);
         cy.contains('th', passName, { timeout: 10000 }).should('be.visible');
         cy.get('tr').contains('th', passName).parents('tr').then($row => {

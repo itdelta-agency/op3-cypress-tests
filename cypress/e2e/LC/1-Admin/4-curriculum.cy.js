@@ -17,7 +17,7 @@ describe('LC.A4. Create curriculum', () => {
         cy.task('logStep', 'Переход на страницу "Программы обучения"');
         // Go to add curriculums page
         cy.visit(ROUTES.curriculums);
-        cy.wait(1500);
+        cy.get('h2').contains('Curriculums').should('be.visible');
         cy.task('logInfo', 'Переход на страницу создания программы обучения');
 
         cy.get('button').contains('Add curriculum', {timeout:5000}).click();

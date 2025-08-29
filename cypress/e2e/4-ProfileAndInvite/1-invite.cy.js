@@ -3,6 +3,7 @@ const { JSDOM } = require("jsdom");
 
 describe("C. Invite user by 2 ways", () => {
   let inbox;
+  let link;
 
   beforeEach(function () {
     cy.logTestName.call(this);
@@ -53,7 +54,7 @@ describe("C. Invite user by 2 ways", () => {
         });
       }
 
-      const link = directLink || fallbackLink;
+      link = directLink || fallbackLink;
       cy.task('logInfo', `Найденная ссылка: ${link}`);
       expect(link, 'confirmation link').to.exist;
 
@@ -62,7 +63,7 @@ describe("C. Invite user by 2 ways", () => {
   });
 
   it('accept invitation', function () {
-    const link = this.confirmationLink;
+    link = this.confirmationLink;
 
     if (!link) {
       cy.task('logError', 'confirmation link отсутствует, пропускаем шаг accept invitation');

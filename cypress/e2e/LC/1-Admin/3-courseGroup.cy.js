@@ -15,7 +15,7 @@ describe('LC.A3. Create course group', () => {
         // Go to add curriculums page
         // cy.wait(1500);
         cy.visit(ROUTES.groupCourse)
-        cy.wait(1500);
+        cy.get('h2').contains('Course groups').should('be.visible');
         cy.contains('Add group').click();
         cy.task('logStep', 'Переход на страницу "Создание группы курсов"');
         cy.xpath("//span[text()='Name *']").next().type(Cypress.env('courseGroupName'));

@@ -24,7 +24,7 @@ describe("CP3. Article List", () => {
       }
     });
     cy.get('a.text-indigo-100',).eq(1).click();
-    cy.wait(2000);
+    cy.get('h2').contains('Articles').should('be.visible');
     cy.task('logInfo', 'Деактивация статьи');
     cy.searchRow('QA');
     cy.xpath(`//div[text()="${articleName}"]`).first().click();

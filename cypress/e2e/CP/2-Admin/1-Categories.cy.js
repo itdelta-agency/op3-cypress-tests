@@ -29,13 +29,8 @@ describe("CP1. Categories List", () => {
       .should('be.visible')
       .click();  
 
-    // cy.searchRow(catName);
-    // cy.wait(500);
-
-    // cy.ifRowExists(catName, () => {
-    //   cy.deleteResources(catName);
-    // });
-
+    
+    cy.get('h2').contains('Categories').should('be.visible');  
     cy.contains('Add category').should('be.visible').click();
     cy.task('logStep', 'Переход на страницу создания категорий');
 

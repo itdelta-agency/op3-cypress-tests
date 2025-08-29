@@ -14,6 +14,7 @@ describe('Statistic.ST1. Create Statistic', () => {
 
     it('should create statistics', function () {
         cy.visit(ROUTES.statistics);
+        cy.get('h2').contains('Statistics').should('be.visible');
         cy.wait(500);
 
         cy.contains('Add statistics').click();

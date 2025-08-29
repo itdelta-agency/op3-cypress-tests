@@ -18,7 +18,7 @@ describe('LC.B1. Complete the course which we have created in previous tests', (
   it('Student should answer the lesson', function () {
     cy.login();
     cy.visit(ROUTES.studCourse);
-    cy.wait(500);
+    cy.get('h2').contains('Learning center').should('be.visible');
     cy.task('logStep', 'Переход на страницу "Курсы" в юзерской части');
     // Find the course by name
     cy.xpath("//input[@id='search']").type(courseName);
