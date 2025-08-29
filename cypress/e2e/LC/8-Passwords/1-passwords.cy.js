@@ -12,7 +12,7 @@ describe('Password page', () => {
     beforeEach(function () {
         cy.resetAppState();
         cy.logTestName.call(this);
-        cy.admin()
+        cy.admin();
     });
 
     it('should create password ', () => {

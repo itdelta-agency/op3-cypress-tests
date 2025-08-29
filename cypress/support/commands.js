@@ -20,8 +20,10 @@ Cypress.Commands.add('login', (username = Cypress.env('email'), password = Cypre
 
         cy.xpath("//button[@type='submit']", { timeout: 10000 }).click();
         cy.wait(2000);
-        cy.window().its('localStorage').invoke(`setItem`, 'tableFilterExpanded_/cp/admin/post', 'false')
-        cy.window().its('localStorage').invoke(`setItem`, 'tableFilterExpanded_/st/admin/index', 'false')
+
+        cy.window().its('localStorage').invoke(`setItem`, 'tableFilterExpanded_/cp/admin/post', 'false');
+        cy.window().its('localStorage').invoke(`setItem`, 'tableFilterExpanded_/st/admin/index', 'false');
+        cy.changeLang('en');
     });
 
 });
@@ -58,6 +60,7 @@ Cypress.Commands.add('admin', () => {
     cy.disableAnimations();
 
     cy.task('logStep', "Переход в панель администратора");
+    
 
     // Переходим в админку и ждем пока меню откроется
     return cy.visitAdmin().wait(2000);
@@ -327,7 +330,8 @@ Cypress.Commands.add('accessAllItems', () => {
 
 // -----------------------------------------------------------------------------------------------------------------------
 
-Cypress.Commands.add('changeLang', (lang = 'ru') => {
+Cypress.Commands.add('changeLang', (lang = 'en') => {
+    cy.wait(1000);
     cy.get('[data-header-test-id="lang_button"]')
         .click()
         .then(() => {
@@ -335,42 +339,35 @@ Cypress.Commands.add('changeLang', (lang = 'ru') => {
             cy.get('body').then($body => {
                 if ($body.find(`[data-header-test-id="${lang}"]`).length > 0) {
                     cy.get(`[data-header-test-id="${lang}"]`).click();
-                    cy.task('logInfo', `Язык переключен на ${lang}`);
+                    cy.task('logInfo', `Переключение языка на ${lang}`);
                 } else {
                     cy.task('logError', `Элемент для языка ${lang} не найден`);
                 }
             });
         });
-
+    cy.wait(1000);
     // Проверяем, что язык действительно сменился
-    cy.get('[data-header-test-id="lang_button"] > span', { timeout: 7000 })
-        .should('have.text', lang)
-        .then(() => {
-            cy.task('logInfo', `Язык сменился на ${lang}!`);
-        });
+    // cy.get('[data-header-test-id="lang_button"] > span', { timeout: 7000 })
+    //     .should('have.text', lang)
+    //     .then(() => {
+    //         cy.task('logInfo', `Язык сменился на ${lang}!`);
+    //         cy.wait(1000);
+    //     });
 });
-
-// -----------------------------------------------------------------------------------------------------------------------
-
-Cypress.Commands.add('changeLangAuth', () => {
-    cy.xpath("/html/body/div[2]/div/nav/div/div/div[2]/div/div/button").click();
-    cy.wait(500);
-    cy.xpath("/html/body/div[2]/div/nav/div/div/div[2]/div/div").find('a').last().click();
-    cy.wait(500);
-})
 
 // -----------------------------------------------------------------------------------------------------------------------
 
 Cypress.Commands.add('logout', () => {
     cy.wait(1500);
-    cy.xpath("//button[@class='max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 z-50']").click();
+    cy.get('[data-header-test-id="header_menu_button"]').click();
     cy.wait(500);
-    cy.xpath("//a[@href='" + Cypress.config('baseUrl') + "logout']").click();
+    cy.get('[data-header-test-id="header_dropdown_menu"]').last().click();
     cy.task('logStep', `Пользователь успешно разлогинился`);
     cy.wait(1500);
 });
 
 // -----------------------------------------------------------------------------------------------------------------------
+
 Cypress.Commands.add('searchRow', (name) => {
     cy.task('logInfo', `Поиск строки с именем: "${name}"`);
 

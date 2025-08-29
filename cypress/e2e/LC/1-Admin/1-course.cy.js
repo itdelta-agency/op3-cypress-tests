@@ -15,7 +15,7 @@ describe('LC.A2. Create course', () => {
       expect(result).to.exist;
       inbox = result;
       cy.log('Используем кешированный inbox:', inbox.emailAddress);
-      cy.admin(); // Авторизация
+      cy.admin();
     });
   });
 

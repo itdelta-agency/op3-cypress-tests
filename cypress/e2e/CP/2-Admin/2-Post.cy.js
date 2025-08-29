@@ -13,10 +13,6 @@ describe("CP2. Article List", () => {
     cy.admin();
   });
 
-  // before(function () {
-  //   cy.admin();
-  // });
-
 
 
   it('should create Article', function () {
@@ -28,7 +24,6 @@ describe("CP2. Article List", () => {
       }
     });
     cy.get('a.text-indigo-100',).eq(1).click();
-    // cy.changeLang('en');
     cy.wait(1500);
     cy.get('button').contains('Add article').click();
     cy.task('logStep', 'Переход на страницу создания статьи');

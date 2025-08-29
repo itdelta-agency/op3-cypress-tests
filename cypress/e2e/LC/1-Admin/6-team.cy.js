@@ -11,7 +11,6 @@ describe("LC.A5. Create team", () => {
         cy.logTestName.call(this);
         cy.wait(500);
         cy.admin();
-        // cy.changeLang('en');
     });
 
     it('should create new team', function () {

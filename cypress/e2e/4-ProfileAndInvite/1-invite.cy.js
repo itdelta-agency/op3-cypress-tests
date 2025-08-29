@@ -17,7 +17,6 @@ describe("C. Invite user by 2 ways", () => {
 
   it('should invite by user menu', () => {
     cy.admin();
-
     cy.visit(ROUTES.invite);
 
     cy.xpath("//input[@id='email']").type(inbox.emailAddress);
@@ -55,7 +54,7 @@ describe("C. Invite user by 2 ways", () => {
       }
 
       const link = directLink || fallbackLink;
-      cy.task('logInfo',`Найденная ссылка: ${link}`);
+      cy.task('logInfo', `Найденная ссылка: ${link}`);
       expect(link, 'confirmation link').to.exist;
 
       this.confirmationLink = link;
@@ -66,28 +65,26 @@ describe("C. Invite user by 2 ways", () => {
     const link = this.confirmationLink;
 
     if (!link) {
-      cy.task('logError','confirmation link отсутствует, пропускаем шаг accept invitation');
-
+      cy.task('logError', 'confirmation link отсутствует, пропускаем шаг accept invitation');
+      return;
+    }
 
     cy.visit(link);
-    cy.task('logInfo',`Переход на страницу регистрации по приглашению`);
-    
+    cy.task('logInfo', `Переход на страницу регистрации по приглашению`);
+
     cy.wait(1000);
-    cy.task('logStep',`Ввод имени`);
+    cy.task('logStep', `Ввод имени`);
     cy.xpath("//*[@id='first-name']").type('QA');
-    cy.task('logStep',`Ввод фмилии`);
+    cy.task('logStep', `Ввод фмилии`);
     cy.xpath("//*[@id='last-name']").type('Test');
-    cy.task('logStep',`Ввод пароля`);
+    cy.task('logStep', `Ввод пароля`);
     cy.xpath("//*[@id='password']").type(Cypress.env('password'), { log: false });
-    cy.task('logStep',`Ввод пароля повторно`);
+    cy.task('logStep', `Ввод пароля повторно`);
     cy.xpath("//*[@id='new_password']").type(Cypress.env('password'), { log: false });
-    cy.task('logStep',`Сохранение`);
+    cy.task('logStep', `Сохранение`);
     cy.xpath("(//button[@type='submit'])[1]").click();
 
     cy.checkTextInParagraph();
-
-      return;
-    }
 
   });
 });

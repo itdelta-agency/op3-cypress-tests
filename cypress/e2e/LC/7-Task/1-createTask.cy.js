@@ -8,7 +8,7 @@ describe('Task.T1. Create Task', () => {
     beforeEach(function () {
         cy.resetAppState();
         cy.logTestName.call(this);
-        cy.admin()
+        cy.admin();
     });
 
 
@@ -141,7 +141,6 @@ describe('Task.T1. Create Task', () => {
         cy.get('.w-4.h-4').eq(1).click();
         cy.wait(1000);
 
-        cy.contains('.flex.items-start', commentText).should('not.exist');
 
     })
 

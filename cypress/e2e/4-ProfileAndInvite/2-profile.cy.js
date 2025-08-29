@@ -3,13 +3,16 @@ describe("A3. Profile editing", () => {
 
     beforeEach(function () {
         cy.logTestName.call(this);
-        cy.login();
+        cy.login()
+        cy.wait(1000);
+         
     });
 
 
     it('should assert profile page', function () {
         cy.visit('/my-profile');
         cy.wait(1000);
+        
 
         cy.xpath("//input[@id='avatar']").selectFile('cypress/image/person.jpg', {force: true})
         cy.xpath("//h1[text()='User Profile']").should('be.visible');
@@ -29,6 +32,8 @@ describe("A3. Profile editing", () => {
         cy.login(Cypress.env('email'), newPassword);
         cy.visit('/my-profile');
         cy.wait(1500);
+        
+
 
         cy.xpath("//input[@id='new_password']").clear().type(Cypress.env("password"), {log:false});
         cy.xpath("//button[@type='submit']").should('be.disabled');

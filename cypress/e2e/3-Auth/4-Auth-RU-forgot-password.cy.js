@@ -20,18 +20,17 @@ describe('4-Auth-RU-forgot-password.cy.js', () => {
         cy.task('logInfo', `Используем кешированный inbox: ${inbox.emailAddress}`);
       }
     });
-
     cy.visit(Cypress.config().baseUrl);
   });
 
   it('requesting reset-password-email', function () {
     cy.task('logStep', `Клик на кнопку восстановления пароля`);
-    cy.contains("Forgot your password?").should('be.visible').click();
+    cy.get('[data-test-id="request_password_reset_link"]').should('be.visible').click();
     cy.wait(1500);
     cy.task('logStep', `Ввод почты`);
     cy.xpath("//input[@id='email']", { timeout: 10000 }).type(userEmail);
     cy.wait(500);
-    cy.contains("Email Password Reset Link").should('be.visible').click();
+    cy.get('[data-test-id="submit_button"]').should('be.visible').click();
     cy.wait(500);
     cy.get('body').then($body => {
       if ($body.find(':contains("Error")').length > 0) {

@@ -7,7 +7,6 @@ describe('LC.B2. Search courses', () => {
         cy.resetAppState();
         cy.logTestName.call(this);
         cy.login();
-        cy.wait(500);
         cy.visit(ROUTES.studCourse);
         cy.wait(500);
     });
