@@ -37,7 +37,8 @@ jobs:
           EMAIL: ${{ vars.PRODUCTION_USERNAME }}
           PASSWORD: ${{ secrets.PRODUCTION_PASSWORD }}
           MAILSLURP_API_KEY: ${{ secrets.MAILSLURP_API_KEY }}
-
+          QA_TEST_LOGIN: ${{ vars.QA_TEST_LOGIN }}
+          QA_TEST_PASSWORD: ${{ secrets.QA_TEST_PASSWORD }}
 
       # Генерация Allure отчета
       - name: Generate Allure Report
