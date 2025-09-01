@@ -11,7 +11,7 @@ describe("CP2. Article List", () => {
     cy.resetAppState();
     cy.logTestName.call(this);
     cy.admin();
-    cy.changeLang();
+    // cy.changeLang();
   });
 
 
@@ -116,7 +116,7 @@ describe("CP2. Article List", () => {
     cy.get('h2').contains('Articles', {timeout:10000}).should('be.visible');
     cy.searchRow(articleName);
     cy.wait(500);
-    cy.xpath(`(//div[text()='${articleName}'])`).last().click();
+    cy.xpath(`(//div[text()='${articleName}'])`).first().click();
 
     cy.contains('Edit article');
     cy.task('logInfo', 'Переход на страницу "Редактирование статьи"');

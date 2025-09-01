@@ -9,7 +9,7 @@ describe('LC.B1. Complete the course which we have created in previous tests', (
     cy.resetAppState();
     cy.logTestName.call(this);
     cy.login();
-    cy.changeLang();
+    // cy.changeLang();
   });
 
   it('Student should answer the lesson', function () {

@@ -11,11 +11,11 @@ describe('OrgBoard.A2. Create department', () => {
         cy.resetAppState();
         cy.logTestName.call(this);
         cy.admin();
-        cy.changeLang();
+        // cy.changeLang();
         cy.visit(ROUTES.orgScheme);
         cy.wait(1000);
-        cy.get('h2').contains('OrgBoard').should('be.visible');
-        
+        cy.get('div').contains('OrgBoard').should('be.visible');
+
     });
 
     it('should create position', function () {
@@ -40,6 +40,7 @@ describe('OrgBoard.A2. Create department', () => {
     it('should create sub position', function () {
 
         cy.xpath(`//div[text()='${department}']`)
+            .first()
             .scrollIntoView()
             .should('be.visible')
             .click();

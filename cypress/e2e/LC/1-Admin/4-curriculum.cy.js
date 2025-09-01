@@ -11,7 +11,7 @@ describe('LC.A4. Create curriculum', () => {
         cy.resetAppState();
         cy.logTestName.call(this);
         cy.admin();
-        cy.changeLang();
+        // cy.changeLang();
     });
 
     it('should create curriculum', function () {
@@ -37,9 +37,9 @@ describe('LC.A4. Create curriculum', () => {
                 }
             });
 
-        cy.contains('Sorting').next().type(sortNumb);
+        cy.contains('Sorting').next().clear().type(sortNumb);
         cy.get('.css-19bb58m').type(courseName);
-        cy.xpath(`//*[text()="${courseName}"][1]`).click();
+        cy.xpath(`//*[text()="${courseName}"][1]`).first().click();
 
 
         cy.xpath("//button[text()='Save']").should('be.visible').click();

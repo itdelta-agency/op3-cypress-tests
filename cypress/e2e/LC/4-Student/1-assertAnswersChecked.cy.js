@@ -18,7 +18,7 @@ describe('LC.D1. Assert answers were checked by teacher', () => {
         ];
 
         cy.login();
-        cy.changeLang();
+        // cy.changeLang();
         cy.visit(ROUTES.studCourse);
         cy.wait(500);
 

@@ -7,7 +7,7 @@ describe("CP4. Check Not Acquainted", () => {
     cy.resetAppState();
     cy.logTestName.call(this);
     cy.admin();
-    cy.changeLang();
+    // cy.changeLang();
   });
 
   it('checking the ignorance of the article', () => {

@@ -13,7 +13,7 @@ describe('LC.C1. Check student answers', () => {
         cy.resetAppState();
         cy.logTestName.call(this);
         cy.admin();
-        cy.changeLang();
+        // cy.changeLang();
     });
 
 
@@ -118,7 +118,7 @@ cy.get('tbody', { timeout: 10000 }).then($tbody => {
     //                 });
     //         } else if (main === 'org-online') {
     //             // Для org-online вызываем таск getEmailData без параметров (или с параметрами если нужны)
-    //             // При необходимости передай inbox.emailAddress или id, если твой таск это требует
+    //        
     //             cy.task('getEmailData', { inboxId: inbox.id }).then(emailData => {
     //                 cy.wrap(emailData).its('html').then((html) => {
     //                     cy.document({ log: false }).invoke({ log: false }, 'write', html);

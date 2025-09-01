@@ -8,7 +8,7 @@ describe('Statistic.ST3. clear data statistic', () => {
         cy.resetAppState();
         cy.logTestName.call(this);
         cy.admin();
-        cy.changeLang();
+        // cy.changeLang();
     });
 
 
@@ -16,7 +16,7 @@ describe('Statistic.ST3. clear data statistic', () => {
     it('clearing a value to statistics', function () {
         cy.visit(ROUTES.statistics);
         cy.wait(500);
-        cy.get('h2').contains('Statistics').should('be.visible');
+        cy.get('h2').contains('List of statistics').should('be.visible');
 
 
         cy.get('body').then($body => {
@@ -55,7 +55,7 @@ describe('Statistic.ST3. clear data statistic', () => {
 
     it('delete statistic', function () {
         cy.visit(ROUTES.statistics);
-        cy.get('h2').contains('Statistics').should('be.visible');
+        cy.get('h2').contains('List of statistics').should('be.visible');
         cy.wait(500);
 
 

@@ -12,7 +12,7 @@ describe("LC.A1. Create lessons", () => {
     cy.resetAppState();
     cy.logTestName.call(this);
     cy.admin();
-    cy.changeLang();
+    // cy.changeLang();
   });
 
   it('should create lesson(checkbox + radio)', function () {

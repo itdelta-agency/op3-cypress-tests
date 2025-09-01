@@ -5,7 +5,7 @@ describe("A3. Profile editing", () => {
         cy.logTestName.call(this);
         cy.login()
         cy.wait(1000);
-        cy.changeLang();
+        // cy.changeLang();
          
     });
 

@@ -8,7 +8,7 @@ describe("CP1. Categories List", () => {
     cy.resetAppState();
     cy.logTestName.call(this);
     cy.admin();
-    cy.changeLang();
+    // cy.changeLang();
   });
 
 
@@ -70,7 +70,7 @@ describe("CP1. Categories List", () => {
     cy.visit(ROUTES.categories);
 
     // cy.accessAllItems();
-    cy.xpath(`(//div[text()='${catName}'])`).click();
+    cy.xpath(`(//div[text()='${catName}'])`).first().click();
     //
     cy.contains('Edit category');
 

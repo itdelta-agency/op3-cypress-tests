@@ -22,7 +22,7 @@ describe("US.1 Add User", () => {
         authEmail = Cypress.env('authEmail');
         authPassword = Cypress.env('authPassword');
         cy.admin();
-        cy.changeLang();
+        // cy.changeLang();
       });
   });
 
@@ -32,7 +32,7 @@ describe("US.1 Add User", () => {
   it('Add user', function () {
 
     cy.visit(ROUTES.createUser);
-    cy.get('h2').contains('Users').should('be.visible');
+    cy.get('h2').contains('Create user').should('be.visible');
     cy.task('logStep', 'Переход на стараницу "Создания пользователя"');
 
     cy.get('.shadow-sm').eq(0).should('be.visible').type(firstName);

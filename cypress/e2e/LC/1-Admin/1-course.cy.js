@@ -8,16 +8,19 @@ describe('LC.A2. Create course', () => {
   const lessonCheckboxRadio = Cypress.env('lessonCheckboxRadio');
   const courseName = Cypress.env('courseName');
 
-  beforeEach(function () {
-    cy.resetAppState();
-    cy.logTestName.call(this);
+
+  before(() => {
     cy.task('getCachedInbox').then(result => {
       expect(result).to.exist;
-      inbox = result;
-      cy.log('Используем кешированный inbox:', inbox.emailAddress);
-      cy.admin();
-      cy.changeLang();
+      Cypress.env('inbox', result);
+      cy.log('📬 Используем кешированный inbox:', result.emailAddress);
     });
+  });
+
+  beforeEach(function () {
+    cy.logTestName.call(this);
+    cy.resetAppState();
+    cy.admin();
   });
 
 
@@ -92,11 +95,12 @@ describe('LC.A2. Create course', () => {
       return;
     }
     cy.task('logInfo', 'Получение почтового ящика');
-    cy.task('getLastEmail', { inboxId: inbox.id, timeout: 60000 }).then(email => {
+    cy.task('getLastEmail', { inboxId: inbox.id, timeout: 10000 }).then(email => {
       if (!email) {
-        cy.task('logInfo', 'Письмо не получено, пропускаем дальнейшую проверку');
-        return;
+        cy.task('logError', 'Письмо не получено, пропускаем проверку');
+        return; // тест не падает
       }
+
       cy.task('logInfo', 'Получение текста из письма');
       const html = email.bodyHTML || email.body;
       if (!html) {

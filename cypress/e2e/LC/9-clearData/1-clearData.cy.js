@@ -9,7 +9,7 @@ describe('LC.Z. Clear all created learning items', () => {
         cy.resetAppState();
         cy.logTestName.call(this);
         cy.admin();
-        cy.changeLang();
+        // cy.changeLang();
         
     })
 

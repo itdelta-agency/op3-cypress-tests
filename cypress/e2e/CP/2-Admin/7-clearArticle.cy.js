@@ -9,7 +9,7 @@ describe("CP7. Clear Data", () => {
     cy.resetAppState();
     cy.logTestName.call(this);
     cy.admin();
-    cy.changeLang();
+    // cy.changeLang();
   });
 
   

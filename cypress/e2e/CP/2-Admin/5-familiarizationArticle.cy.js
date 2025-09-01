@@ -6,7 +6,7 @@ describe("CP5. Familiarization with the article", () => {
     cy.resetAppState();
     cy.logTestName.call(this);
     cy.login();
-    cy.changeLang();
+    // cy.changeLang();
   });
 
   it('checking the ignorance of the article ADMIN', () => {
@@ -17,7 +17,7 @@ describe("CP5. Familiarization with the article", () => {
     cy.xpath('//div[text()="Not acquainted"]').click();
     cy.wait(500);
 
-    cy.xpath(`//a[text()="${article}"]`).click();
+    cy.xpath(`//a[text()="${article}"]`).first().click();
 
     cy.wait(500);
     cy.task('logStep', 'Ответы на вопросы статьи');

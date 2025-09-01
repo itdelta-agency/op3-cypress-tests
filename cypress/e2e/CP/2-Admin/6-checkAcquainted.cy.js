@@ -8,7 +8,7 @@ describe("CP6. Check Acquainted", () => {
     cy.resetAppState();
     cy.logTestName.call(this);
     cy.admin();
-    cy.changeLang();
+    // cy.changeLang();
   });
 
 
@@ -22,7 +22,7 @@ describe("CP6. Check Acquainted", () => {
       }
     });
     cy.get('a.text-indigo-100',).eq(2).click();
-    cy.get('h2').contains('Articles').should('be.visible');
+    cy.get('h2').contains('Report').should('be.visible');
     cy.whoCanSee(['Users']);
     cy.wait(500);
     cy.get('.px-3.py-1').click();

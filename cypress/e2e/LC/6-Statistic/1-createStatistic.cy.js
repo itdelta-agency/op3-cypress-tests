@@ -10,12 +10,12 @@ describe('Statistic.ST1. Create Statistic', () => {
         cy.resetAppState();
         cy.logTestName.call(this);
         cy.admin();
-        cy.changeLang();
+        // cy.changeLang();
     });
 
     it('should create statistics', function () {
         cy.visit(ROUTES.statistics);
-        cy.get('h2').contains('Statistics').should('be.visible');
+        cy.get('h2').contains('List of statistics').should('be.visible');
         cy.wait(500);
 
         cy.contains('Add statistics').click();

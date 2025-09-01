@@ -21,7 +21,7 @@ describe('4-Auth-RU-forgot-password.cy.js', () => {
       }
     });
     cy.visit(Cypress.config().baseUrl);
-    cy.changeLang();
+    // cy.changeLang();
   });
 
   it('requesting reset-password-email', function () {
