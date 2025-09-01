@@ -66,7 +66,7 @@ Cypress.Commands.add('admin', () => {
     cy.task('logStep', "Переход в панель администратора");
 
     // Переходим в админку и ждем пока меню откроется
-    return cy.visitAdmin().wait(2000);
+    return cy.visitAdmin();
 });
 
 // -----------------------------------------------------------------------------------------------------------------------
@@ -666,6 +666,9 @@ Cypress.Commands.add('visitAdmin', () => {
     // 6. Проверка, что меню закрылось после клика
     cy.get('[data-header-test-id="header_menu_button"]', { timeout: 5000 })
         .should('have.attr', 'aria-expanded', 'false');
+
+    cy.get('h2').contains(/Courses|Курсы/, { timeout: 20000 })
+    .should('be.visible');
 
     cy.task('logInfo', 'Перешли в админку');
 });
