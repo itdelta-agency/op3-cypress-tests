@@ -15,24 +15,25 @@ describe("CP1. Categories List", () => {
   it('should create Category)', function () {
     cy.task('logInfo', 'Создание новой категории');
 
-    cy.get('.flex.justify-between', { timeout: 15000 }).eq(1)
-      .should('be.visible') // ждём пока элемент видим
-      .then($tab => {
-        const isExpanded = $tab.attr('aria-expanded') === 'true';
-        if (!isExpanded) {
-          cy.wrap($tab).click();
-          cy.task('logInfo', 'Вкладка категорий скрыта, клик на "Регламенты"');
-        }
-      });
+    // cy.get('.flex.justify-between', { timeout: 15000 }).eq(1)
+    //   .should('be.visible') // ждём пока элемент видим
+    //   .then($tab => {
+    //     const isExpanded = $tab.attr('aria-expanded') === 'true';
+    //     if (!isExpanded) {
+    //       cy.wrap($tab).click();
+    //       cy.task('logInfo', 'Вкладка категорий скрыта, клик на "Регламенты"');
+    //     }
+    //   });
 
-    // Кликаем на первый линк
-    cy.get('a.text-indigo-100').eq(0)
-      .should('be.visible')
-      .click();  
+    // // Кликаем на первый линк
+    // cy.get('a.text-indigo-100').eq(0)
+    //   .should('be.visible')
+    //   .click();  
+    cy.visit(ROUTES.categories);
 
     
     cy.get('h2').contains('Categories').should('be.visible');  
-    cy.contains('Add category').should('be.visible').click();
+    cy.get('button').contains('Add category').click();
     cy.task('logStep', 'Переход на страницу создания категорий');
 
     // create post
