@@ -60,6 +60,7 @@ describe("CP1. Categories List", () => {
     cy.wait(500);
     cy.contains('div', 'QA Test Category')
       .parents('tr')
+      .last()
       .within(() => {
         cy.contains('span', 'Inactive').should('exist');
         cy.task('logInfo', 'Категория активна!');

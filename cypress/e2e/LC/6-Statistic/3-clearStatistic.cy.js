@@ -47,8 +47,8 @@ describe('Statistic.ST3. clear data statistic', () => {
         cy.get('.p-2.rounded-full').click();
 
 
-        cy.contains('div', /Delete\s*/i).click();
-        cy.wait(200);
+        cy.contains('div', /Delete value\s*/i).click();
+        cy.get('.inline-block.align-bottom').should('be.visible');
         cy.contains('button', 'Delete').click();
         cy.checkTextInParagraph();
     })

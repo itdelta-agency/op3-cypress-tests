@@ -89,14 +89,6 @@ describe("CP3. Article List", () => {
     cy.login()
     cy.visit(ROUTES.report);
     cy.wait(1000);
-    cy.get('.flex.justify-between', { timeout: 10000 }).eq(1).then($tab => {
-      const isExpanded = $tab.attr('aria-expanded') === 'true';  // true если открыта
-      if (!isExpanded) {
-        cy.wrap($tab).click();
-      }
-    });
-    cy.get('.bg-indigo-800').click();
-    cy.wait(1000);
     cy.whoCanSee(['Users']);
 
     cy.get('.px-3.py-1').click();

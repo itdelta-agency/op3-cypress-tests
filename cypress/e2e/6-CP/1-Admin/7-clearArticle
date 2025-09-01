@@ -25,7 +25,7 @@ describe("CP7. Clear Data", () => {
       cy.get('.p-2.rounded-full').click();
     });
     cy.task('logStep', 'Открытие меню категории');
-    cy.wait(300);
+    
 
     cy.contains('div', 'Delete category').click({ force: true });
     cy.contains('button', 'Delete').click();

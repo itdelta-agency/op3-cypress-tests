@@ -107,7 +107,7 @@ describe("US.1 Add User", () => {
     cy.task('logStep', 'Переход на страницу "Пользователи"');
     cy.visit(ROUTES.users);
     cy.get('h2').contains('Users').should('be.visible');
-    // cy.changeLang('en');
+
     cy.accessAllItems();
     cy.wait(1000);
 
@@ -117,7 +117,7 @@ describe("US.1 Add User", () => {
       .should('be.visible')
       .within(() => {
         // Кликаем по колонке "Имя"
-        cy.get('th').eq(3).click();  // если имя в первом столбце
+        cy.get('th').eq(3).click(); 
       });
     cy.task('logInfo', 'Выбрали пользователя для редактирования');
 
