@@ -16,13 +16,7 @@ describe("CP7. Clear Data", () => {
 
   it('should delete Category)', function () {
     cy.task('logStep', 'Преход на страницу "Категории" для удаления');
-    cy.get('.flex.justify-between', { timeout: 10000 }).eq(1).then($tab => {
-      const isExpanded = $tab.attr('aria-expanded') === 'true';  // true если открыта
-      if (!isExpanded) {
-        cy.wrap($tab).click();
-      }
-    });
-    cy.get('a.text-indigo-100',).eq(0).click();
+    cy.visit(ROUTES.categories);
     cy.get('h2').contains('Categories').should('be.visible');
 
     cy.searchRow(catName);

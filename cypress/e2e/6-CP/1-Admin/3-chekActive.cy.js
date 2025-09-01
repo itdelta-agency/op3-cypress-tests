@@ -18,13 +18,7 @@ describe("CP3. Article List", () => {
 
   it('Deactivate Article', function () {
     cy.task('logStep', 'Переход на страницу "Статьи" для деактивации');
-    cy.get('.flex.justify-between', { timeout: 10000 }).eq(1).then($tab => {
-      const isExpanded = $tab.attr('aria-expanded') === 'true';  // true если открыта
-      if (!isExpanded) {
-        cy.wrap($tab).click();
-      }
-    });
-    cy.get('a.text-indigo-100',).eq(1).click();
+    cy.visit(ROUTES.articles);
     cy.get('h2').contains('Articles').should('be.visible');
     cy.task('logInfo', 'Деактивация статьи');
     cy.searchRow('QA');

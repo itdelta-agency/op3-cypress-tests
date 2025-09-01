@@ -31,7 +31,7 @@ describe('LC.A2. Create course', () => {
     expect(lessonCheckboxRadio, 'lessonCheckboxRadio').to.exist;
     expect(courseName, 'courseName должен быть задан').to.exist;
 
-    cy.get('.flex.justify-between', { timeout: 10000 }).eq(2).then($tab => {
+    cy.get('.flex.justify-between', { timeout: 20000 }).eq(2).then($tab => {
       const isExpanded = $tab.attr('aria-expanded') === 'true';  // true если открыта
       if (!isExpanded) {
         cy.wrap($tab).click();

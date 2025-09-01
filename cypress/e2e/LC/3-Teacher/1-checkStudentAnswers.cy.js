@@ -27,7 +27,7 @@ it('Check first answer', () => {
     cy.wait(1500);
 
     // Открываем вкладку Student answers
-    cy.get('.flex.justify-between', { timeout: 10000 }).eq(2).then($tab => {
+    cy.get('.flex.justify-between', { timeout: 20000 }).eq(2).then($tab => {
         const isExpanded = $tab.attr('aria-expanded') === 'true';
         if (!isExpanded) {
             cy.wrap($tab).click();

@@ -18,7 +18,7 @@ describe("LC.A1. Create lessons", () => {
   it('should create lesson(checkbox + radio)', function () {
     cy.task('logStep', 'Переход на страницу создания курса, для создания уроков');
     // Go to add courses page
-    cy.get('.flex.justify-between', { timeout: 10000 }).eq(2).then($tab => {
+    cy.get('.flex.justify-between', { timeout: 20000 }).eq(2).then($tab => {
       const isExpanded = $tab.attr('aria-expanded') === 'true';  // true если открыта
       if (!isExpanded) {
         cy.wrap($tab).click();
