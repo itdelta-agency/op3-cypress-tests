@@ -40,14 +40,16 @@ describe('Statistic.ST3. clear data statistic', () => {
 
         // Клик по пункту меню "Statistic data"
         cy.contains('div', /Statistic data\s*/i).click();
+        cy.wait(800);
 
-        cy.wait(800); // Подождать, пока закроется/откроется что нужно
-
-        // Повторный клик по ⋯
+        // Повторный клик
         cy.get('.p-2.rounded-full').click();
+        cy.wait(1000);
 
+        cy.contains('div', /Delete value/i, { timeout: 10000 })
+            .should('be.visible')
+            .click();
 
-        cy.contains('div', /Delete value\s*/i).click();
         cy.get('.inline-block.align-bottom').should('be.visible');
         cy.contains('button', 'Delete').click();
         cy.checkTextInParagraph();
@@ -57,7 +59,6 @@ describe('Statistic.ST3. clear data statistic', () => {
         cy.visit(ROUTES.statistics);
         cy.get('h2').contains('List of statistics').should('be.visible');
         cy.wait(500);
-
 
         cy.get('body').then($body => {
             if ($body.find('.mt-1.relative.flex').length === 0) {
