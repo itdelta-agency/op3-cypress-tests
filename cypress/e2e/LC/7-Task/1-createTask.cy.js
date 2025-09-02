@@ -66,6 +66,7 @@ describe('Task.T1. Create Task', () => {
         cy.xpath("//span[text()='Result *']").next().type('Result Result');
 
         cy.contains('button', 'Save').click();
+        cy.checkTextInParagraph();
     })
 
 
@@ -102,6 +103,7 @@ describe('Task.T1. Create Task', () => {
         cy.get('.focus\\:border-indigo-500').eq(4).clear().type(10);
 
         cy.contains('Save').click();
+        cy.checkTextInParagraph();
     });
 
     it('check edits', function () {
