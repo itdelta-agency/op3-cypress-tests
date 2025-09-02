@@ -1,3 +1,4 @@
+import { exists } from "mailslurp-client";
 import { ROUTES } from "../../../support/routes";
 
 describe('Statistic.ST3. clear data statistic', () => {
@@ -43,8 +44,8 @@ describe('Statistic.ST3. clear data statistic', () => {
         cy.wait(800);
 
         // Повторный клик
-        cy.get('.p-2.rounded-full').click();
-        cy.wait(1000);
+        cy.get('.p-2.rounded-full').should('be.visible').click();
+        cy.get('.flex.flex-col.m-auto').should('exists');
 
         cy.contains('div', /Delete value/i, { timeout: 10000 })
             .should('be.visible')
