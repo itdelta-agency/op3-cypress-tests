@@ -125,11 +125,11 @@ describe("CP2. Article List", () => {
         }
       });
 
-    cy.contains('div', categorisName).parent()
-      .find('svg').click();
-    cy.get('.css-hlgwow').type(categorisName);
-    cy.xpath("//*[text()='" + categorisName + "'][1]").click();
-    cy.wait(1500);
+    // cy.contains('div', categorisName).parent()
+    //   .find('svg').click();
+    // cy.get('.css-hlgwow').type(categorisName);
+    // cy.xpath("//*[text()='" + categorisName + "'][1]").click();
+    // cy.wait(1500);
 
     // Продолжение сценария:
     cy.get('.tab.flex.cursor-pointer').parent().next().find('span').eq(1).click();

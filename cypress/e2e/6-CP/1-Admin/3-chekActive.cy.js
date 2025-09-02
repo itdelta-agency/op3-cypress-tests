@@ -32,7 +32,7 @@ describe("CP3. Article List", () => {
         }
       });
     cy.wait(500);
-    cy.xpath('//button[text()="Save"]').click();
+    cy.xpath('//button[text()="Save & Close"]').click();
     cy.task('logInfo', 'Статья деактивированна');
     cy.checkTextInParagraph();
     cy.clearCookies();
@@ -78,7 +78,7 @@ describe("CP3. Article List", () => {
         }
       });
     cy.wait(100);
-    cy.xpath('//button[text()="Save"]').click();
+    cy.xpath('//button[text()="Save & Close"]').click();
     cy.task('logInfo', 'Статья активированна');
     cy.checkTextInParagraph();
   })
