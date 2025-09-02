@@ -30,7 +30,7 @@ module.exports = defineConfig({
     lessonCheckboxRadio: "QA Test lesson (checkbox + radio)",
     lessonText: "QA Test lesson (text)",
     lessonTimer: "QA Test lesson (timer)",
-    courseUser: 'QA Test',
+    qaUser: 'QA Test',
     questionRadio: "radio question",
     questionText: "text question",
     questionCheckbox: "checkbox question",
@@ -104,15 +104,23 @@ module.exports = defineConfig({
         },
 
 
-        getLastEmail: async ({ timeout = 60000 }) => {
-          try {
-            const email = await mailslurp.waitForLatestEmail(cachedInbox.id, timeout);
-            return email || null; // если письма нет, возвращаем null
-          } catch (error) {
-            console.warn(`[WARN] Письмо не пришло в течение ${timeout / 1000} секунд`);
-            return null; // тест не падает
-          }
-        },
+getLastEmail: async ({ inboxId, sentAt, timeout = 60000 }) => {
+  const startTime = Date.now();
+  const pollInterval = 2000; // 2 секунды
+  let email = null;
+
+  while (Date.now() - startTime < timeout) {
+    email = await mailslurp.waitForLatestEmail(inboxId, pollInterval).catch(() => null);
+
+    if (email && new Date(email.createdAt).getTime() > sentAt) {
+      return email; // вернули новое письмо
+    }
+    // иначе ждём и повторяем
+  }
+
+  console.warn(`[WARN] Новое письмо не пришло в течение ${timeout / 1000} секунд`);
+  return null;
+},
 
         resetInboxCache() {
           cachedInbox = null;

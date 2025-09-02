@@ -109,6 +109,19 @@ describe('LC.Z. Clear all created learning items', () => {
 
     })
 
+        it('delete invite user', function () {
+        const qaUser = Cypress.env('qaUser');
+        cy.visit(ROUTES.users);
+        cy.wait(1000);
+        cy.searchRow(qaUser);
+        cy.wait(500);
+
+        cy.ifRowExists(qaUser, () => {
+            cy.deleteResources(qaUser);
+        });
+
+    })
+
     it('delete position', function () {
         const namePosition = Cypress.env('namePosition');
         cy.visit(ROUTES.position);
