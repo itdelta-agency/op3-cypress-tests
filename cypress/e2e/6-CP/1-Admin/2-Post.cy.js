@@ -113,8 +113,9 @@ describe("CP2. Article List", () => {
     cy.xpath(`(//div[text()='${articleName}'])`).first().click();
 
     cy.contains('Edit article');
+    cy.wait(1000);
     cy.task('logInfo', 'Переход на страницу "Редактирование статьи"');
-    cy.get('.shadow-sm').eq(0).clear().type(articleName);
+    cy.contains('Name *').next().clear().type(articleName);
 
     cy.get("button[role='switch']")
       .invoke('attr', 'aria-checked')
