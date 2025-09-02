@@ -178,10 +178,10 @@ Cypress.Commands.add('reliableType', (selector, text) => {
 
 Cypress.Commands.add('bulkAction', (actions, nameOrNames) => {
     const nameList = Array.isArray(nameOrNames) ? nameOrNames : [nameOrNames];
-
+    cy.wait(1000);
     // Если панель не раскрыта — кликаем по тултипу
     cy.get('body').then($body => {
-        if ($body.find('.mt-1.relative.flex').length === 0) {
+        if ($body.find('[placeholder="Search"]').length === 0) {
             cy.xpath("//div[@class='tooltip']").click();
         }
     });
