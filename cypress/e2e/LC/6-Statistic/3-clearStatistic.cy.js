@@ -45,7 +45,7 @@ describe('Statistic.ST3. clear data statistic', () => {
 
         // Повторный клик
         cy.get('.p-2.rounded-full').should('be.visible').click();
-        cy.get('.flex.flex-col.m-auto').should('exists');
+        cy.get('.flex.flex-col.m-auto').should('be.visible');
 
         cy.contains('div', /Delete value/i, { timeout: 10000 })
             .should('be.visible')

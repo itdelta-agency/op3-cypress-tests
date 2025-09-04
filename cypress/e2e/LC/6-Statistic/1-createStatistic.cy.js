@@ -44,7 +44,7 @@ describe('Statistic.ST1. Create Statistic', () => {
 
 
 
-        cy.get('input.shadow-sm').type(statisticName);
+        
         cy.get("button[role='switch']").eq(1)
             .invoke('attr', 'aria-checked')
             .then(checked => {
@@ -53,7 +53,7 @@ describe('Statistic.ST1. Create Statistic', () => {
                 }
             });
 
-        cy.get('input.shadow-sm').type(statisticName);
+        
         cy.get("button[role='switch']").eq(2)
             .invoke('attr', 'aria-checked')
             .then(checked => {
@@ -61,7 +61,7 @@ describe('Statistic.ST1. Create Statistic', () => {
                     cy.get("button[role='switch']").eq(2).click();
                 }
             });
-        cy.get('input.shadow-sm').type(statisticName);
+        
         cy.get("button[role='switch']").eq(3)
             .invoke('attr', 'aria-checked')
             .then(checked => {
