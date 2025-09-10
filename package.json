@@ -25,7 +25,8 @@
     "mailparser": "^3.5.0",
     "mailslurp-client": "^15.24.1",
     "node-fetch": "^2.7.0",
-    "nodemailer": "^6.8.0"
+    "nodemailer": "^6.8.0",
+    "quoted-printable": "^1.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",

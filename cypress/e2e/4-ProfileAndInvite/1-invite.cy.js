@@ -1,16 +1,15 @@
 const { ROUTES } = require("../../support/routes");
 const { JSDOM } = require("jsdom");
+const mailhog = require('../../support/mailhog-client');
 
 describe("C. Invite user by 2 ways", () => {
   let confirmationLink; // глобальная переменная для ссылки
-  let sentAt;
 
   before(() => {
-    cy.task('getCachedInbox').then(result => {
-      expect(result).to.exist;
-      Cypress.env('inbox', result);
-      cy.log('📬 Используем кешированный inbox:', result.emailAddress);
-    });
+    // Используем email из переменных окружения или дефолтный
+    const emailAddress = process.env.REGISTRATION_EMAIL || 'test@example.com';
+    Cypress.env('inboxEmail', emailAddress);
+    cy.log('📬 Используем inbox:', emailAddress);
   });
 
   beforeEach(function () {
@@ -19,57 +18,31 @@ describe("C. Invite user by 2 ways", () => {
   });
 
   it('should invite by user menu', () => {
-    const inbox = Cypress.env('inbox');
-    expect(inbox).to.exist;
+    const inboxEmail = Cypress.env('inboxEmail');
+    expect(inboxEmail).to.exist;
 
     cy.admin();
     cy.visit(ROUTES.invite);
 
-    sentAt = Date.now(); // сохраняем время отправки письма
-
-    cy.xpath("//input[@id='email']").type(inbox.emailAddress);
-    cy.xpath("//button[@type='submit']").click();
-    cy.task('logInfo', `Приглашение отправлено пользователю ${inbox.emailAddress}`);
+    // Отправка приглашения
+    cy.xpath("//input[@id='email']").type(inboxEmail);
+    cy.contains('Send').click();
+    cy.task('logInfo', `Приглашение отправлено пользователю ${inboxEmail}`);
   });
 
-  it('getting last email', function () {
-    const inbox = Cypress.env('inbox');
-    if (!inbox) {
-      cy.task('logError', 'Inbox не найден, тест пропускается');
-      return;
-    }
 
-    if (!sentAt) {
-      cy.task('logError', 'Время отправки письма не задано, пропускаем проверку');
-      return;
-    }
+it('getting last email', () => {
+  cy.task('getLastEmail', { timeout: 90000 }).then(email => { // увеличиваем timeout, если нужно
+    if (!email) return cy.task('logError', 'Письмо не получено');
 
-    // Ждем новое письмо после sentAt
-    cy.task('getLastEmail', { inboxId: inbox.id, sentAt, timeout: 60000 }).then(email => {
-      if (!email) {
-        cy.task('logError', '⚠️ Новое письмо не получено в течение 60 секунд');
-        return;
-      }
+    const link = mailhog.extractConfirmationLink(email);
+    if (!link) return cy.task('logError', 'Ссылка в письме не найдена');
 
-      const html = email.bodyHTML || email.body;
-      if (!html) {
-        cy.task('logError', 'Письмо пришло, но тело письма пустое');
-        return;
-      }
-
-      const dom = new JSDOM(html);
-      const doc = dom.window.document;
-      const link = doc.querySelector('a.button.button-primary')?.href;
-
-      if (!link) {
-        cy.task('logError', 'Ссылка в письме не найдена');
-        return;
-      }
-
-      cy.task('logInfo', `Найденная ссылка: ${link}`);
-      confirmationLink = link; // сохраняем в глобальную переменную
-    });
+    confirmationLink = link;
+    cy.task('logInfo', `Найденная ссылка: ${link}`);
   });
+});
+
 
   it('accept invitation', function () {
     if (!confirmationLink) {

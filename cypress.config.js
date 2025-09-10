@@ -1,15 +1,8 @@
 require('dotenv').config();
 const { defineConfig } = require("cypress");
-const makeEmailAccount = require('./cypress/support/email-account');
-const getLastInboxByCreatedDate = require('./cypress/support/get-last-inbox');
+const mailhog = require('./cypress/support/mailhog-client'); // MailHog client
 const { getLoggingTasks } = require('./setupLogging');
-let cachedInbox = null;
 const allureWriter = require('@shelex/cypress-allure-plugin/writer');
-const emailApi = require('./cypress/support/emailApi');
-const { MailSlurp } = require('mailslurp-client');
-const mailslurp = new MailSlurp({ apiKey: process.env.MAILSLURP_API_KEY });
-// const orderedSpecs = require('./ordered-specs');
-// const specPatternGlob = `{${orderedSpecs.join(',')}}`;
 
 module.exports = defineConfig({
   chromeWebSecurity: false,
@@ -20,9 +13,6 @@ module.exports = defineConfig({
     password: process.env.PASSWORD,
     authEmail: process.env.QA_TEST_LOGIN,
     authPassword: process.env.QA_TEST_PASSWORD,
-    // leadSecretKey: process.env.BITRIX24_SECRET_KEY,
-    // leadUrl: process.env.BITRIX24_URL,
-    // leadUserId: process.env.BITRIX24_USER_ID,
     courseGroupName: "QA Test Course Group",
     curriculumName: "QA Test Curriculum",
     teamName: "Qa Test Team",
@@ -50,15 +40,11 @@ module.exports = defineConfig({
     fullName: 'QA USER',
     sortNumb: 666,
     statisticName: 'Statistic name',
-    // Pass data
     passName: "IT-DELTA",
     passUrl: "https://tenant1.release.company-policy.com/",
     passLogin: "Login",
     passPassword: "123123",
     passDescription: "Pass description: Convenient application!",
-
-
-
   },
   defaultCommandTimeout: 15000,
   requestTimeout: 30000,
@@ -71,87 +57,27 @@ module.exports = defineConfig({
     registerUrl: 'https://app.org-online.ru/register',
     specPattern: "cypress/e2e/**/*.cy.js",
 
-
-
     setupNodeEvents: async (on, config) => {
-      // Кешируем inbox один раз
-      if (!cachedInbox) {
-        cachedInbox = await getLastInboxByCreatedDate();
-        if (!cachedInbox || !cachedInbox.emailAddress) {
-          throw new Error('Не удалось получить или создать Inbox');
-        }
-        console.log('📬 Кешируем inbox:', cachedInbox.emailAddress);
-      }
-
-      // Создаём объект emailAccount с уже кешированным inbox
-      const emailAccount = await makeEmailAccount(cachedInbox);
-      const account = await emailApi();
-
       const loggingTasks = getLoggingTasks();
 
       on('task', {
         ...loggingTasks,
 
-        // Возвращаем кешированный inbox, не создаём новый
-        getCachedInbox() {
-          return cachedInbox;
-        },
-
-        getLastInbox: async () => {
-          // Можно обновить кеш, если нужно
-          cachedInbox = await getLastInboxByCreatedDate();
-          return cachedInbox;
-        },
-
-
-getLastEmail: async ({ inboxId, sentAt, timeout = 60000 }) => {
-  const startTime = Date.now();
-  const pollInterval = 2000; // 2 секунды
-  let email = null;
-
-  while (Date.now() - startTime < timeout) {
-    email = await mailslurp.waitForLatestEmail(inboxId, pollInterval).catch(() => null);
-
-    if (email && new Date(email.createdAt).getTime() > sentAt) {
-      return email; // вернули новое письмо
+        // Ждём новое письмо с MailHog
+  getLastEmail: async ({ timeout = 60000 }) => {
+    try {
+      const email = await mailhog.getLastEmail(timeout);
+      return email || null;
+    } catch (err) {
+      console.error('[task] mail client error:', err.message || err);
+      return null;
     }
-    // иначе ждём и повторяем
-  }
+  },
 
-  console.warn(`[WARN] Новое письмо не пришло в течение ${timeout / 1000} секунд`);
-  return null;
-},
-
-        resetInboxCache() {
-          cachedInbox = null;
-          return null;
+        getConfirmationLink: async () => {
+          const email = await mailhog.waitForLatestEmail(60000);
+          return mailhog.extractConfirmationLink(email);
         },
-
-        getUserEmail() {
-          return emailAccount.user;
-        },
-
-        sendEmail() {
-          return emailAccount.sendEmail ? emailAccount.sendEmail() : null;
-        },
-
-        getAccount(params) {
-          return emailAccount.openMessage ? emailAccount.openMessage(params) : null;
-        },
-
-        getTestAccount() {
-          return emailAccount.testAccountCreate ? emailAccount.testAccountCreate() : null;
-        },
-
-        getConfirmationLink() {
-          return emailAccount.getConfirmationLink();
-        },
-
-        getEmailData() {
-          return account.getEmailData();
-        },
-
-
       });
 
       allureWriter(on, config);

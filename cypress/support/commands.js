@@ -18,7 +18,7 @@ Cypress.Commands.add('login', (username = Cypress.env('email'), password = Cypre
         cy.xpath("//input[@id='email']", { timeout: 10000 }).type(username);
         cy.xpath("//input[@id='password']", { timeout: 10000 }).type(password, { log: false });
 
-        cy.xpath("//button[@type='submit']", { timeout: 10000 }).click();
+        cy.contains("Sign in", { timeout: 10000 }).click();
         // Ждем пока страница загрузится 
         cy.get('[data-header-test-id="header_menu_button"]', {timeout:15000}).should('be.visible');
 
