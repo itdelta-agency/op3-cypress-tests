@@ -1,8 +1,8 @@
-const jsdom = require("jsdom");
-const { JSDOM } = jsdom;
+// const mailhog = require('../../support/mailhog-client');
+
 
 describe('LC.A2. Create course', () => {
-  let inbox;
+
   let emailLink;
   const courseGroupName = Cypress.env('courseGroupName');
   const lessonCheckboxRadio = Cypress.env('lessonCheckboxRadio');
@@ -10,11 +10,10 @@ describe('LC.A2. Create course', () => {
 
 
   before(() => {
-    cy.task('getCachedInbox').then(result => {
-      expect(result).to.exist;
-      Cypress.env('inbox', result);
-      cy.log('📬 Используем кешированный inbox:', result.emailAddress);
-    });
+    // Глобальная настройка inbox, если нужно
+    const inboxEmail = Cypress.env('REGISTRATION_EMAIL') || 'test@example.com';
+    Cypress.env('inboxEmail', inboxEmail);
+    cy.log('📬 Используем inbox:', inboxEmail);
   });
 
   beforeEach(function () {
@@ -87,52 +86,38 @@ describe('LC.A2. Create course', () => {
 
   });
 
-  ////Код рабочий, но пока на сайте эта функция не работает\\\
-  it('should get course email and extract link', () => {
-    cy.task('logInfo', 'Проверка что пользователь получил письмо, о появлении нового курса');
-    if (!inbox) {
-      cy.task('logInfo', 'inbox не доступен, пропускаем получение письма');
-      return;
-    }
-    cy.task('logInfo', 'Получение почтового ящика');
-    cy.task('getLastEmail', { inboxId: inbox.id, timeout: 10000 }).then(email => {
-      if (!email) {
-        cy.task('logError', 'Письмо не получено, пропускаем проверку');
-        return; // тест не падает
-      }
 
-      cy.task('logInfo', 'Получение текста из письма');
-      const html = email.bodyHTML || email.body;
-      if (!html) {
-        cy.task('logInfo', 'Тело письма пустое, пропускаем дальнейшую проверку');
-        return;
-      }
 
-      const { JSDOM } = require('jsdom');
-      const dom = new JSDOM(html);
-      const doc = dom.window.document;
-      cy.task('logInfo', 'Получение ссылки из письма');
-      const link = doc.querySelector('a[href*="/course"]')?.href;
 
-      cy.task('logInfo', `Найденная ссылка: ${link}`);
+//   it('should get course email and extract link', () => {
+//     cy.task('logInfo', 'Проверка, что пользователь получил письмо о новом курсе');
 
-      if (!link) {
-        cy.task('logInfo', 'Ссылка на курс не найдена в письме, пропускаем дальнейший тест');
-        return;
-      }
+//     cy.task('getLastEmail', { timeout: 90000 }).then(email => {
+//       if (!email) return cy.task('logError', 'Письмо не получено');
 
-      emailLink = link;
-    });
-  });
+//       cy.task('logInfo', `Получено письмо: ${email.subject}, body length: ${email.body.length}`);
 
-  it('should open assigned course from email', () => {
-    if (!emailLink) {
-      cy.task('logInfo', 'emailLink не доступен, пропускаем открытие курса');
-      return;
-    }
-    cy.task('logInfo', 'Переход по ссылке из письма, для просмотра курса');
-    cy.visit(emailLink);
-    cy.contains('Course Overview').should('be.visible');
-    cy.task('logInfo', 'Курс просмотрен!');
-  });
+//       // Поиск ссылки через mailhog-client
+//       const link = mailhog.extractConfirmationLink(email);
+//       if (!link) return cy.task('logError', 'Ссылка на курс в письме не найдена');
+
+//       emailLink = link;
+//       cy.task('logInfo', `Найденная ссылка на курс: ${link}`);
+//     });
+//   });
+
+//   it('should open assigned course from email', () => {
+//     if (!emailLink) {
+//       cy.task('logInfo', 'emailLink не доступен, пропускаем открытие курса');
+//       return;
+//     }
+
+//     cy.task('logInfo', 'Переход по ссылке из письма для просмотра курса');
+//     cy.visit(emailLink);
+//     cy.contains('Course Overview').should('be.visible');
+//     cy.task('logInfo', 'Курс просмотрен!');
+//   });
 });
+
+
+

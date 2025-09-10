@@ -1,12 +1,10 @@
 const { ROUTES } = require("../../support/routes");
-const { JSDOM } = require("jsdom");
 const mailhog = require('../../support/mailhog-client');
 
 describe("C. Invite user by 2 ways", () => {
   let confirmationLink; // глобальная переменная для ссылки
 
   before(() => {
-    // Используем email из переменных окружения или дефолтный
     const emailAddress = process.env.REGISTRATION_EMAIL || 'test@example.com';
     Cypress.env('inboxEmail', emailAddress);
     cy.log('📬 Используем inbox:', emailAddress);
@@ -31,17 +29,17 @@ describe("C. Invite user by 2 ways", () => {
   });
 
 
-it('getting last email', () => {
-  cy.task('getLastEmail', { timeout: 90000 }).then(email => { // увеличиваем timeout, если нужно
-    if (!email) return cy.task('logError', 'Письмо не получено');
+  it('getting last email', () => {
+    cy.task('getLastEmail', { timeout: 90000 }).then(email => {
+      if (!email) return cy.task('logError', 'Письмо не получено');
 
-    const link = mailhog.extractConfirmationLink(email);
-    if (!link) return cy.task('logError', 'Ссылка в письме не найдена');
+      const link = mailhog.extractConfirmationLink(email);
+      if (!link) return cy.task('logError', 'Ссылка в письме не найдена');
 
-    confirmationLink = link;
-    cy.task('logInfo', `Найденная ссылка: ${link}`);
+      confirmationLink = link;
+      cy.task('logInfo', `Найденная ссылка: ${link}`);
+    });
   });
-});
 
 
   it('accept invitation', function () {
