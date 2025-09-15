@@ -18,9 +18,9 @@ Cypress.Commands.add('login', (username = Cypress.env('email'), password = Cypre
         cy.xpath("//input[@id='email']", { timeout: 10000 }).type(username);
         cy.xpath("//input[@id='password']", { timeout: 10000 }).type(password, { log: false });
 
-        cy.contains("Sign in", { timeout: 10000 }).click();
+        cy.get('[data-test-id="submit_button"]', { timeout: 10000 }).click();
         // Ждем пока страница загрузится 
-        cy.get('[data-header-test-id="header_menu_button"]', {timeout:15000}).should('be.visible');
+        cy.get('[data-header-test-id="header_menu_button"]', {timeout:20000}).should('be.visible');
 
         // Отключаем анимацию
         cy.disableAnimations();
@@ -471,7 +471,7 @@ Cypress.Commands.add('deleteAllByName', (name) => {
 
 // -----------------------------------------------------------------------------------------------------------------------
 
-Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Departments', 'Teams', 'Others']) => {
+Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Departments', 'Teams', 'Others'], userSearchValues = {}) => {
 
     cy.task('logInfo', `Начало работы с модальным окном парв доступа`);
     const tabSearchValues = {
@@ -513,23 +513,25 @@ Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Departments', 'Teams', 'Oth
             if ($nav.find(`div:contains("${tab}")`).length > 0) {
                 cy.wrap($nav).contains('div', tab).click();
 
+                const valueToSearch = userSearchValues[tab] || tabSearchValues[tab];
+
                 // Вводим значение для поиска
                 cy.contains('div', 'Search')
                     .parent()
                     .find('input')
                     .clear()
-                    .type(tabSearchValues[tab], { force: true });
+                    .type(valueToSearch, { force: true });
 
                 cy.wait(1500); // немного подождать, чтобы список успел обновиться
 
                 // Проверяем, есть ли нужный элемент в DOM
                 cy.get('body').then($body => {
-                    const selector = `div:contains("${tabSearchValues[tab]}")`;
+                    const selector = `div:contains("${valueToSearch}")`;
 
                     if ($body.find(selector).length > 0) {
-                        cy.contains('div', tabSearchValues[tab]).click({ force: true });
+                        cy.contains('div', valueToSearch).click({ force: true });
                     } else {
-                        cy.task('logWarn', `Элемент "${tabSearchValues[tab]}" не найден — пропускаем`);
+                        cy.task('logWarn', `Элемент "${valueToSearch}" не найден — пропускаем`);
                     }
                 });
 

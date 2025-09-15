@@ -7,15 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 120
 
-
-    services:
-      mailhog:
-        image: mailhog/mailhog
-        ports:
-          - 1025:1025  # SMTP
-          - 8025:8025  # HTTP API
-
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -49,7 +40,7 @@ jobs:
           MAILSLURP_API_KEY: ${{ secrets.MAILSLURP_API_KEY }}
           QA_TEST_LOGIN: ${{ vars.QA_TEST_LOGIN }}
           QA_TEST_PASSWORD: ${{ secrets.QA_TEST_PASSWORD }}
-          MAILHOG_HOST: mailhog
+          MAILHOG_HOST: tenant1.release.company-policy.com
           MAILHOG_API_PORT: 8025
           MAILHOG_SMTP_PORT: 1025
           REGISTRATION_EMAIL: test@example.com

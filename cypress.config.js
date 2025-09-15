@@ -13,6 +13,7 @@ module.exports = defineConfig({
     password: process.env.PASSWORD,
     authEmail: process.env.QA_TEST_LOGIN,
     authPassword: process.env.QA_TEST_PASSWORD,
+    emailMailHog: process.env.REGISTRATION_EMAIL,
     courseGroupName: "QA Test Course Group",
     curriculumName: "QA Test Curriculum",
     teamName: "Qa Test Team",
