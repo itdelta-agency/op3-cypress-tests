@@ -71,7 +71,7 @@ describe("LC.A1. Create lessons", () => {
   
     cy.visit(ROUTES.courses);
     cy.wait(500);
-    cy.accessAllItems();
+    // cy.accessAllItems();
     cy.xpath("(//div[text()='" + Cypress.env('courseName') + "'])[1]").click();
 
     cy.xpath("//span[text()='List of lessons']//following-sibling::span/descendant::input").click();
@@ -101,7 +101,7 @@ describe("LC.A1. Create lessons", () => {
 
     // cy.xpath("//a[text()='Courses']").click();
     cy.wait(500);
-    cy.accessAllItems();
+    // cy.accessAllItems();
     cy.xpath("(//div[text()='" + Cypress.env('courseName') + "'])[1]").click();
 
     cy.xpath("//span[text()='List of lessons']//following-sibling::span/descendant::input").click();

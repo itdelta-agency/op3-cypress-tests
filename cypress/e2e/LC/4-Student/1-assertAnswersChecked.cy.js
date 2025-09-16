@@ -29,7 +29,7 @@ describe('LC.D1. Assert answers were checked by teacher', () => {
         cy.xpath(`//h1[text()='${courseName}']`).should('be.visible');
         cy.wait(400);
 
-        const lessonSuccess = 'Lesson successfully completed!'; // или любое другое фиксированное сообщение
+        const lessonSuccess = 'Lesson successfully completed!';
 
         lessons.forEach(lessonTitle => {
             cy.get('ul[role="list"] li').contains(lessonTitle).click();

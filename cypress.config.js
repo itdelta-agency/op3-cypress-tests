@@ -40,7 +40,7 @@ module.exports = defineConfig({
     lastName: 'USER',
     fullName: 'QA USER',
     sortNumb: 666,
-    statisticName: 'Statistic name',
+    statisticName: 'QA Statistic name',
     passName: "IT-DELTA",
     passUrl: "https://tenant1.release.company-policy.com/",
     passLogin: "Login",

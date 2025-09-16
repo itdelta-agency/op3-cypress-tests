@@ -51,10 +51,6 @@ describe('LC.A2. Create course', () => {
     cy.xpath("//span[text()='Name *']").next().type(courseName);
     cy.xpath("//textarea").type("Автотест: описание курса");
 
-    // cy.contains('li', 'Available for').within(() => {
-    //   cy.contains('button', 'Select').click();
-    // });
-
     // cy.whoCanSee(['Users', 'Others']);
 
     // Если нужно указать кого конкретно выбрать
@@ -63,7 +59,7 @@ describe('LC.A2. Create course', () => {
       {
         'Users': 'QA',
         'Others': 'All users'
-      })
+      });
 
     // 1 чек бокс
     cy.get("button[role='switch']").eq(0)

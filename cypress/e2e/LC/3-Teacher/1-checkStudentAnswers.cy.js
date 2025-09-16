@@ -1,4 +1,4 @@
-// const mailhog = require('../../support/mailhog-client');
+const mailhog = require('../../../support/mailhog-client');
 // const { recurse } = require('cypress-recurse')
 
 
@@ -133,8 +133,12 @@ describe('LC.C1. Check student answers', () => {
             cy.task('logInfo', 'Переход по ссылке из письма выполнен');
 
             // Проверяем, что заголовок курса виден
-            cy.xpath("//span[@class='course-title']").should('be.visible');
+            cy.get('p').contains('Intro').click();
+            cy.get('.text-3xl.font-bold.leading-tight').should('be.visible');
             cy.task('logInfo', 'Заголовок курса виден');
+            cy.get('p').contains('Result').click();
+            cy.get('div').contains('Congratulations').should('be.visible');
+            cy.task('logInfo', 'Курс пройден!');
         });
     });
 
