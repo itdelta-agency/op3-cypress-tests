@@ -1,15 +1,15 @@
 const { recurse } = require("cypress-recurse");
 const { generateUserData } = require('../../support/fakerData');
 const { JSDOM } = require("jsdom");
+const mailhog = require('../../support/mailhog-client');
 
 
 describe('Register Ru', () => {
 
     let user;
-    let inbox;
+    let email = 'QaTest28@gmail.com';
 
     before(() => {
-
         user = generateUserData();
         cy.wrap(user).then(u => {
             cy.task('logInfo', `Generated user: ${JSON.stringify(u, null, 2)}`);
@@ -21,13 +21,8 @@ describe('Register Ru', () => {
         cy.logTestName.call(this);
         cy.resetAppState();
 
-        cy.task('getCachedInbox').then(result => {
-            expect(result).to.exist;
-            inbox = result;
-            cy.log('Используем кешированный inbox:', inbox.emailAddress);
-        });
         cy.visit(Cypress.config().registerUrl);
-        cy.changeLangAuth('en');
+        // cy.changeLangAuth('en');
     })
 
 
@@ -35,81 +30,70 @@ describe('Register Ru', () => {
     it('valid-email-input', function () {
         cy.disableAnimations();
 
+        cy.task('logStep', `Ввод почты`);
+        cy.xpath("//input[@id='email']", { timeout: 10000 }).type(email);
+        cy.get('[data-test-id="submit_button"]', { timeout: 5000 }).should('be.visible');
+        cy.task('logStep', `Клик по кнопке "Зарегистрироваться"`);
+        cy.get('[data-test-id="submit_button"]').click();
 
-        cy.task('getCachedInbox').then(result => {
-            expect(result).to.exist;
-            let userEmail = result.emailAddress;
-            cy.log('Используем кешированный inbox:', userEmail);
+        cy.wait(30000);
 
-            cy.task('logStep', `Ввод почты`);
-            cy.xpath("//input[@id='email']", { timeout: 10000 }).type(userEmail);
-            cy.get('[data-test-id="submit_button"]', { timeout: 5000 }).should('be.visible');
-            cy.task('logStep', `Клик по кнопке "Зарегистрироваться"`);
-            cy.get('[data-test-id="submit_button"]').click();
+        cy.task('getLastEmail', { timeout: 90000 }).then(email => {
+            if (!email) return cy.task('logError', 'Письмо не получено');
 
-            cy.wait(30000);
+            const html = email.bodyHTML || email.body;
+            const match = html.match(/\d{4}/); // ищем 4 цифры подряд
+            if (!match) return cy.task('logError', 'Код подтверждения не найден в письме');
 
-            cy.task('logStep', `Проверка кода верификации на почте `);
-            cy.task('getLastEmail', { user: userEmail, pass: 'password', timeout: 60000 }).then(email => {
-                if (!email) {
-                    cy.task('logInfo', 'Письмо не пришло после первой отправки кода');
-                    return;
-                }
-                const html = email.bodyHTML || email.body;
-                const dom = new JSDOM(html);
-                const doc = dom.window.document;
-                const codeParagraph = doc.querySelector("p");
-                // Извлекаем 4-значный код
-                const actualCode = codeParagraph?.textContent.match(/\d{4}/)?.[0]?.trim();
-                cy.task('logInfo', `Код из письма после первой отправки: ${actualCode}`);
-                cy.wrap(actualCode).as('verifiCode')
-            });
+            const verificationCode = match[0];
+            cy.task('logInfo', `Найден код подтверждения: ${verificationCode}`);
+
+            // сохраняем для дальнейших шагов теста
+            cy.wrap(verificationCode).as('verificationCode');
+        });
 
 
-            cy.get('@verifiCode').then(verifiCode => {
-                cy.task('logStep', `Ввод валидного кода`);
-                cy.xpath("//input[@id='code']", { timeout: 10000 }).clear().type(verifiCode);
-                cy.task('logStep', `Клик по кнопке "Проверить код "`);
-                cy.get('[data-test-id="check_code_button"]', { timeout: 5000 }).should('be.visible').click();
-            });
+        cy.get('@verifiCode').then(verifiCode => {
+            cy.task('logStep', `Ввод валидного кода`);
+            cy.xpath("//input[@id='code']", { timeout: 10000 }).clear().type(verifiCode);
+            cy.task('logStep', `Клик по кнопке "Проверить код "`);
+            cy.get('[data-test-id="check_code_button"]', { timeout: 5000 }).should('be.visible').click();
+        });
 
-            cy.url().should('include', '/registration');
+        cy.url().should('include', '/registration');
 
-            cy.task('logStep', `Ввод имени ${user.name}`);
-            cy.get('#name').should('be.visible');
-            cy.get('#name').type(user.name);
+        cy.task('logStep', `Ввод имени ${user.name}`);
+        cy.get('#name').should('be.visible');
+        cy.get('#name').type(user.name);
 
-            cy.task('logStep', `Ввод фамилии ${user.last_name}`);
-            cy.get('#last_name').should('be.visible');
-            cy.get('#last_name').type(user.last_name);
+        cy.task('logStep', `Ввод фамилии ${user.last_name}`);
+        cy.get('#last_name').should('be.visible');
+        cy.get('#last_name').type(user.last_name);
 
-            cy.task('logStep', `Ввод пароля ${user.pass}`);
-            cy.get('#password').should('be.visible').type(user.pass);
-            cy.task('logStep', `Ввод подтверждения пароля  ${user.pass_1}`);
-            cy.get('#password_confirmation').should('be.visible').type(user.pass_1);
+        cy.task('logStep', `Ввод пароля ${user.pass}`);
+        cy.get('#password').should('be.visible').type(user.pass);
+        cy.task('logStep', `Ввод подтверждения пароля  ${user.pass_1}`);
+        cy.get('#password_confirmation').should('be.visible').type(user.pass_1);
 
-            cy.task('logStep', `Клик по кнопке "Зарегистрироваться"`)
-            cy.get('[data-test-id="submit_button"]').should('be.visible').click();
+        cy.task('logStep', `Клик по кнопке "Зарегистрироваться"`)
+        cy.get('[data-test-id="submit_button"]').should('be.visible').click();
 
-            cy.contains("Значение поля Пароль не совпадает с подтверждаемым.").should('be.visible');
+        cy.contains("Значение поля Пароль не совпадает с подтверждаемым.").should('be.visible');
 
-            cy.task('logStep', `Ввод пароля ${user.pass}`);
-            cy.get('#password').should('be.visible').type(user.pass);
-            cy.task('logStep', `Ввод подтверждения пароля  ${user.pass_1}`);
-            cy.get('#password_confirmation').should('be.visible').type(user.pass_1);
+        cy.task('logStep', `Ввод пароля ${user.pass}`);
+        cy.get('#password').should('be.visible').type(user.pass);
+        cy.task('logStep', `Ввод подтверждения пароля  ${user.pass_1}`);
+        cy.get('#password_confirmation').should('be.visible').type(user.pass_1);
 
-            cy.task('logStep', `Клик по кнопке "Зарегистрироваться"`)
-            cy.get('[data-test-id="submit_button"]').should('be.visible').click();
+        cy.task('logStep', `Клик по кнопке "Зарегистрироваться"`)
+        cy.get('[data-test-id="submit_button"]').should('be.visible').click();
 
-            cy.url({ timeout: 10000 }).then((url) => {
-                if (url.includes('/cp')) {
-                    cy.task('logInfo', 'Успешный переход на /cp');
-                } else {
-                    cy.task('logError', 'Переход не выполнен, URL не изменился');
-                    // здесь можно выбросить ошибку, если нужно
-                    // throw new Error('URL не изменился на /cp');
-                }
-            });
+        cy.url({ timeout: 10000 }).then((url) => {
+            if (url.includes('/cp')) {
+                cy.task('logInfo', 'Успешный переход на /cp');
+            } else {
+                cy.task('logError', 'Переход не выполнен, URL не изменился');
+            }
         });
     });
 });

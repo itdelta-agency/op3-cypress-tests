@@ -120,7 +120,8 @@ describe("LC.A1. Create lessons", () => {
     cy.wait(200);
     cy.get('.flex.flex-row-reverse').contains('Save').click();
     cy.wait(700);
-    cy.get('input.shadow-sm').eq(0).click().type(q2Name);
+    cy.get('input.shadow-sm').eq(0).click();
+    cy.get('input.shadow-sm').eq(0).type(q2Name);
     cy.wait(200);
     cy.get('input.shadow-sm').eq(1).type(qName + 2);
     cy.get("button[role='switch']")

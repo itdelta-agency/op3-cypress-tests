@@ -386,16 +386,14 @@ Cypress.Commands.add('searchRow', (name) => {
     });
 
     // Чистим поле поиска безопасно
-    cy.get('[placeholder="Search"], [placeholder="Поиск"]', { timeout: 10000 })
-        .first()
-        .then(($input) => {
-            // повторная проверка value через retry
-            cy.wrap($input)
-                .clear()
-                .should(() => {
-                    expect($input.val()).to.eq('');
-                });
-        });
+const sel = '[placeholder="Search"], [placeholder="Поиск"]';
+
+cy.get(sel, { timeout: 10000 })
+  .first()
+  .clear();
+
+// заново получаем элемент — если он был заменён, то мы получим новый экземпляр
+cy.get(sel).first().should('have.value', '');
 
     // Вводим текст посимвольно с проверкой через новый get
     name.split('').forEach((char, index) => {

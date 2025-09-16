@@ -17,8 +17,6 @@ describe("C. Invite user by 2 ways", () => {
 
   it('should invite by user menu', () => {
     cy.task(`logInfo`, `Используем inbox:${emailAddress}`)
-    // const inboxEmail = Cypress.env('inboxEmail');
-    // expect(inboxEmail).to.exist;
 
     cy.admin();
     cy.visit(ROUTES.invite);
