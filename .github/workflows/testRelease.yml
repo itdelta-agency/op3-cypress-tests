@@ -43,7 +43,7 @@ jobs:
           MAILHOG_HOST: tenant1.release.company-policy.com
           MAILHOG_API_PORT: 8025
           MAILHOG_SMTP_PORT: 1025
-          REGISTRATION_EMAIL: test@example.com
+          REGISTRATION_EMAIL: noreply@release.company-policy.com
 
       # Генерация Allure отчета
       - name: Generate Allure Report
