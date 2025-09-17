@@ -71,7 +71,7 @@ describe("LC.A1. Create lessons", () => {
   
     cy.visit(ROUTES.courses);
     cy.wait(500);
-    cy.accessAllItems();
+    // cy.accessAllItems();
     cy.xpath("(//div[text()='" + Cypress.env('courseName') + "'])[1]").click();
 
     cy.xpath("//span[text()='List of lessons']//following-sibling::span/descendant::input").click();
@@ -101,7 +101,7 @@ describe("LC.A1. Create lessons", () => {
 
     // cy.xpath("//a[text()='Courses']").click();
     cy.wait(500);
-    cy.accessAllItems();
+    // cy.accessAllItems();
     cy.xpath("(//div[text()='" + Cypress.env('courseName') + "'])[1]").click();
 
     cy.xpath("//span[text()='List of lessons']//following-sibling::span/descendant::input").click();
@@ -120,7 +120,8 @@ describe("LC.A1. Create lessons", () => {
     cy.wait(200);
     cy.get('.flex.flex-row-reverse').contains('Save').click();
     cy.wait(700);
-    cy.get('input.shadow-sm').eq(0).click().type(q2Name);
+    cy.get('input.shadow-sm').eq(0).click();
+    cy.get('input.shadow-sm').eq(0).type(q2Name);
     cy.wait(200);
     cy.get('input.shadow-sm').eq(1).type(qName + 2);
     cy.get("button[role='switch']")

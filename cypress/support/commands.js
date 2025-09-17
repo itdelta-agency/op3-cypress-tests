@@ -20,7 +20,7 @@ Cypress.Commands.add('login', (username = Cypress.env('email'), password = Cypre
 
         cy.xpath("//button[@type='submit']", { timeout: 10000 }).click();
         // Ждем пока страница загрузится 
-        cy.get('[data-header-test-id="header_menu_button"]', {timeout:15000}).should('be.visible');
+        cy.get('[data-header-test-id="header_menu_button"]', { timeout: 15000 }).should('be.visible');
 
         // Отключаем анимацию
         cy.disableAnimations();
@@ -175,7 +175,6 @@ Cypress.Commands.add('reliableType', (selector, text) => {
         });
 });
 // -----------------------------------------------------------------------------------------------------------------------
-
 Cypress.Commands.add('bulkAction', (actions, nameOrNames) => {
     const nameList = Array.isArray(nameOrNames) ? nameOrNames : [nameOrNames];
     cy.wait(1000);
@@ -356,10 +355,10 @@ Cypress.Commands.add('changeLang', (lang = 'en') => {
     const expectedText = lang === 'en' ? 'Regulations' : 'Регламенты';
 
     cy.get(headerSelector, { timeout: 15000 })
-      .should('have.text', expectedText)
-      .then(() => {
-          cy.task('logInfo', `Язык успешно переключен на ${lang}`);
-      });
+        .should('have.text', expectedText)
+        .then(() => {
+            cy.task('logInfo', `Язык успешно переключен на ${lang}`);
+        });
 });
 
 // -----------------------------------------------------------------------------------------------------------------------
@@ -374,7 +373,6 @@ Cypress.Commands.add('logout', () => {
 });
 
 // -----------------------------------------------------------------------------------------------------------------------
-
 Cypress.Commands.add('searchRow', (name) => {
     cy.task('logInfo', `Поиск строки с именем: "${name}"`);
 
@@ -386,16 +384,14 @@ Cypress.Commands.add('searchRow', (name) => {
     });
 
     // Чистим поле поиска безопасно
-    cy.get('[placeholder="Search"], [placeholder="Поиск"]', { timeout: 10000 })
+    const sel = '[placeholder="Search"], [placeholder="Поиск"]';
+
+    cy.get(sel, { timeout: 10000 })
         .first()
-        .then(($input) => {
-            // повторная проверка value через retry
-            cy.wrap($input)
-                .clear()
-                .should(() => {
-                    expect($input.val()).to.eq('');
-                });
-        });
+        .clear();
+
+    // заново получаем элемент — если он был заменён, то мы получим новый экземпляр
+    cy.get(sel).first().should('have.value', '');
 
     // Вводим текст посимвольно с проверкой через новый get
     name.split('').forEach((char, index) => {
@@ -416,6 +412,7 @@ Cypress.Commands.add('searchRow', (name) => {
         }
     });
 });
+
 
 
 // -----------------------------------------------------------------------------------------------------------------------
@@ -471,7 +468,7 @@ Cypress.Commands.add('deleteAllByName', (name) => {
 
 // -----------------------------------------------------------------------------------------------------------------------
 
-Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Departments', 'Teams', 'Others']) => {
+Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Departments', 'Teams', 'Others'], userSearchValues = {}) => {
 
     cy.task('logInfo', `Начало работы с модальным окном парв доступа`);
     const tabSearchValues = {
@@ -513,23 +510,25 @@ Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Departments', 'Teams', 'Oth
             if ($nav.find(`div:contains("${tab}")`).length > 0) {
                 cy.wrap($nav).contains('div', tab).click();
 
+                const valueToSearch = userSearchValues[tab] || tabSearchValues[tab];
+
                 // Вводим значение для поиска
                 cy.contains('div', 'Search')
                     .parent()
                     .find('input')
                     .clear()
-                    .type(tabSearchValues[tab], { force: true });
+                    .type(valueToSearch, { force: true });
 
                 cy.wait(1500); // немного подождать, чтобы список успел обновиться
 
                 // Проверяем, есть ли нужный элемент в DOM
                 cy.get('body').then($body => {
-                    const selector = `div:contains("${tabSearchValues[tab]}")`;
+                    const selector = `div:contains("${valueToSearch}")`;
 
                     if ($body.find(selector).length > 0) {
-                        cy.contains('div', tabSearchValues[tab]).click({ force: true });
+                        cy.contains('div', valueToSearch).click({ force: true });
                     } else {
-                        cy.task('logWarn', `Элемент "${tabSearchValues[tab]}" не найден — пропускаем`);
+                        cy.task('logWarn', `Элемент "${valueToSearch}" не найден — пропускаем`);
                     }
                 });
 
@@ -559,6 +558,7 @@ Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Departments', 'Teams', 'Oth
             }
         });
 });
+
 
 // -----------------------------------------------------------------------------------------------------------------------
 
@@ -668,7 +668,7 @@ Cypress.Commands.add('visitAdmin', () => {
         .should('have.attr', 'aria-expanded', 'false');
 
     cy.get('h2').contains(/Courses|Курсы/, { timeout: 20000 })
-    .should('be.visible');
+        .should('be.visible');
 
     cy.task('logInfo', 'Перешли в админку');
 });

@@ -38,19 +38,18 @@ allure open
 # Getting Started
 git clone <repository-url>
 cd op3-cypress-tests
-yarn
 Создать .env файл из примера:
 cp .env.example .env
-
-### Running Tests
-Запуск Cypress в интерактивном режиме (с GUI):
-
+//headless
+yarn cy:run
+//headed cypress
 yarn cy:open
 
 
 # Automated Tests
 Запуск автоматических тестов и генерация Allure отчёта:
 
+yarn allure:clear
 yarn cy:run
 yarn allure:report
 yarn allure:open

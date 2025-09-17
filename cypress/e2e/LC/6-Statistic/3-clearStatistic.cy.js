@@ -32,7 +32,7 @@ describe('Statistic.ST3. clear data statistic', () => {
             .wait(100)
             .type(statisticName, { delay: 100 });
 
-        cy.wait(500); // Подожди, пока таблица обновится
+        cy.wait(500);
 
         cy.get('tr').contains(statisticName).closest('tr').within(() => {
             // Клик по кнопке "⋯"
@@ -41,7 +41,7 @@ describe('Statistic.ST3. clear data statistic', () => {
 
         // Клик по пункту меню "Statistic data"
         cy.contains('div', /Statistic data\s*/i).click();
-        cy.wait(800);
+        cy.get('h2').contains('Statistic data').should('be.visible');
 
         // Повторный клик
         cy.get('.p-2.rounded-full').should('be.visible').click();
