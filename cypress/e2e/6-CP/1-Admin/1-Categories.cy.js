@@ -1,32 +1,40 @@
+const { should } = require("chai");
 const { ROUTES } = require("../../../support/routes");
 
 describe("CP1. Categories List", () => {
   let catName = Cypress.env('categoryName');
 
   beforeEach(function () {
+    cy.resetAppState();
     cy.logTestName.call(this);
     cy.admin();
+    // cy.changeLang();
   });
+
 
   it('should create Category)', function () {
     cy.task('logInfo', 'Создание новой категории');
 
-    cy.get('.flex.justify-between', { timeout: 10000 }).eq(1).then($tab => {
-      const isExpanded = $tab.attr('aria-expanded') === 'true';  // true если открыта
-      if (!isExpanded) {
-        cy.wrap($tab).click();
-        cy.task('logInfo', 'Вкладка категорий скрыта, клик на "Регламенты"');
+    // cy.get('.flex.justify-between', { timeout: 15000 }).eq(1)
+    //   .should('be.visible') // ждём пока элемент видим
+    //   .then($tab => {
+    //     const isExpanded = $tab.attr('aria-expanded') === 'true';
+    //     if (!isExpanded) {
+    //       cy.wrap($tab).click();
+    //       cy.task('logInfo', 'Вкладка категорий скрыта, клик на "Регламенты"');
+    //     }
+    //   });
 
-      }
-    });
-    cy.get('a.text-indigo-100',).eq(0).click();
+    // // Кликаем на первый линк
+    // cy.get('a.text-indigo-100').eq(0)
+    //   .should('be.visible')
+    //   .click();  
+    cy.visit(ROUTES.categories);
 
-    cy.wait(500);
-    cy.deleteAllByName(catName);
-
-    cy.wait(500);
-    cy.contains('Add category').click();
-    cy.task('logInfo', 'Переход на страницу создания категорий');
+    
+    cy.get('h2').contains('Categories').should('be.visible');  
+    cy.get('button').contains('Add category').click();
+    cy.task('logStep', 'Переход на страницу создания категорий');
 
     // create post
     cy.get('ul li:first input').type(catName);
@@ -38,17 +46,21 @@ describe("CP1. Categories List", () => {
         }
       });
     cy.get('input[type="number"]').clear().type(222);
+    cy.wait(500);
     cy.whoCanSee(['Users', 'Teams', 'Others']);
     cy.get(".sm\\:col-start-3").should('be.visible').click();
     cy.wait(500);
 
     cy.checkTextInParagraph();
+    cy.wait(1000);
 
     // check active
     cy.task('logInfo', 'Проверка ативности');
     cy.searchRow(catName);
+    cy.wait(500);
     cy.contains('div', 'QA Test Category')
       .parents('tr')
+      .last()
       .within(() => {
         cy.contains('span', 'Inactive').should('exist');
         cy.task('logInfo', 'Категория активна!');
@@ -56,11 +68,11 @@ describe("CP1. Categories List", () => {
   });
 
   it('should edit Category)', function () {
-    cy.task('logInfo', 'Переход к редактированию категории');
+    cy.task('logStep', 'Переход к редактированию категории');
     cy.visit(ROUTES.categories);
 
     // cy.accessAllItems();
-    cy.xpath(`(//div[text()='${catName}'])`).click();
+    cy.xpath(`(//div[text()='${catName}'])`).first().click();
     //
     cy.contains('Edit category');
 
@@ -82,6 +94,7 @@ describe("CP1. Categories List", () => {
       .within(() => {
         cy.contains('span', 'Active').should('exist');
       });
+    cy.task('logInfo', 'Категория отредактирована и активна!');
 
 
   });

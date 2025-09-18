@@ -3,13 +3,15 @@ describe("Statistic.ST2. adding a value to statistics", () => {
     let statisticName = Cypress.env('statisticName');
 
     beforeEach(function () {
+        cy.resetAppState();
         cy.logTestName.call(this);
         cy.admin();
+        // cy.changeLang();
     });
 
     it("adding a value to statistics", function () {
         cy.visit("/st/filled");
-        cy.wait(1000);
+        cy.wait(2000);
         cy.contains(lastName).click();
         cy.contains(statisticName).click();
         cy.wait(500);

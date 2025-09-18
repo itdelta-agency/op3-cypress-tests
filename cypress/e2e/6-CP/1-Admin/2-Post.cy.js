@@ -1,4 +1,4 @@
-
+ const { ROUTES } = require("../../../support/routes");
 describe("CP2. Article List", () => {
   let articleName = Cypress.env('articleName');
   let categorisName = Cypress.env('categoryName')
@@ -8,27 +8,25 @@ describe("CP2. Article List", () => {
 
 
   beforeEach(function () {
+    cy.resetAppState();
     cy.logTestName.call(this);
     cy.admin();
+    // cy.changeLang();
   });
 
 
+
   it('should create Article', function () {
-    cy.task('logInfo', 'Переход на страницу "Статьи"');
-    cy.get('.flex.justify-between', { timeout: 10000 }).eq(1).then($tab => {
-      const isExpanded = $tab.attr('aria-expanded') === 'true';  // true если открыта
-      if (!isExpanded) {
-        cy.wrap($tab).click();
-      }
-    });
-    cy.get('a.text-indigo-100',).eq(1).click();
-    // cy.changeLang('en');
-    cy.wait(1500);
-    cy.get('.text-white.bg-indigo-600').eq(0).click();
-    cy.task('logInfo', 'Переход на страницу создания статьи');
+    cy.task('logStep', 'Переход на страницу "Статьи"');
+    cy.visit(ROUTES.articles);
+    cy.get('h2').contains('Articles').should('be.visible');
+
+    cy.get('button').contains('Add article').click();
+    cy.task('logStep', 'Переход на страницу создания статьи');
     cy.wait(1500);
 
     // create Article
+    cy.task('logInfo', 'Создание статьи');
     cy.get('.shadow-sm').eq(0).type(articleName);
     cy.get("button[role='switch']")
       .invoke('attr', 'aria-checked')
@@ -102,21 +100,23 @@ describe("CP2. Article List", () => {
     cy.xpath("//button[text()='Save & Close']").click();
 
     cy.checkTextInParagraph();
+    cy.task('logInfo', 'Статья создана');
 
   });
 
   it('edit articles', function () {
-    cy.visit('cp/admin/post');
-    
+    cy.visit(ROUTES.articles);
+
+    cy.get('h2').contains('Articles', {timeout:10000}).should('be.visible');
+    cy.searchRow(articleName);
     cy.wait(500);
-    cy.searchRow('Q');
-    cy.wait(500);
-    cy.xpath(`(//div[text()='${articleName}'])`).last().click();
+    cy.xpath(`(//div[text()='${articleName}'])`).first().click();
 
     cy.contains('Edit article');
-
-    cy.get('.shadow-sm').eq(0).clear().type(articleName);
+    cy.wait(1000);
     cy.task('logInfo', 'Переход на страницу "Редактирование статьи"');
+    cy.contains('Name *').next().clear().type(articleName);
+
     cy.get("button[role='switch']")
       .invoke('attr', 'aria-checked')
       .then(checked => {
@@ -125,11 +125,11 @@ describe("CP2. Article List", () => {
         }
       });
 
-    cy.contains('div', categorisName).parent()
-      .find('svg').click();
-    cy.get('.css-hlgwow').type(categorisName);
-    cy.xpath("//*[text()='" + categorisName + "'][1]").click();
-    cy.wait(1500);
+    // cy.contains('div', categorisName).parent()
+    //   .find('svg').click();
+    // cy.get('.css-hlgwow').type(categorisName);
+    // cy.xpath("//*[text()='" + categorisName + "'][1]").click();
+    // cy.wait(1500);
 
     // Продолжение сценария:
     cy.get('.tab.flex.cursor-pointer').parent().next().find('span').eq(1).click();

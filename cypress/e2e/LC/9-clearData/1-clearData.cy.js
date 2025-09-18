@@ -6,8 +6,11 @@ describe('LC.Z. Clear all created learning items', () => {
 
 
     beforeEach(function () {
+        cy.resetAppState();
         cy.logTestName.call(this);
         cy.admin();
+        // cy.changeLang();
+        
     })
 
 
@@ -96,12 +99,25 @@ describe('LC.Z. Clear all created learning items', () => {
     it('delete user', function () {
         const editUser = Cypress.env('editUser');
         cy.visit(ROUTES.users);
-        cy.wait(1500);
+        cy.wait(1000);
         cy.searchRow(editUser);
         cy.wait(500);
 
         cy.ifRowExists(editUser, () => {
             cy.deleteResources(editUser);
+        });
+
+    })
+
+        it('delete invite user', function () {
+        const qaUser = Cypress.env('qaUser');
+        cy.visit(ROUTES.users);
+        cy.wait(1000);
+        cy.searchRow(qaUser);
+        cy.wait(500);
+
+        cy.ifRowExists(qaUser, () => {
+            cy.deleteResources(qaUser);
         });
 
     })

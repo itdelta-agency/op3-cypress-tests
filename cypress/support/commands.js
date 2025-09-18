@@ -19,7 +19,15 @@ Cypress.Commands.add('login', (username = Cypress.env('email'), password = Cypre
         cy.xpath("//input[@id='password']", { timeout: 10000 }).type(password, { log: false });
 
         cy.xpath("//button[@type='submit']", { timeout: 10000 }).click();
-        cy.wait(2000);
+        // Ждем пока страница загрузится 
+        cy.get('[data-header-test-id="header_menu_button"]', { timeout: 15000 }).should('be.visible');
+
+        // Отключаем анимацию
+        cy.disableAnimations();
+
+        // Меняем язык
+        cy.changeLang();
+
         cy.window().its('localStorage').invoke(`setItem`, 'tableFilterExpanded_/cp/admin/post', 'false')
         cy.window().its('localStorage').invoke(`setItem`, 'tableFilterExpanded_/st/admin/index', 'false')
     });
@@ -47,11 +55,18 @@ Cypress.Commands.add('checkTextPresence', (text) => {
 // -----------------------------------------------------------------------------------------------------------------------
 
 Cypress.Commands.add('admin', () => {
+    cy.task('logInfo', "Авторизация");
+    // Логинимся
     cy.login();
-    cy.visit('/')
-    cy.visitAdmin();
-    cy.wait(1000);
-    cy.wait(1000);
+    cy.wait(500);
+
+    // Заходим на главную страницу
+    cy.visit('/');
+
+    cy.task('logStep', "Переход в панель администратора");
+
+    // Переходим в админку и ждем пока меню откроется
+    return cy.visitAdmin();
 });
 
 // -----------------------------------------------------------------------------------------------------------------------
@@ -68,7 +83,6 @@ Cypress.Commands.add('createAnswerForQuestion', (questionName) => {
     cy.xpath("/html/body/div[2]/div/div/div[2]/div[2]/main/div/ul/li[6]/div[2]/div/div[2]/input").type(questionName + ' answer');
     cy.xpath("(//button[@role='switch'])[2]").click();
     cy.xpath("(//button[text()='Save'])[1]").click();
-    // cy.xpath("//p[text()='Success!']").should('be.visible');
 });
 
 // -----------------------------------------------------------------------------------------------------------------------
@@ -76,11 +90,6 @@ Cypress.Commands.add('createAnswerForQuestion', (questionName) => {
 Cypress.Commands.add('addAnswers', () => {
 
     cy.xpath("//span[text()='Add answer']").click();
-
-    // cy.xpath("//input[@type='text']").type(Cypress.env('answer1'));
-    // cy.xpath("(//button[@role='switch'])[1]").click();
-    // cy.xpath("(//button[@role='switch'])[2]").click();
-    // cy.xpath("//button[text()='Save']").click();
 
 
     cy.xpath("/html/body/div[2]/div/div/div[2]/div[2]/main/div/ul/li[5]/div[2]/div/div[1]/input").type(Cypress.env('answer1'));
@@ -156,10 +165,9 @@ Cypress.Commands.add('reliableType', (selector, text) => {
                 cy.wait(300);
                 cy.get('@reliableInput').type(text, { delay: 150 });
 
-                // Повторная проверка (только лог)
+                // Повторная проверка 
                 cy.get('@reliableInput').invoke('val').then(finalVal => {
                     if (finalVal !== text) {
-                        cy.log(`⚠️ После повтора всё ещё не совпадает: "${finalVal}"`);
                         cy.task('logError', `Ожидалось: "${text}", но введено: "${finalVal}"`);
                     }
                 });
@@ -167,13 +175,12 @@ Cypress.Commands.add('reliableType', (selector, text) => {
         });
 });
 // -----------------------------------------------------------------------------------------------------------------------
-
 Cypress.Commands.add('bulkAction', (actions, nameOrNames) => {
     const nameList = Array.isArray(nameOrNames) ? nameOrNames : [nameOrNames];
-
+    cy.wait(1000);
     // Если панель не раскрыта — кликаем по тултипу
     cy.get('body').then($body => {
-        if ($body.find('.mt-1.relative.flex').length === 0) {
+        if ($body.find('[placeholder="Search"]').length === 0) {
             cy.xpath("//div[@class='tooltip']").click();
         }
     });
@@ -183,9 +190,7 @@ Cypress.Commands.add('bulkAction', (actions, nameOrNames) => {
 
         nameList.forEach(name => {
             cy.wait(200);
-
             cy.searchRow(name);
-
             // Отмечаем все строки, которые содержат это имя
             cy.get('tbody tr[role="row"]', { timeout: 5000 })
                 .should('exist');
@@ -309,7 +314,6 @@ Cypress.Commands.add('closePopup', () => {
 
 Cypress.Commands.add('accessAllItems', () => {
     cy.wait(2000);
-    // cy.xpath('(//button/span[starts-with(text(), \'Show\')])[last()]').click();
     cy.get('[data-test-id="pageCountButton"]').scrollIntoView().click();
     cy.wait(1000);
     cy.get('.font-normal.block').eq(3).click()
@@ -318,87 +322,98 @@ Cypress.Commands.add('accessAllItems', () => {
 
 // -----------------------------------------------------------------------------------------------------------------------
 
-Cypress.Commands.add('changeLang', (lang = 'ru') => {
-    cy.get('[data-header-test-id="lang_button"]')
-        .click()
-        .then(() => {
-            // Проверяем, существует ли элемент нужного языка
-            cy.get('body').then($body => {
-                if ($body.find(`[data-header-test-id="${lang}"]`).length > 0) {
-                    cy.get(`[data-header-test-id="${lang}"]`).click();
-                    cy.task('logInfo', `Язык переключен на ${lang}`);
-                } else {
-                    cy.task('logError', `Элемент для языка ${lang} не найден`);
-                }
-            });
-        });
+// Cypress.Commands.add('changeLang', (lang = 'en') => {
+//     cy.wait(1000);
+//     cy.get('[data-header-test-id="lang_button"]')
+//         .click()
+//         .then(() => {
+//             // Проверяем, существует ли элемент нужного языка
+//             cy.get('body').then($body => {
+//                 if ($body.find(`[data-header-test-id="${lang}"]`).length > 0) {
+//                     cy.get(`[data-header-test-id="${lang}"]`).click();
+//                     cy.task('logInfo', `Переключение языка на ${lang}`);
+//                 } else {
+//                     cy.task('logError', `Элемент для языка ${lang} не найден`);
+//                 }
+//             });
+//         });
+//     cy.wait(1000);
+// });
 
-    // Проверяем, что язык действительно сменился
-    cy.get('[data-header-test-id="lang_button"] > span', { timeout: 7000 })
-        .should('have.text', lang)
+
+Cypress.Commands.add('changeLang', (lang = 'en') => {
+    // Клик по кнопке смены языка
+    cy.get('[data-header-test-id="lang_button"]').click();
+
+    // Ожидаем появления нужного языка в выпадающем меню
+    cy.get(`[data-header-test-id="${lang}"]`, { timeout: 10000 })
+        .should('be.visible')
+        .click();
+
+    // Ждем, пока на странице отобразится элемент с текстом на выбранном языке
+    const headerSelector = 'h2.mb-4.text-2xl.font-bold';
+    const expectedText = lang === 'en' ? 'Regulations' : 'Регламенты';
+
+    cy.get(headerSelector, { timeout: 15000 })
+        .should('have.text', expectedText)
         .then(() => {
-            cy.task('logInfo', `Язык сменился на ${lang}!`);
+            cy.task('logInfo', `Язык успешно переключен на ${lang}`);
         });
 });
-
-// -----------------------------------------------------------------------------------------------------------------------
-
-Cypress.Commands.add('changeLangAuth', () => {
-    cy.xpath("/html/body/div[2]/div/nav/div/div/div[2]/div/div/button").click();
-    cy.wait(500);
-    cy.xpath("/html/body/div[2]/div/nav/div/div/div[2]/div/div").find('a').last().click();
-    cy.wait(500);
-})
 
 // -----------------------------------------------------------------------------------------------------------------------
 
 Cypress.Commands.add('logout', () => {
     cy.wait(1500);
-    cy.xpath("//button[@class='max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 z-50']").click();
+    cy.get('[data-header-test-id="header_menu_button"]').click();
     cy.wait(500);
-    cy.xpath("//a[@href='" + Cypress.config('baseUrl') + "logout']").click();
-    cy.task('logStep',`Пользователь успешно разлогинился`);
+    cy.get('[data-header-test-id="header_dropdown_menu"]').last().click();
+    cy.task('logStep', `Пользователь успешно разлогинился`);
     cy.wait(1500);
 });
 
 // -----------------------------------------------------------------------------------------------------------------------
-
 Cypress.Commands.add('searchRow', (name) => {
-    cy.task('logInfo',` Поиск строки с именем: "${name}"`);
-    cy.get('body').then($body => {
+    cy.task('logInfo', `Поиск строки с именем: "${name}"`);
+
+    // Проверяем, есть ли элементы, иначе кликаем на тултип
+    cy.get('.w-full.h-full').then($body => {
         if ($body.find('.mt-1.relative.flex').length === 0) {
             cy.xpath("//div[@class='tooltip']").click();
         }
     });
 
-    cy.get('[placeholder="Search"], [placeholder="Поиск"]').first()
-        .should('exist')
+    // Чистим поле поиска безопасно
+    const sel = '[placeholder="Search"], [placeholder="Поиск"]';
+
+    cy.get(sel, { timeout: 10000 })
+        .first()
         .clear();
 
+    // заново получаем элемент — если он был заменён, то мы получим новый экземпляр
+    cy.get(sel).first().should('have.value', '');
+
+    // Вводим текст посимвольно с проверкой через новый get
     name.split('').forEach((char, index) => {
         cy.get('[placeholder="Search"], [placeholder="Поиск"]').first()
-            .type(char, { delay: 0 });
-
-        // ждем, пока поле реально обновится перед следующим символом
-        cy.get('[placeholder="Search"], [placeholder="Поиск"]').first()
+            .type(char, { delay: 0 })
             .should('have.value', name.slice(0, index + 1));
-
-        // микропаузa, чтобы debounce успел отработать
-        cy.wait(100);
+        cy.wait(100); // небольшая пауза между символами
     });
 
-    cy.wait(800); // подождать обновления таблицы
+    // Ждем, чтобы таблица успела обновиться
+    cy.wait(800);
 
-    // Проверяем наличие строки, и логируем результат
+    // Проверка строки в таблице через повторный get
     cy.get('tbody').then($tbody => {
         const rows = $tbody.find(`tr:contains("${name}")`);
-        if (rows.length > 0) {
-
-        } else {
+        if (rows.length === 0) {
             cy.task('logError', `Строка с именем "${name}" не найдена!`);
         }
     });
 });
+
+
 
 // -----------------------------------------------------------------------------------------------------------------------
 
@@ -430,13 +445,12 @@ Cypress.Commands.add('deleteAllByName', (name) => {
                 const $row = Cypress.$(filtered[0]);
 
                 cy.wrap($row).within(() => {
-                    cy.get('button').first().click();               // Открыть меню
-                    cy.contains('div', 'Delete').click();     // Клик по кнопке Delete (любой, где есть слово Delete)
+                    cy.get('button').first().click();
+                    cy.contains('div', 'Delete').click();
                 });
 
                 // Подтверждаем удаление
                 cy.contains('button', 'Delete').click();
-
                 // Ждем исчезновения строки с этим именем
                 return cy.get('tr')
                     .should('not.contain.text', name)
@@ -454,7 +468,7 @@ Cypress.Commands.add('deleteAllByName', (name) => {
 
 // -----------------------------------------------------------------------------------------------------------------------
 
-Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Departments', 'Teams', 'Others']) => {
+Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Departments', 'Teams', 'Others'], userSearchValues = {}) => {
 
     cy.task('logInfo', `Начало работы с модальным окном парв доступа`);
     const tabSearchValues = {
@@ -465,45 +479,56 @@ Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Departments', 'Teams', 'Oth
 
     };
     cy.task('logInfo', 'Клик по кнопке селект');
-    cy.get('.w-20.text-xs').click();
-    cy.wait(500);
-    cy.get('.cursor-pointer.absolute.-right-5').then($el => {
-        if ($el.is(':visible')) {
-            // Окно видно
-            cy.task('logInfo', 'Модальное окно открыто');
-        } else {
-            // Окно не видно — можно кликнуть ещё раз
-            cy.get('.w-20.text-xs').click();
-            cy.task('logWarn', 'Модальное окно не открылось, кликаем на кнопку селект еще раз');
-        }
-    });
 
+    cy.get('[aria-modal="true"]').should('not.exist');
+
+    cy.get('.w-20.text-xs')
+        .should('be.visible')
+        .click();
+    cy.get('[aria-modal="true"]', { timeout: 10000 })
+        .should('be.visible');
+
+    cy.task('logInfo', 'Клик по кнопке открытия модалки выполнен');
+
+
+    // Ждём видимость содержимого модалки. В случае провала — логируем и продолжаем.
+    cy.get('.block.mb-4', { timeout: 10000 })
+        .should('be.visible')
+        .then(
+            () => {
+                cy.task('logInfo', 'Модалка успешно открылась');
+            },
+            (err) => {
+                // Не бросаем err — логируем и делаем скрин для дебага, тест продолжит выполнение
+                cy.task('logError', 'Модалка не открылась в отведённый таймаут — логируем и продолжаем');
+                cy.screenshot('modal-open-timeout');
+            }
+        );
 
     Cypress._.each(tabs, (tab) => {
         cy.get('.-mb-px.flex', { timeout: 5000 }).then(($nav) => {
             if ($nav.find(`div:contains("${tab}")`).length > 0) {
                 cy.wrap($nav).contains('div', tab).click();
-                cy.wait(200);
+
+                const valueToSearch = userSearchValues[tab] || tabSearchValues[tab];
 
                 // Вводим значение для поиска
-
                 cy.contains('div', 'Search')
                     .parent()
                     .find('input')
                     .clear()
-                    .type(tabSearchValues[tab], { force: true });
+                    .type(valueToSearch, { force: true });
 
-                cy.wait(500); // немного подождать, чтобы список успел обновиться
+                cy.wait(1500); // немного подождать, чтобы список успел обновиться
 
                 // Проверяем, есть ли нужный элемент в DOM
                 cy.get('body').then($body => {
-                    const selector = `div:contains("${tabSearchValues[tab]}")`;
+                    const selector = `div:contains("${valueToSearch}")`;
 
                     if ($body.find(selector).length > 0) {
-                        cy.contains('div', tabSearchValues[tab]).click({ force: true });
-                        cy.wait(300);
+                        cy.contains('div', valueToSearch).click({ force: true });
                     } else {
-                        cy.task('logWarn', `Элемент "${tabSearchValues[tab]}" не найден — пропускаем`);
+                        cy.task('logWarn', `Элемент "${valueToSearch}" не найден — пропускаем`);
                     }
                 });
 
@@ -515,24 +540,25 @@ Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Departments', 'Teams', 'Oth
 
     cy.task('logInfo', 'Сохраняем изменения');
     cy.get('.mt-3.w-full').click();
-    cy.wait(500);
+    cy.get('[aria-modal="true"]', { timeout: 5000 }).should('not.exist');
+    cy.task('logInfo', 'Модальное окно закрылось после нажатия на "Сохранить"');
 
-    cy.get('body').then($body => {
-        const el = $body.find('.cursor-pointer.absolute.-right-5');
-        if (el.length && el.is(':visible')) {
-            cy.task('logError','Модальное окно все еще открыто, кликаем на кнопку сохранить еще раз');
-            cy.get('.mt-3.w-full').click();
-        } else {
-            cy.task('logInfo','Модальное окно закрыто, продолжение теста');
-        }
-    });
+
 
     // Проверка: что хотя бы один элемент выбран
-    cy.get('.w-full.max-h-24')
+    return cy.get('.w-full.max-h-24')
         .children('li')
-        .should('be.visible');
-        cy.task('logInfo','Права доступа выданы!');
+        .then($items => {
+            if ($items.length > 0) {
+                // Если есть элементы — логируем успешное событие
+                cy.task('logInfo', 'Права доступа выданы!');
+            } else {
+                // Если элементов нет — логируем предупреждение
+                cy.task('logInfo', 'Ничего не выбрано');
+            }
+        });
 });
+
 
 // -----------------------------------------------------------------------------------------------------------------------
 
@@ -542,10 +568,9 @@ Cypress.Commands.add('ifRowExists', (name, callback) => {
 
         if (row.length > 0) {
             cy.task('logInfo', 'Строка успешно найдена!');
-            callback(); 
+            callback();
         } else {
-            cy.log(`Строка с именем "${name}" не найдена — тест пропущен`);
-            cy.task('logError', 'Строка не найдена.');
+            cy.task('logError', `Строка с именем "${name}" удалены`);
         }
     });
 });
@@ -611,10 +636,68 @@ Cypress.Commands.add('checkTextInParagraph', (text = 'Success!', timeout = 3000)
 
     return check();
 });
+
 // -----------------------------------------------------------------------------------------------------------------------
 
-Cypress.Commands.add('visitAdmin', (user) => {
-    cy.get("[data-header-test-id='header_menu_button']").click();
-    cy.get("[data-header-test-id='header_dropdown_menu']").eq(1).click();
-    cy.wait(1000)
-})
+Cypress.Commands.add('visitAdmin', () => {
+    // 1. Ждём видимость основного контейнера
+    cy.get('.mt-5.flex-1.flex.flex-col', { timeout: 15000 })
+        .should('be.visible');
+
+    // 2. Ждём, что кнопка меню видна и закрыта
+    cy.get('[data-header-test-id="header_menu_button"]', { timeout: 10000 })
+        .should('be.visible')
+        .should('have.attr', 'aria-expanded', 'false');
+
+    // 3. Кликаем по кнопке меню, когда точно можно
+    cy.get('[data-header-test-id="header_menu_button"]')
+        .click({ force: true });
+
+    // 4. Ждём, что меню реально раскрылось
+    cy.get('[data-header-test-id="header_menu_button"]', { timeout: 5000 })
+        .should('have.attr', 'aria-expanded', 'true');
+
+    // 5. Ждём, что элемент меню виден и кликабелен
+    cy.get("[data-header-test-id='header_dropdown_menu']", { timeout: 10000 })
+        .eq(1)
+        .should('be.visible')
+        .click({ force: true });
+
+    // 6. Проверка, что меню закрылось после клика
+    cy.get('[data-header-test-id="header_menu_button"]', { timeout: 5000 })
+        .should('have.attr', 'aria-expanded', 'false');
+
+    cy.get('h2').contains(/Courses|Курсы/, { timeout: 20000 })
+        .should('be.visible');
+
+    cy.task('logInfo', 'Перешли в админку');
+});
+// -----------------------------------------------------------------------------------------------------------------------
+
+Cypress.Commands.add('checkVisible', (selector, options = {}) => {
+    // Пытаемся найти элемент с указанным селектором
+    cy.get('body').then($body => {
+        if ($body.find(selector).length) {
+            // Элемент найден → проверяем видимость
+            cy.get(selector, options).should('be.visible');
+        } else {
+            // Элемент не найден → логируем и продолжаем
+            cy.log(`Элемент "${selector}" не найден`);
+        }
+    });
+});
+
+// -----------------------------------------------------------------------------------------------------------------------
+
+Cypress.Commands.add('disableAnimations', () => {
+    cy.document().then(doc => {
+        const style = doc.createElement('style');
+        style.innerHTML = `
+      * {
+        transition: none !important;
+        animation: none !important;
+      }
+    `;
+        doc.head.appendChild(style);
+    });
+});

@@ -7,12 +7,15 @@ describe('Statistic.ST1. Create Statistic', () => {
 
 
     beforeEach(function () {
+        cy.resetAppState();
         cy.logTestName.call(this);
-        cy.admin()
+        cy.admin();
+        // cy.changeLang();
     });
 
     it('should create statistics', function () {
         cy.visit(ROUTES.statistics);
+        cy.get('h2').contains('List of statistics').should('be.visible');
         cy.wait(500);
 
         cy.contains('Add statistics').click();
@@ -41,7 +44,7 @@ describe('Statistic.ST1. Create Statistic', () => {
 
 
 
-        cy.get('input.shadow-sm').type(statisticName);
+        
         cy.get("button[role='switch']").eq(1)
             .invoke('attr', 'aria-checked')
             .then(checked => {
@@ -50,7 +53,7 @@ describe('Statistic.ST1. Create Statistic', () => {
                 }
             });
 
-        cy.get('input.shadow-sm').type(statisticName);
+        
         cy.get("button[role='switch']").eq(2)
             .invoke('attr', 'aria-checked')
             .then(checked => {
@@ -58,7 +61,7 @@ describe('Statistic.ST1. Create Statistic', () => {
                     cy.get("button[role='switch']").eq(2).click();
                 }
             });
-        cy.get('input.shadow-sm').type(statisticName);
+        
         cy.get("button[role='switch']").eq(3)
             .invoke('attr', 'aria-checked')
             .then(checked => {

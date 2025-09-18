@@ -4,6 +4,7 @@ describe('LC.D1. Assert answers were checked by teacher', () => {
 
 
     beforeEach(function () {
+        cy.resetAppState();
         cy.logTestName.call(this);
     });
 
@@ -17,7 +18,9 @@ describe('LC.D1. Assert answers were checked by teacher', () => {
         ];
 
         cy.login();
+        // cy.changeLang();
         cy.visit(ROUTES.studCourse);
+        cy.wait(500);
 
         cy.xpath("//input[@id='search']").type(courseName);
         cy.xpath(`//h3[text()='${courseName}']`).click();
@@ -26,7 +29,7 @@ describe('LC.D1. Assert answers were checked by teacher', () => {
         cy.xpath(`//h1[text()='${courseName}']`).should('be.visible');
         cy.wait(400);
 
-        const lessonSuccess = 'lesson Success!'; // или любое другое фиксированное сообщение
+        const lessonSuccess = 'Lesson successfully completed!'; // или любое другое фиксированное сообщение
 
         lessons.forEach(lessonTitle => {
             cy.get('ul[role="list"] li').contains(lessonTitle).click();

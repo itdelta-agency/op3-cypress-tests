@@ -9,14 +9,16 @@ describe("LC.A1. Create lessons", () => {
   let qName = Cypress.env('questionText');
 
   beforeEach(function () {
+    cy.resetAppState();
     cy.logTestName.call(this);
     cy.admin();
+    // cy.changeLang();
   });
 
   it('should create lesson(checkbox + radio)', function () {
-    cy.task('logInfo', 'Переход на страницу создания курса, для создания уроков');
+    cy.task('logStep', 'Переход на страницу создания курса, для создания уроков');
     // Go to add courses page
-    cy.get('.flex.justify-between', { timeout: 10000 }).eq(2).then($tab => {
+    cy.get('.flex.justify-between', { timeout: 20000 }).eq(2).then($tab => {
       const isExpanded = $tab.attr('aria-expanded') === 'true';  // true если открыта
       if (!isExpanded) {
         cy.wrap($tab).click();
@@ -24,7 +26,7 @@ describe("LC.A1. Create lessons", () => {
     });
     cy.contains('Courses').click();
 
-    cy.wait(500);
+    cy.get('h2').contains('Courses').should('be.visible');
     cy.accessAllItems();
     cy.xpath("(//div[text()='" + Cypress.env('courseName') + "'])[1]").click();
 
@@ -33,7 +35,7 @@ describe("LC.A1. Create lessons", () => {
 
     cy.wait(500);
     // CREATE LESSON
-    cy.task('logInfo', 'Создание первого урока ');
+    cy.task('logStep', 'Создание первого урока ');
     cy.xpath("//h2[text()='Create lesson']").click();
     cy.xpath("//input[@type='text']").first().type(lName);
     cy.xpath("//button[@role='switch']").click();
@@ -66,17 +68,17 @@ describe("LC.A1. Create lessons", () => {
 
   it('should create lesson(text)', function () {
 
-    cy.login()
+  
     cy.visit(ROUTES.courses);
     cy.wait(500);
-    cy.accessAllItems();
+    // cy.accessAllItems();
     cy.xpath("(//div[text()='" + Cypress.env('courseName') + "'])[1]").click();
 
     cy.xpath("//span[text()='List of lessons']//following-sibling::span/descendant::input").click();
     cy.xpath("/html/body/div[2]/div/div/div[2]/div[2]/main/div/ul/li[7]/span[2]/div[3]/div[2]/div/div[2]/button").click();
 
     //// Create lesson ////
-    cy.task('logInfo', 'Создание второго урока');
+    cy.task('logStep', 'Создание второго урока');
     cy.xpath("//h2[text()='Create lesson']").click();
     cy.xpath("//input[@type='text']").first().type(lessonText);
     cy.xpath("//button[@role='switch']").click();
@@ -94,19 +96,19 @@ describe("LC.A1. Create lessons", () => {
   it('should create lesson(timer)', function () {
     const q2Name = Cypress.env('questionText');
 
-    cy.login()
+  
     cy.visit(ROUTES.courses);
 
     // cy.xpath("//a[text()='Courses']").click();
     cy.wait(500);
-    cy.accessAllItems();
+    // cy.accessAllItems();
     cy.xpath("(//div[text()='" + Cypress.env('courseName') + "'])[1]").click();
 
     cy.xpath("//span[text()='List of lessons']//following-sibling::span/descendant::input").click();
     cy.xpath("/html/body/div[2]/div/div/div[2]/div[2]/main/div/ul/li[7]/span[2]/div[3]/div[2]/div/div[2]/button").click();
 
     // Create lesson
-    cy.task('logInfo', 'Создание третьего урока ');
+    cy.task('logStep', 'Создание третьего урока ');
     cy.xpath("//h2[text()='Create lesson']").click();
     cy.xpath("//input[@type='text']").first().type(lessonTimer);
     cy.xpath("//button[@role='switch']").click();
@@ -118,7 +120,8 @@ describe("LC.A1. Create lessons", () => {
     cy.wait(200);
     cy.get('.flex.flex-row-reverse').contains('Save').click();
     cy.wait(700);
-    cy.get('input.shadow-sm').eq(0).click().type(q2Name);
+    cy.get('input.shadow-sm').eq(0).click();
+    cy.get('input.shadow-sm').eq(0).type(q2Name);
     cy.wait(200);
     cy.get('input.shadow-sm').eq(1).type(qName + 2);
     cy.get("button[role='switch']")
@@ -141,7 +144,7 @@ describe("LC.A1. Create lessons", () => {
 
 
   it('check bulk action', function() {
-    cy.task('logInfo', 'Переход на страницу уроков, для проверки массовых действий');
+    cy.task('logStep', 'Переход на страницу уроков, для проверки массовых действий');
 
     cy.visit(ROUTES.lessons)
     cy.wait(2000);
@@ -152,10 +155,10 @@ describe("LC.A1. Create lessons", () => {
 
 
   it('save Lesson of Course', function () {
-    cy.task('logInfo', 'Переход на страницу "Курсы"');
+    cy.task('logStep', 'Переход на страницу "Курсы"');
     const courseName = Cypress.env('courseName');
 
-    cy.login();
+    // cy.login();
     cy.visit(ROUTES.courses);
     cy.wait(1100);
     cy.accessAllItems();
@@ -192,13 +195,4 @@ describe("LC.A1. Create lessons", () => {
     cy.checkTextInParagraph();
   });
 
-
-
-
-
-  afterEach(function onAfterEach() {
-    // if (this.currentTest.state === 'failed') {
-    //     cy.setCookie(skipCookie, 'true');
-    // }
-  });
 });

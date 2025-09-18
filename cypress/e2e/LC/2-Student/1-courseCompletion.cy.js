@@ -3,32 +3,30 @@ import { ROUTES } from "../../../support/routes";
 describe('LC.B1. Complete the course which we have created in previous tests', () => {
 
 
-  beforeEach(function () {
-    cy.logTestName.call(this);
-    cy.login();
-  })
+
   const courseName = Cypress.env('courseName');
   beforeEach(() => {
-    cy.task("getUserEmail").then((data) => {
-      // data — объект, берем поле email
-      cy.login(data.email, Cypress.env('password'));
-    });
+    cy.resetAppState();
+    cy.logTestName.call(this);
+    cy.login();
+    // cy.changeLang();
   });
 
   it('Student should answer the lesson', function () {
-    cy.login();
+    
     cy.visit(ROUTES.studCourse);
-    cy.task('logInfo', 'Переход на страницу "Курсы" в юзерской части');
+    cy.get('h2').contains('Learning center').should('be.visible');
+    cy.task('logStep', 'Переход на страницу "Курсы" в юзерской части');
     // Find the course by name
     cy.xpath("//input[@id='search']").type(courseName);
     cy.wait(200);
-    cy.task('logInfo', 'Поиск нужного курса');
+    cy.task('logStep', 'Поиск нужного курса');
 
-    cy.get('.flex.justify-between').eq(4)
+    cy.get('.focus-visible\\:ring-indigo')
       .invoke('attr', 'aria-expanded')
       .then(checked => {
         if (checked === 'false') {
-          cy.get('.flex.justify-between').eq(4).click();
+          cy.get('.focus-visible\\:ring-indigo').click();
           cy.task('logInfo', 'Открытие группы курсов');
         }
         // Если 'true' — ничего не делаем
@@ -103,43 +101,33 @@ describe('LC.B1. Complete the course which we have created in previous tests', (
 
       //// THIRD LESSON ////
       cy.task('logInfo', 'Прохождение третьего урока');
-      cy.get('body').then($body => {
-        if ($body.find('div:contains("The lesson is awaiting teacher review")').length > 0) {
-          // Урок уже завершён
-          cy.task('logInfo', 'Урок завершён — переходим дальше');
-        } else if ($body.find('button:contains("Start lesson")').length > 0) {
-          // Урок не начат — запускаем
-          cy.task('logInfo', 'Урок не начат — запускаем');
-          cy.contains('Start lesson').click();
-          cy.wait(1000);
 
-          // После старта — отвечаем
-          cy.get('.ql-editor').eq(1).click().type("Lorem ipsum dolor sit amet, consectetur " +
-            "adipisicing elit. Accusamus aspernatur dolorem dolorum eligendi esse facilis impedit ipsa maxime minus " +
-            "molestiae nostrum odit provident quam ratione, sequi similique, tempore. Nemo, sunt?");
-          cy.get('button').contains('Check').click();
-          cy.wait(500);
-        } else {
-          // Урок уже начат, но не завершён — просто отвечаем
-          cy.task('logInfo', 'Урок начат, но не завершён — отвечаем на вопрос');
-          cy.get('.ql-editor').eq(1).click().type("Lorem ipsum dolor sit amet, consectetur " +
-            "adipisicing elit. Accusamus aspernatur dolorem dolorum eligendi esse facilis impedit ipsa maxime minus " +
-            "molestiae nostrum odit provident quam ratione, sequi similique, tempore. Nemo, sunt?");
-
-          cy.get('button').contains('Check').click();
-          cy.wait(500);
-        }
+      cy.get('.inline-block.align-bottom', {timeout:10000}).should('be.visible');
+      cy.contains('button', 'Start lesson', { timeout: 5000 })
+        .click();
+      cy.wait(1000);
+      cy.get('.ql-editor').eq(1).click().type(
+        "Lorem ipsum dolor sit amet, consectetur " +
+        "adipisicing elit. Accusamus aspernatur dolorem dolorum eligendi esse facilis impedit ipsa maxime minus " +
+        "molestiae nostrum odit provident quam ratione, sequi similique, tempore. Nemo, sunt?"
+      );
+      cy.get('button').contains('Check').click();
+      cy.wait(500);
+      cy.task('logInfo', 'Третий урок пройден');
+         
 
 
-        //
-        //// BACK TO THE FIRST LESSON
-        cy.task('logInfo', 'Все уроки пройдены! Переход к первому уроку и ожидание проверки уроков.');
-        cy.get('p').contains('QA Test lesson (checkbox + radio)').click();
-        cy.wait(200);
-        cy.get('div').contains('Lesson successfully completed!').should('be.visible')
 
-      });
-    })
+
+      //
+      //// BACK TO THE FIRST LESSON
+      cy.task('logInfo', 'Все уроки пройдены! Переход к первому уроку и ожидание проверки уроков.');
+      cy.get('p').contains('QA Test lesson (checkbox + radio)').click();
+      cy.wait(200);
+      cy.get('div').contains('Lesson successfully completed!').should('be.visible')
+
+    });
   })
-
 });
+
+

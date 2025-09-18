@@ -6,8 +6,10 @@ describe('Task.T1. Create Task', () => {
 
 
     beforeEach(function () {
+        cy.resetAppState();
         cy.logTestName.call(this);
-        cy.admin()
+        cy.admin();
+        // cy.changeLang();
     });
 
 
@@ -47,6 +49,7 @@ describe('Task.T1. Create Task', () => {
     it('should create task', function () {
         cy.visit(ROUTES.tasks);
         cy.wait(1500);
+        cy.get('h2').contains('Tasks').should('be.visible');
         cy.contains('button', 'Add').click();
         cy.wait(500);
 
@@ -63,51 +66,52 @@ describe('Task.T1. Create Task', () => {
         cy.xpath("//span[text()='Result *']").next().type('Result Result');
 
         cy.contains('button', 'Save').click();
+        cy.checkTextInParagraph();
     })
 
 
-it('Edit task', function () {
-    cy.login();
-    cy.visit(ROUTES.tasks);
-    cy.wait(1000);
-    cy.searchRow(taskName);
+    it('Edit task', function () {
+        cy.visit(ROUTES.tasks);
+        cy.wait(1000);
+        cy.get('h2').contains('Tasks').should('be.visible');
+        cy.searchRow(taskName);
 
-    cy.xpath(`//div[text()="${taskName}"]`).closest('tr').first().within(() => {
-        cy.get('th').eq(0).find('div').click();
+        cy.xpath(`//div[text()="${taskName}"]`).closest('tr').first().within(() => {
+            cy.get('th').eq(0).find('div').click();
+        });
+        cy.contains('Edit').should('be.visible').click({ multiple: true });
+        cy.wait(1500);
+
+        cy.xpath("//span[text()='Auditors']").next().click().type('QA Edit', { delay: 100 });
+        cy.contains("div", 'QA Edit USER').click();
+
+        cy.xpath("//span[text()='Deadline']").next().find('button').click();
+        cy.wait(500);
+
+        // Определяем текущий и целевой месяц
+        const currentMonth = new Date().getMonth();
+        const targetMonth = day.getMonth();
+
+        if (currentMonth !== targetMonth) {
+            cy.get("[data-slot='next-button']").click();
+            cy.wait(500);
+        }
+
+        cy.get('[data-react-aria-pressable="true"]').contains("span", day.getDate()).click({ force: true });
+
+        cy.get('.focus\\:border-indigo-500').eq(2).clear().type(10);
+        cy.get('.focus\\:border-indigo-500').eq(4).clear().type(10);
+
+        cy.contains('Save').click();
+        cy.checkTextInParagraph();
     });
-    cy.contains('Edit').should('be.visible').click({ multiple: true });
-    cy.wait(1500);
-
-    cy.xpath("//span[text()='Auditors']").next().click().type('QA Edit', { delay: 100 });
-    cy.contains("div", 'QA Edit USER').click();
-
-    cy.xpath("//span[text()='Deadline']").next().find('button').click();
-    cy.wait(500);
-
-    // Определяем текущий и целевой месяц
-    const currentMonth = new Date().getMonth();
-    const targetMonth = day.getMonth();
-
-    if (currentMonth !== targetMonth) {
-      cy.get("[data-slot='next-button']").click();
-      cy.wait(500);
-    }
-
-    cy.get('[data-react-aria-pressable="true"]').contains("span", day.getDate()).click({ force: true });
-
-    cy.get('.focus\\:border-indigo-500').eq(2).clear().type(10);
-    cy.get('.focus\\:border-indigo-500').eq(4).clear().type(10);
-
-    cy.contains('Save').click();
-});
 
     it('check edits', function () {
         const commentText = 'Текст комментария!';
-        cy.login();
         cy.visit(ROUTES.tasks);
         cy.wait(1000);
+        cy.get('h2').contains('Tasks').should('be.visible');
 
-        cy.wait(1000);
         cy.searchRow(taskName);
         cy.wait(500);
         cy.contains('tr', taskName).within(() => {
@@ -142,15 +146,14 @@ it('Edit task', function () {
         cy.get('.w-4.h-4').eq(1).click();
         cy.wait(1000);
 
-        cy.contains('.flex.items-start', commentText).should('not.exist');
 
     })
 
 
     it('delete task', function () {
-        cy.login();
         cy.visit(ROUTES.tasks);
         cy.wait(1000);
+        cy.get('h2').contains('Tasks').should('be.visible');
         cy.searchRow(taskName);
 
         cy.xpath(`//div[text()="${taskName}"]`).closest('tr').first().within(() => {

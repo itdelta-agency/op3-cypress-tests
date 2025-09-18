@@ -8,7 +8,7 @@ module.exports = [
   'cypress/e2e/4-ProfileAndInvite/1-invite.cy.js',
   'cypress/e2e/4-ProfileAndInvite/2-profile.cy.js',
 
-  // 5- Sttings-----------------------------------------
+  // 5-Settings-----------------------------------------
   'cypress/e2e/5-Settings/settings.cy.js',
 
   // CP  // 2-Admin-------------------------------------

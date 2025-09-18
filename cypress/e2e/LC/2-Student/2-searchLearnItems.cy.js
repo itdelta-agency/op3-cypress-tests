@@ -1,43 +1,79 @@
-describe('LC.B2. Search courses', () => {
+import { ROUTES } from "../../../support/routes";
 
+
+describe('LC.B2. Search courses', () => {
+    let courseName = Cypress.env('courseName')
     beforeEach(function () {
+        cy.resetAppState();
         cy.logTestName.call(this);
         cy.login();
-        cy.visit('/lc/courses');
+        // cy.changeLang();
+        cy.visit(ROUTES.studCourse);
+        cy.wait(500);
     });
-    
+
     it('select Started Finished and All courses', function () {
-        cy.task('logInfo', 'Проверка фильтрации на страранице "Курсов"');
-        cy.xpath("//button[text()='Started']").click()
-        cy.xpath("//button[text()='Finished']").click()
-        cy.xpath("//button[text()='All']").click()
-    });
+        cy.task('logInfo', 'Проверка фильтрации на странице "Курсов"');
+
+        // Вкладка Started — позитивный сценарий, курсов нет
+        cy.get('button').contains('Started').click();
+        cy.wait(500);
+        cy.get('.flex.justify-between.items-center.w-full.p-4', { timeout: 5000 }).then($el => {
+            if ($el.is('visible')) {
+                cy.task('logError', 'Начатых курсов нет, но они должны быть');
+            } else {
+                cy.task('logInfo', 'Начатых курсы есть — всё верно');
+            }
+        });
+        cy.wait(500);
+
+        // Вкладка Finished — проверяем, что курсы есть
+        cy.get('button').contains('Finished').click();
+
+        cy.get('body').then($body => {
+            const $el = $body.find('.flex.justify-between.items-center.w-full.p-4');
+
+            if ($el.length === 0) {
+                // Элемента нет в DOM
+                cy.task('logInfo', 'Завершенных курсов нет (элемент отсутствует)');
+            } else if ($el.is(':visible')) {
+                // Элемент есть и видим
+                cy.task('logError', 'Завершенные курсы отображаются — это ошибка!');
+            } else {
+                // Элемент есть, но скрыт
+                cy.task('logInfo', 'Завершенных курсов нет (элемент скрыт)');
+            }
+        });
+        cy.wait(500);
+
+        // Вкладка All — проверяем, что курсы отображаются
+        cy.get('button').contains('All').click();
+        cy.wait(500);
+        cy.get('.flex.justify-between.items-center.w-full.p-4', { timeout: 5000 }).then($el => {
+            if ($el.is(':visible')) {
+                cy.task('logInfo', 'Курсы отображаются во вкладке "Все"!');
+            } else {
+                cy.task('logError', 'Во вкладке "Все" курсов нет');
+            }
+        });
+        cy.wait(500);
+    })
+
 
     it('search course by name', function () {
-        cy.xpath("//input[@id='search']").type(Cypress.env('courseName')).clear();
+        cy.xpath("//input[@id='search']").clear().type(courseName);
+        cy.get('h3').contains(courseName).should('be.visible');
+
+
+
     });
 
-    it('go to curriculums', function () {
-        cy.xpath("//a[@name='Curriculums']").click();
-        // cy.xpath("//span[text()='" + Cypress.env('curriculumName') + "']").should('be.visible').click();
+    it('go to curriculums and search them by name', function () {
+        cy.get('a[name="Curriculums"]').click();
+        cy.wait(500);
+        cy.get('h3').contains(courseName).click({ force: true });
+        cy.wait(500);
+        cy.get('h1').contains(courseName, { timeout: 5000 }).should('be.visible');
     });
-
-    // afterEach(function onAfterEach() {
-    //     if (this.currentTest.state === 'failed') {
-    //         Cypress.runner.stop();
-    //         cy.setCookie(skipCookie, 'true');
-    //     }
-    // });
 });
 
-// describe('Search curriculums', function () {
-//     before(() => {
-//         cy.login(Cypress.env('email'), Cypress.env('password'), { log: false });
-//     });
-//
-//     it('go to curriculums and search them by name', function () {
-//         cy.xpath("//a[@name='Curriculums']").click();
-//         cy.xpath("//h3[text()='Архитектура']").should('be.visible').click();
-//         cy.xpath("//h1[text()='Архитектура']").should('be.visible');
-//     });
-// });

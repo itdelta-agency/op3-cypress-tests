@@ -1,26 +1,33 @@
+import { ROUTES } from "../../../support/routes";
+
 describe('LC.A4. Create curriculum', () => {
- 
+
+    let curriculumName = Cypress.env('curriculumName');
+    let sortNumb = Cypress.env('sortNumb');
+    let courseName = Cypress.env('courseName');
+
 
     beforeEach(function () {
+        cy.resetAppState();
         cy.logTestName.call(this);
         cy.admin();
+        // cy.changeLang();
     });
 
     it('should create curriculum', function () {
-        cy.task('logInfo', 'Переход на страницу "Программы обучения"');
+        cy.task('logStep', 'Переход на страницу "Программы обучения"');
         // Go to add curriculums page
-        cy.wait(1500);
-        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Learning Center")').click({ multiple: true });
-        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Curriculums")').click({ multiple: true });
-        cy.xpath("//button[text()='Add curriculum']").click();
+        cy.visit(ROUTES.curriculums);
+        cy.get('h2').contains('Curriculums').should('be.visible');
         cy.task('logInfo', 'Переход на страницу создания программы обучения');
-        
-        cy.xpath("//span[text()='Name *']").next().type(Cypress.env('curriculumName'));
-        cy.xpath("//textarea").type("Lorem ipsum dolor sit amet, consectetur adipisicing elit.")
-        cy.whoCanSee(['Users', 'Teams', 'Others']);
 
-        cy.xpath("(//input[@type='text'])[2]").type(Cypress.env('courseName'));
-        cy.xpath("//*[text()='" + Cypress.env('courseName') + "'][1]").click();
+        cy.get('button').contains('Add curriculum', {timeout:5000}).click();
+        cy.get('h2').contains('Create curriculum').should('be.visible');
+
+        cy.contains('Name *').next().type(curriculumName);
+        cy.contains('Description').next().type("Lorem ipsum dolor sit amet, consectetur adipisicing elit.");
+        cy.wait(500);
+        cy.whoCanSee(['Users', 'Teams', 'Others']);
 
         cy.get("button[role='switch']").eq(0)
             .invoke('attr', 'aria-checked')
@@ -30,19 +37,14 @@ describe('LC.A4. Create curriculum', () => {
                 }
             });
 
-        // cy.xpath("/html/body/div[3]/div/div/div/div/div[2]/button").click();
-        // cy.wait(500);
+        cy.contains('Sorting').next().clear().type(sortNumb);
+        cy.get('.css-19bb58m').type(courseName);
+        cy.xpath(`//*[text()="${courseName}"][1]`).first().click();
 
-        //Save curriculum
+
         cy.xpath("//button[text()='Save']").should('be.visible').click();
         cy.checkTextInParagraph();
         cy.task('logInfo', 'Программа обучения создана');
     });
 
-
-    // afterEach(function onAfterEach() {
-    //     if (this.currentTest.state === 'failed') {
-    //         cy.setCookie(skipCookie, 'true');
-    //     }
-    // });
 });

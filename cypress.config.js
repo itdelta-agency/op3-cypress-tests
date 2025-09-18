@@ -11,11 +11,6 @@ const mailslurp = new MailSlurp({ apiKey: process.env.MAILSLURP_API_KEY });
 // const orderedSpecs = require('./ordered-specs');
 // const specPatternGlob = `{${orderedSpecs.join(',')}}`;
 
-// console.log('orderedSpecs:', orderedSpecs);
-// console.log('specPatternGlob:', specPatternGlob);
-
-console.log('Start loading config');
-console.log('process.env.URL:', process.env.URL);
 module.exports = defineConfig({
   chromeWebSecurity: false,
   env: {
@@ -25,9 +20,9 @@ module.exports = defineConfig({
     password: process.env.PASSWORD,
     authEmail: process.env.QA_TEST_LOGIN,
     authPassword: process.env.QA_TEST_PASSWORD,
-    leadSecretKey: process.env.BITRIX24_SECRET_KEY,
-    leadUrl: process.env.BITRIX24_URL,
-    leadUserId: process.env.BITRIX24_USER_ID,
+    // leadSecretKey: process.env.BITRIX24_SECRET_KEY,
+    // leadUrl: process.env.BITRIX24_URL,
+    // leadUserId: process.env.BITRIX24_USER_ID,
     courseGroupName: "QA Test Course Group",
     curriculumName: "QA Test Curriculum",
     teamName: "Qa Test Team",
@@ -35,7 +30,7 @@ module.exports = defineConfig({
     lessonCheckboxRadio: "QA Test lesson (checkbox + radio)",
     lessonText: "QA Test lesson (text)",
     lessonTimer: "QA Test lesson (timer)",
-    courseUser: 'QA Test',
+    qaUser: 'QA Test',
     questionRadio: "radio question",
     questionText: "text question",
     questionCheckbox: "checkbox question",
@@ -56,16 +51,16 @@ module.exports = defineConfig({
     sortNumb: 666,
     statisticName: 'Statistic name',
     // Pass data
-    passName: 'AT-Delta',
-    passUrl: 'https://tenant1.release.company-policy.com/',
-    passLogin: 'qa2@itdelta.dev',
-    passPassword: '123123',
-    passDescription: 'Pass description: Convenient application!'
+    passName: "IT-DELTA",
+    passUrl: "https://tenant1.release.company-policy.com/",
+    passLogin: "Login",
+    passPassword: "123123",
+    passDescription: "Pass description: Convenient application!",
 
 
 
   },
-  defaultCommandTimeout: 3000,
+  defaultCommandTimeout: 15000,
   requestTimeout: 30000,
   viewportHeight: 800,
   viewportWidth: 800,
@@ -74,7 +69,7 @@ module.exports = defineConfig({
     baseUrl: process.env.URL,
     prodUrl: 'https://qa-testing.org-online.ru/',
     registerUrl: 'https://app.org-online.ru/register',
-    specPattern: 'cypress/e2e/**/*.cy.js',
+    specPattern: "cypress/e2e/**/*.cy.js",
 
 
 
@@ -89,11 +84,9 @@ module.exports = defineConfig({
       }
 
       // Создаём объект emailAccount с уже кешированным inbox
-      // const emailAccount = await makeEmailAccount(cachedInbox); // Если makeEmailAccount принимает inbox, передай его
-      // const account = await emailApi();
+      const emailAccount = await makeEmailAccount(cachedInbox);
+      const account = await emailApi();
 
-      const emailAccount = {}; // заглушка
-      const account = {};      // заглушка
       const loggingTasks = getLoggingTasks();
 
       on('task', {
@@ -110,13 +103,24 @@ module.exports = defineConfig({
           return cachedInbox;
         },
 
-        getLastEmail: async ({ timeout = 60000 }) => {
-          try {
-            return await mailslurp.waitForLatestEmail(cachedInbox.id, timeout);
-          } catch (error) {
-            throw new Error(`Письмо не пришло в течение ${timeout / 1000} секунд`);
-          }
-        },
+
+getLastEmail: async ({ inboxId, sentAt, timeout = 60000 }) => {
+  const startTime = Date.now();
+  const pollInterval = 2000; // 2 секунды
+  let email = null;
+
+  while (Date.now() - startTime < timeout) {
+    email = await mailslurp.waitForLatestEmail(inboxId, pollInterval).catch(() => null);
+
+    if (email && new Date(email.createdAt).getTime() > sentAt) {
+      return email; // вернули новое письмо
+    }
+    // иначе ждём и повторяем
+  }
+
+  console.warn(`[WARN] Новое письмо не пришло в течение ${timeout / 1000} секунд`);
+  return null;
+},
 
         resetInboxCache() {
           cachedInbox = null;

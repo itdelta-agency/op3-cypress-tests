@@ -1,3 +1,5 @@
+const { ROUTES } = require("../../../support/routes");
+
 describe("CP6. Check Acquainted", () => {
 
   let articleName = Cypress.env('articleName');
@@ -5,21 +7,19 @@ describe("CP6. Check Acquainted", () => {
 
 
   beforeEach(function () {
+    cy.resetAppState();
     cy.logTestName.call(this);
     cy.admin();
+    // cy.changeLang();
   });
 
 
   it('checking the ignorance of the article', () => {
-    cy.task('logInfo', 'Переход на страницу отчета, для проверки, что пользователь ознакомлен со статьей');
+    cy.task('logStep', 'Переход на страницу отчета, для проверки, что пользователь ознакомлен со статьей');
 
-    cy.get('.flex.justify-between', { timeout: 10000 }).eq(1).then($tab => {
-      const isExpanded = $tab.attr('aria-expanded') === 'true';  // true если открыта
-      if (!isExpanded) {
-        cy.wrap($tab).click();
-      }
-    });
-    cy.get('a.text-indigo-100',).eq(2).click();
+    cy.visit(ROUTES.report);
+
+    cy.get('h2').contains('Report').should('be.visible');
     cy.whoCanSee(['Users']);
     cy.wait(500);
     cy.get('.px-3.py-1').click();

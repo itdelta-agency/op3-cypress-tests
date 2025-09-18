@@ -9,8 +9,9 @@ describe('2-Auth-RU-login-valid.cy.js', () => {
         cy.logTestName.call(this);
         cy.resetAppState();
         cy.visit(Cypress.config().baseUrl);
-        // cy.changeLangAuth('en');
+        // cy.changeLang();
     });
+
 
     it('should move to login page and log in', function () {
         

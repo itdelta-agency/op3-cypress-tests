@@ -8,19 +8,22 @@ describe('LC.A2. Create course', () => {
   const lessonCheckboxRadio = Cypress.env('lessonCheckboxRadio');
   const courseName = Cypress.env('courseName');
 
-  beforeEach(function () {
-    cy.logTestName.call(this);
+
+  before(() => {
     cy.task('getCachedInbox').then(result => {
       expect(result).to.exist;
-      inbox = result;
-      cy.log('Используем кешированный inbox:', inbox.emailAddress);
+      Cypress.env('inbox', result);
+      cy.log('📬 Используем кешированный inbox:', result.emailAddress);
     });
   });
 
-  beforeEach(() => {
-
-    cy.admin(); // Авторизация
+  beforeEach(function () {
+    cy.logTestName.call(this);
+    cy.resetAppState();
+    cy.admin();
   });
+
+
 
   it('should create course and assign user', () => {
     // Проверяем, что переменные заданы
@@ -28,21 +31,21 @@ describe('LC.A2. Create course', () => {
     expect(lessonCheckboxRadio, 'lessonCheckboxRadio').to.exist;
     expect(courseName, 'courseName должен быть задан').to.exist;
 
-    cy.get('.flex.justify-between', { timeout: 10000 }).eq(2).then($tab => {
+    cy.get('.flex.justify-between', { timeout: 20000 }).eq(2).then($tab => {
       const isExpanded = $tab.attr('aria-expanded') === 'true';  // true если открыта
       if (!isExpanded) {
         cy.wrap($tab).click();
       }
     });
     cy.contains('Courses').click();
-    cy.task('logInfo', 'Переход на страницу "Курсы"');
+    cy.wait(500);
+    cy.task('logStep', 'Переход на страницу "Курсы"');
 
-    cy.wait(200);
     cy.get('h2').contains('Courses').should('be.visible');
     cy.contains('Add Course').click();
     cy.wait(200);
-    cy.task('logInfo', 'Переход на страницу "Создание курса"');
-    
+    cy.task('logStep', 'Переход на страницу "Создание курса"');
+
     cy.get('h2').contains('Create course').should('be.visible');
     // Заполняем форму
     cy.xpath("//span[text()='Name *']").next().type(courseName);
@@ -51,8 +54,8 @@ describe('LC.A2. Create course', () => {
     // cy.contains('li', 'Available for').within(() => {
     //   cy.contains('button', 'Select').click();
     // });
-~
-    cy.whoCanSee(['Users', 'Others']);
+    ~
+      cy.whoCanSee(['Users', 'Others']);
 
     // 1 чек бокс
     cy.get("button[role='switch']").eq(0)
@@ -79,6 +82,7 @@ describe('LC.A2. Create course', () => {
     cy.checkTextInParagraph();
     cy.task('logInfo', 'Курс создан');
 
+    cy.task('logInfo', 'Проверка массовых действий');
     cy.bulkAction(['Deactivate', 'Activate',], [courseName]);
 
   });
@@ -91,11 +95,12 @@ describe('LC.A2. Create course', () => {
       return;
     }
     cy.task('logInfo', 'Получение почтового ящика');
-    cy.task('getLastEmail', { inboxId: inbox.id, timeout: 60000 }).then(email => {
+    cy.task('getLastEmail', { inboxId: inbox.id, timeout: 10000 }).then(email => {
       if (!email) {
-        cy.task('logInfo', 'Письмо не получено, пропускаем дальнейшую проверку');
-        return;
+        cy.task('logError', 'Письмо не получено, пропускаем проверку');
+        return; // тест не падает
       }
+
       cy.task('logInfo', 'Получение текста из письма');
       const html = email.bodyHTML || email.body;
       if (!html) {
