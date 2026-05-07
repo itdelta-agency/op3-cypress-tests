@@ -124,7 +124,7 @@ describe('Password page', () => {
 
             // Проверка описания
             cy.wrap($row)
-                .find('th').eq(3)
+                .find('th').eq(7)
                 .find('svg')
                 .first()
                 .click();

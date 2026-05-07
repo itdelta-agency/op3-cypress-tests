@@ -61,7 +61,7 @@ describe('LC.B1. Complete the course which we have created in previous tests', (
         cy.wait(200);
 
         cy.xpath("(//input[@type='radio'])").parent().contains('answer 1').click();
-        cy.xpath("//label[text()='answer 1']").click();
+        cy.xpath("//span[text()='answer 1']").parents("label").click();
         cy.wait(200);
 
         cy.wait(2000);

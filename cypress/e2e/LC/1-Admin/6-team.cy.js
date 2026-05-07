@@ -68,7 +68,7 @@ describe("LC.A5. Create team", () => {
         cy.get('h2').contains('Users').should('be.visible');
         cy.searchRow('QA Edit');
 
-        cy.contains('tr[role="row"]', 'QA Edit USER')
+        cy.contains('tr[role="row"]', 'USER QA Edit')
             .within(() => {
                 cy.get('button').first().click();
             });

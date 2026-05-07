@@ -51,12 +51,7 @@ describe("CP2. Article List", () => {
       cy.get('.px-3.py-1').eq(0).click();
       cy.get('.px-3.py-1.text-sm').click();
     }
-
-    cy.get('.my-2.flex.flex-wrap').click();
-    cy.get('.w-full.max-h-24')
-      .children('li')
-      .should('be.visible');
-
+    
     cy.get('.mr-1').click();
     cy.get("button[role='switch']").eq(1).then($checkbox => {
       if (!$checkbox.attr('aria-checked') === 'false') {

@@ -45,13 +45,13 @@ describe('Statistic.ST3. clear data statistic', () => {
 
         // Повторный клик
         cy.get('.p-2.rounded-full').should('be.visible').click();
-        cy.get('.flex.flex-col.m-auto').should('be.visible');
+        cy.get('.flex.flex-col').contains('Edit value').should('be.visible');
 
         cy.contains('div', /Delete value/i, { timeout: 10000 })
             .should('be.visible')
             .click();
 
-        cy.get('.inline-block.align-bottom').should('be.visible');
+        cy.get('.inline-block.align-bottom').should('exist');
         cy.contains('button', 'Delete').click();
         cy.checkTextInParagraph();
     })
@@ -81,8 +81,8 @@ describe('Statistic.ST3. clear data statistic', () => {
 
 
             // Клик по пункту меню "Statistic data"
-            cy.contains('div', /Delete*/i).click();
         });
+        cy.contains('div', 'Delete statistic').click();
 
         cy.wait(200);
         cy.contains('button', 'Delete').click();

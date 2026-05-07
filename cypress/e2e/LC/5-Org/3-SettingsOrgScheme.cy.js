@@ -12,7 +12,10 @@ describe('OrgBoard.A4.Settings', () => {
     });
 
     it('edit settings', function () {
-        cy.get('a.text-indigo-100').contains('Settings').click();
+        cy.wait(500);
+        cy.get('button.text-indigo-100').contains('Settings').click();
+        cy.wait(100);
+        cy.get('a.text-indigo-100').contains('Modules').click();
         cy.wait(1500);
         cy.xpath("//a[@name='OrgScheme']").click();
         cy.wait(1500);
@@ -21,6 +24,7 @@ describe('OrgBoard.A4.Settings', () => {
         cy.get('.shadow-sm').eq(1).clear().type('QA COMPANY DESCRIPTION');
 
         cy.get('div.css-19bb58m').eq(0).type('QA position');
+        cy.wait(500);
         cy.get('div[role="listbox"]')
             .should('be.visible')
             .find('div[role="option"]')
