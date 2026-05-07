@@ -7,7 +7,7 @@ describe("US.1 Add User", () => {
   let authPassword;
   let firstName = 'QA';
   let lastName = 'USER';
-  let fullName = firstName + ' ' + lastName;
+  let fullName = lastName + ' ' + firstName;
   let editUserFirstName = firstName + ' ' + "Edit";
   let actualUserName = '';
 

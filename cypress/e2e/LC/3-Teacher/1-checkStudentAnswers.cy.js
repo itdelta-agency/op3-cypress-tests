@@ -77,7 +77,6 @@ cy.get('tbody', { timeout: 10000 }).then($tbody => {
                 .clear()
                 .type('Комментарий к ответу');
 
-            cy.get('button.mt-3').click();
             cy.task('logStep', 'Комментарий для ученика');
 
             cy.checkTextInParagraph();

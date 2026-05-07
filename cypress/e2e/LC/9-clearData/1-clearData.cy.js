@@ -136,7 +136,6 @@ describe('LC.Z. Clear all created learning items', () => {
     })
 
 
-
     it('delete children department', function () {
         const department = Cypress.env('department');
 
@@ -146,7 +145,7 @@ describe('LC.Z. Clear all created learning items', () => {
 
         cy.xpath(`//div[text()="${department}"]`).then($el => {
             if ($el.length) {
-                cy.wrap($el).scrollIntoView().click();
+                cy.wrap($el).eq(0).scrollIntoView().click();
 
                 // Удаление поддепартамента внутри блока
                 cy.get('.text-lg.cursor-pointer').find('svg').last().click({ force: true });
@@ -168,7 +167,7 @@ describe('LC.Z. Clear all created learning items', () => {
 
         cy.xpath(`//div[text()="${department}"]`).then($el => {
             if ($el.length) {
-                cy.wrap($el).scrollIntoView().click();
+                cy.wrap($el).eq(0).scrollIntoView().click();
 
                 // Вся логика удаления внутри этого блока
                 cy.get('.overflow-ellipsis').contains(department).next().find('svg').last().click({ force: true });

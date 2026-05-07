@@ -5,7 +5,8 @@ describe('OrgBoard.A4.Settings', () => {
         cy.logTestName.call(this);
         cy.admin();
         // cy.changeLang();
-        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find(':contains("Settings")').click({multiple: true});
+        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find('button:contains("Settings")').click()
+        cy.xpath("//div[@class='flex flex-col flex-grow pt-5 pb-4 overflow-y-auto']").find('a:contains("Modules")').click()
         cy.wait(3000);
     });
 

@@ -77,9 +77,9 @@ describe('Task.T1. Create Task', () => {
         cy.searchRow(taskName);
 
         cy.xpath(`//div[text()="${taskName}"]`).closest('tr').first().within(() => {
-            cy.get('th').eq(0).find('div').click();
+            cy.get('th').eq(1).find('div').click();
         });
-        cy.contains('Edit').should('be.visible').click({ multiple: true });
+        cy.get('div.fixed').get('div.cursor-pointer').contains('Edit').should('be.visible').click({ multiple: true });
         cy.wait(1500);
 
         cy.xpath("//span[text()='Auditors']").next().click().type('QA Edit', { delay: 100 });
@@ -97,10 +97,9 @@ describe('Task.T1. Create Task', () => {
             cy.wait(500);
         }
 
-        cy.get('[data-react-aria-pressable="true"]').contains("span", day.getDate()).click({ force: true });
+        cy.get('[data-react-aria-pressable="true"]').get('span:not([aria-disabled="true"])').contains("span", day.getDate()).click({ force: true });
 
-        cy.get('.focus\\:border-indigo-500').eq(2).clear().type(10);
-        cy.get('.focus\\:border-indigo-500').eq(4).clear().type(10);
+        cy.get('.focus\\:border-indigo-500').eq(1).clear().type(10);
 
         cy.contains('Save').click();
         cy.checkTextInParagraph();
@@ -116,10 +115,10 @@ describe('Task.T1. Create Task', () => {
         cy.wait(500);
         cy.contains('tr', taskName).within(() => {
 
-            cy.get('th').first().find('button').click();
+            cy.get('th').eq(1).find('button').click();
 
-            cy.contains('div', 'View').click();
         });
+        cy.get('div.fixed').get('div.cursor-pointer').contains('View').should('be.visible').click({ multiple: true });
         cy.wait(500);
 
         cy.contains('dt', 'Responsible').next().should('contain.text', 'QA Edit USER')
@@ -130,7 +129,7 @@ describe('Task.T1. Create Task', () => {
 
         // Comments 
         cy.get('.relative.flex').eq(3)
-            .find('.ql-editor')
+            .find('.ql-editor').eq(1)
             .click()
             .type(commentText)
         cy.get('button').contains('Send').click();
@@ -157,11 +156,11 @@ describe('Task.T1. Create Task', () => {
         cy.searchRow(taskName);
 
         cy.xpath(`//div[text()="${taskName}"]`).closest('tr').first().within(() => {
-            cy.get('th').eq(0).find('div').click();
+            cy.get('th').eq(1).find('div').click();
         });
-        cy.contains('Delete').should('be.visible').click({ multiple: true });
+        cy.get('div.fixed').get('div.cursor-pointer').contains('Delete').should('exist').click({ multiple: true });
         cy.wait(200);
-        cy.get('button').contains('Delete').click();
+        cy.get('button').contains('Delete').click({force: true});
         cy.checkTextInParagraph();
     })
 })

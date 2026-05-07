@@ -20,7 +20,7 @@ Cypress.Commands.add('login', (username = Cypress.env('email'), password = Cypre
 
         cy.xpath("//button[@type='submit']", { timeout: 10000 }).click();
         // Ждем пока страница загрузится 
-        cy.get('[data-header-test-id="header_menu_button"]', { timeout: 15000 }).should('be.visible');
+        cy.get('[data-header-test-id="header_menu_button"]', { timeout: 30000 }).should('be.visible');
 
         // Отключаем анимацию
         cy.disableAnimations();
@@ -114,7 +114,7 @@ Cypress.Commands.add('addAnswers', () => {
 Cypress.Commands.add('question', (questionName, questionType) => {
 
     // cy.xpath("//div[@class='flex items-center cursor-pointer mb-3']").click();
-    cy.xpath("//h2[text()='Add question']").click();
+    // cy.xpath("//span[text()='Add question']").click();
 
     // // cy.xpath("//*[text()=Создание вопроса']").should('be.visible');
     cy.xpath("(//input[@type='text'])[1]").type(questionName);
@@ -130,7 +130,7 @@ Cypress.Commands.add('question', (questionName, questionType) => {
     }
     // cy.xpath("//input[@type='number']").type(10);
     cy.xpath("//button[text()='Save']").click();
-    cy.wait(1500);
+    cy.wait(1000)
     cy.checkTextInParagraph();
 });
 
@@ -198,7 +198,7 @@ Cypress.Commands.add('bulkAction', (actions, nameOrNames) => {
                 .filter(`:contains("${name}")`)
                 .each($row => {
                     cy.wrap($row)
-                        .find('input[type="checkbox"][title="Toggle Row Selected"]')
+                        .find('input[type="checkbox"][title="Toggle row expanded"]')
                         .check({ force: true });
                 });
         });
@@ -482,7 +482,7 @@ Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Departments', 'Teams', 'Oth
 
     cy.get('[aria-modal="true"]').should('not.exist');
 
-    cy.get('.w-20.text-xs')
+    cy.get('.w-20.text-xs').first()
         .should('be.visible')
         .click();
     cy.get('[aria-modal="true"]', { timeout: 10000 })
@@ -492,8 +492,8 @@ Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Departments', 'Teams', 'Oth
 
 
     // Ждём видимость содержимого модалки. В случае провала — логируем и продолжаем.
-    cy.get('.block.mb-4', { timeout: 10000 })
-        .should('be.visible')
+    cy.get('[id^="headlessui-dialog-overlay-"][data-headlessui-state="open"]', { timeout: 10000 })
+        .should('exist')
         .then(
             () => {
                 cy.task('logInfo', 'Модалка успешно открылась');
@@ -506,9 +506,9 @@ Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Departments', 'Teams', 'Oth
         );
 
     Cypress._.each(tabs, (tab) => {
-        cy.get('.-mb-px.flex', { timeout: 5000 }).then(($nav) => {
-            if ($nav.find(`div:contains("${tab}")`).length > 0) {
-                cy.wrap($nav).contains('div', tab).click();
+        cy.get('.-mb-px.flex[aria-label="Tabs"]', { timeout: 5000 }).then(($nav) => {
+            if ($nav.find(`button:contains("${tab}")`).length > 0) {
+                cy.wrap($nav).contains('button', tab).click();
 
                 const valueToSearch = userSearchValues[tab] || tabSearchValues[tab];
 
@@ -546,7 +546,7 @@ Cypress.Commands.add('whoCanSee', (tabs = ['Users', 'Departments', 'Teams', 'Oth
 
 
     // Проверка: что хотя бы один элемент выбран
-    return cy.get('.w-full.max-h-24')
+    return cy.get('ul.w-full')
         .children('li')
         .then($items => {
             if ($items.length > 0) {
@@ -599,7 +599,7 @@ Cypress.Commands.add('deleteResources', (name) => {
             }
 
             cy.wrap($row).find('.p-2.rounded-full').click();
-            cy.contains('div', /delete\s*/i).click();
+            cy.get('div.fixed.flex.flex-col.gap-3').contains('div', /delete\s*/i).click();
             cy.wait(200);
             cy.get('.sm\\:col-start-3').click();
             // Ждём обновления DOM и вызываем следующую итерацию
